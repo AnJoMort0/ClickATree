@@ -21,8 +21,8 @@ Click a Tree is not your average clicker game – it's your own digital forest! 
 - 🎨 Visual Design: AnJoMorto (with the help of ([Designer](https://www.bing.com/images/create))
 - 🎼 Melodic Magic: TBD
 
-This project was developped under the class "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL).
+This project was developped for the class "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).
 
 ## Game On! 🎮
 
-Get ready for a green journey with Click a Tree. Grow, protect, and immerse yourself in the magic of nature – all in the name of fun! 🌳💚
+Get ready for a green journey with Click a Tree. Grow, protect, and immerse yourself in the magic of nature! 🌳💚
