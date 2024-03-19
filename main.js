@@ -58,9 +58,13 @@ scene("game", () => {
     //DECLARING VARIABLES
     let cash            = 0;
     let score           = 0;
-    let nb_trees     = 1;
+    let cash_per_sec    = 0;
+    let nb_trees        = 0;
     //prices
+        let scaling     = 1.4;
         let pr_new_tree = 20;
+    //cash/second
+        let cps_tree     = 0.1;
 
     //ADDING UI
     //cash
@@ -74,12 +78,11 @@ scene("game", () => {
      ]);
     const text_cash = add([
         text(Math.floor(cash),{
-           width : 600
+           width : width(),
         }),
         pos(icon_cash.pos.x + 60, icon_cash.pos.y),
         anchor(icon_cash.anchor),
         z(z_ui),
-        // mettre à jour le cash
         {
            update(){
               this.text = Math.floor(cash);
@@ -87,15 +90,31 @@ scene("game", () => {
         },
         "ui"
      ]);
+    //cash/second
+     const text_cash_per_sec = add([
+        text(`${Math.round(cash_per_sec * 10) / 10}/s`,{
+            size    : 24,
+            width   : 600,
+        }),
+        pos(text_cash.pos.x, text_cash.pos.y + 35),
+        anchor(text_cash.anchor),
+        z(z_ui),
+        {
+            update(){
+                this.text = `${Math.round(cash_per_sec * 10) / 10}/s`;
+            }
+        },
+        "ui",
+     ])
+
     //score
     const text_score = add([
         text(`Score : ${Math.floor(score)}`,{
-           width : 600
+           width : width(),
         }),
         pos(15, height() - 30),
         anchor("left"),
         z(z_ui),
-        // mettre à jour le score
         {
            update(){
               this.text = `Score : ${Math.floor(score)}`;
@@ -141,14 +160,15 @@ scene("game", () => {
         "tree",
         "clickable",
         "start_tree",
+        nb_trees++,
+        cps(cps_tree),
     ]);
 
     //ADDING EVENT LISTENERS
     //Game elements
         //click the starting tree
         onClick("start_tree", (t) => {    
-            cash++; //add to the cash
-            score++; //add to score
+            plus(1);
             //particles when clicked
             for (let i = 0; i < 3; i++) {
                 const leaf_particle = add([
@@ -179,23 +199,18 @@ scene("game", () => {
         //New itens buttons
             //New tree
             onClick("new_tree", (t) =>{
-                console.log("new tree");
                 if(cash < pr_new_tree){
                     warning(text_cash);
                     warning(text_new_tree_price);
                 } else {
-                    cash = cash - pr_new_tree;
-                    pr_new_tree = pr_new_tree * 1.4;
                     addTree();
-                    nb_trees++;
                 }
             })
 
     //AUTOMATIC STUFF
        //Each tree gives cash overtime
-       loop(10, () => {
-            cash  = cash  + nb_trees;
-            score = score + nb_trees;
+       loop(1, () => {
+            plus(cash_per_sec);
        })
 
     //FUNCTIONS
@@ -210,7 +225,36 @@ scene("game", () => {
              z(1),
              "tree",
           ])
+            pay(pr_new_tree);
+            //exp(pr_new_tree); //PK çA MARCHE PAS??????
+            pr_new_tree = pr_new_tree * scaling;
+            cps(cps_tree);
+            nb_trees++;
        }
+
+       //General Functions
+        //Add to score and cash
+        function plus(x){
+            cash    = cash  + x;
+            score   = score + x;
+        }
+
+        //Pay with cash
+        function pay(x){
+            cash = cash - x;
+        }
+
+        //Exponentially scale price
+        function exp(x){
+            console.log(x);
+            x = x * scaling;
+            console.log(x);
+        }
+
+        //Increase cash per second
+        function cps(x){
+            cash_per_sec = cash_per_sec + x;
+        }
 })
 
 scene("pauseMenu", () => {
