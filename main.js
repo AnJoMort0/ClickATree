@@ -36,9 +36,12 @@ loadRoot('assets/');
         leafs.forEach((spr) => {
             loadSprite(spr, `game_elements/leafs/${spr}.png`);
         })
+        //other
+        loadSprite('bee', 'game_elements/other/bee.png');
     //ui elements
         //new buttons
         loadSprite('new_tree', "ui/new_buttons/new_tree_button.png");
+        loadSprite('new_bee', "ui/new_buttons/new_bee_button.png")
 //load ui sounds
     //loadSound('button_click',"audio/other/click.wav");
 //load sfx
@@ -60,11 +63,14 @@ scene("game", () => {
     let score           = 0;
     let cash_per_sec    = 0;
     let nb_trees        = 0;
+    let nb_bees         = 0;
     //prices
         let scaling     = 1.4;
         let pr_new_tree = 20;
+        let pr_new_bee  = 100;
     //cash/second
-        let cps_tree     = 0.1;
+        let cps_tree    = 0.1;
+        let cps_bee     = 1;
 
     //ADDING UI
     //cash
@@ -147,6 +153,30 @@ scene("game", () => {
         anchor(new_tree.anchor),
         z(z_ui_top),
      ])
+    //adding a new bee button
+     const new_bee = add([
+        sprite('new_bee'),
+        pos(new_tree.pos.x, new_tree.pos.y + 130),
+        scale(0.9),
+        anchor(new_tree.anchor),
+        area(),
+        z(z_ui),
+        "ui",
+        "button",
+        "new_button",
+        "new_bee",
+     ])
+     const text_new_bee_price = add([
+        text(Math.floor(pr_new_bee)),
+        {
+            update(){
+            this.text = Math.floor(pr_new_bee);
+            }
+        },
+        pos(new_bee.pos.x - 95, new_bee.pos.y - 20),
+        anchor(new_bee.anchor),
+        z(z_ui_top),
+     ])
 
     //ADDING OBJECTS
         //adding starting tree
@@ -167,10 +197,10 @@ scene("game", () => {
     //ADDING EVENT LISTENERS
     //Game elements
         //click the starting tree
-        onClick("start_tree", (t) => {    
+        onClick("start_tree", (t) => { 
             plus(1);
             //particles when clicked
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < rand(1,3); i++) {
                 const leaf_particle = add([
                     pos(mousePos()),
                     sprite(choose(leafs)),
@@ -190,6 +220,22 @@ scene("game", () => {
             zoomOut(t);
         })
     
+    //Animations
+        //bee moving
+        /*loop(rand(1,20), () => {
+            console.log("activated");
+            get("bee").forEach(bee => {
+                wait(rand(0,5), () => {
+                    console.log("activated v2")
+                    let target = choose(get("tree"));
+                    onUpdate(bee, (bee) => {
+                        bee.move(target.pos.x, target.pos.y);
+                    })
+                })
+            });
+        })*/
+            
+    
     //UI elements
         //click any button
         onClick("button", (b) => {
@@ -206,9 +252,18 @@ scene("game", () => {
                     addTree();
                 }
             })
+            //New bee
+            onClick("new_bee", (t) =>{
+                if(cash < pr_new_bee){
+                    warning(text_cash);
+                    warning(text_new_bee_price);
+                } else {
+                    addBee();
+                }
+            })
 
     //AUTOMATIC STUFF
-       //Each tree gives cash overtime
+       //Each element gives cash overtime
        loop(1, () => {
             plus(cash_per_sec);
        })
@@ -230,6 +285,23 @@ scene("game", () => {
             pr_new_tree = pr_new_tree * scaling;
             cps(cps_tree);
             nb_trees++;
+       }
+       //Add a new bee
+       function addBee(){
+        const bee = add([
+            sprite('bee'),
+            pos(rand(0, width()), rand(0, height())),
+            scale(0.2),
+            anchor('center'),
+            area(),
+            z(z_pp),
+            "bee",
+        ])
+            pay(pr_new_bee);
+            //change with function
+            pr_new_bee = pr_new_bee * scaling;
+            cps(cps_bee);
+            nb_bees++;
        }
 
        //General Functions
@@ -255,6 +327,22 @@ scene("game", () => {
         function cps(x){
             cash_per_sec = cash_per_sec + x;
         }
+
+        onKeyRelease("t", () => {
+            console.log(get("tree"));
+        })
+        //Debug
+        onKeyRelease("d", () => {
+            if(debug.inspect != true){
+                debug.inspect = true;
+            } else {
+                debug.inspect = false;
+            }
+        })
+        //Money Cheat
+        onKeyDown("0" ,() => {
+            cash = cash + 9999999999;
+        })
 })
 
 scene("pauseMenu", () => {
