@@ -94,7 +94,7 @@ scene("game", () => {
      const text_cash_per_sec = add([
         text(`${Math.round(cash_per_sec * 10) / 10}/s`,{
             size    : 24,
-            width   : 600,
+            width   : width(),
         }),
         pos(text_cash.pos.x, text_cash.pos.y + 35),
         anchor(text_cash.anchor),
