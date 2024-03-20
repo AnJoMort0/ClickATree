@@ -14,11 +14,11 @@ kaboom({
 
 //static values
 setGravity(800);
-const click_jump    = 1.05;
+const CLICK_JUMP    = 1.05;
 //z values:
-    const z_ui      = 10;
-    const z_ui_top  = 11;
-    const z_pp      = 9;
+    const Z_UI      = 10;
+    const Z_UI_TOP  = 11;
+    const Z_PP      = 9;
 
 //load assets
 loadRoot('assets/');
@@ -79,7 +79,7 @@ scene("game", () => {
         pos(10, 50),
         scale(0.03),
         anchor('left'),
-        z(z_ui),
+        z(Z_UI),
         "ui",
      ]);
     const text_cash = add([
@@ -88,7 +88,7 @@ scene("game", () => {
         }),
         pos(icon_cash.pos.x + 60, icon_cash.pos.y),
         anchor(icon_cash.anchor),
-        z(z_ui),
+        z(Z_UI),
         {
            update(){
               this.text = Math.floor(cash);
@@ -104,7 +104,7 @@ scene("game", () => {
         }),
         pos(text_cash.pos.x, text_cash.pos.y + 35),
         anchor(text_cash.anchor),
-        z(z_ui),
+        z(Z_UI),
         {
             update(){
                 this.text = `${Math.round(cash_per_sec * 10) / 10}/s`;
@@ -120,7 +120,7 @@ scene("game", () => {
         }),
         pos(15, height() - 30),
         anchor("left"),
-        z(z_ui),
+        z(Z_UI),
         {
            update(){
               this.text = `Score : ${Math.floor(score)}`;
@@ -136,7 +136,7 @@ scene("game", () => {
         scale(1),
         anchor("right"),
         area(),
-        z(z_ui),
+        z(Z_UI),
         "ui",
         "button",
         "new_button",
@@ -151,7 +151,7 @@ scene("game", () => {
         },
         pos(new_tree.pos.x - 95, new_tree.pos.y - 20),
         anchor(new_tree.anchor),
-        z(z_ui_top),
+        z(Z_UI_TOP),
      ])
     //adding a new bee button
      const new_bee = add([
@@ -160,7 +160,7 @@ scene("game", () => {
         scale(0.9),
         anchor(new_tree.anchor),
         area(),
-        z(z_ui),
+        z(Z_UI),
         "ui",
         "button",
         "new_button",
@@ -175,7 +175,7 @@ scene("game", () => {
         },
         pos(new_bee.pos.x - 95, new_bee.pos.y - 20),
         anchor(new_bee.anchor),
-        z(z_ui_top),
+        z(Z_UI_TOP),
      ])
 
     //ADDING OBJECTS
@@ -186,7 +186,7 @@ scene("game", () => {
         scale(0.3),
         anchor("center"),
         area(),
-        z(z_pp),
+        z(Z_PP),
         "tree",
         "clickable",
         "start_tree",
@@ -222,18 +222,34 @@ scene("game", () => {
     
     //Animations
         //bee moving
-        /*loop(rand(1,20), () => {
-            console.log("activated");
+        //get("bee").forEach(bee => {
+            /*console.log(bee);
+            bee.onStateEnter("idle", async () => {
+                await wait(rand(0,10))
+                bee.enterState("move")
+            })
+            bee.onStateEnter("move", async () => {
+                await wait(3) //instead of this I need to change to when colliding with a tree
+                bee.enterState("idle")
+            })
+            bee.onStateUpdate("move", () => {
+                let target = choose(get("tree"));
+                console.log(target);
+                const dir = target.pos.sub(bee.pos).unit();
+                bee.move(dir.scale(rand(100-200)));
+            })
+            bee.onStateUpdate("idle", () => {
+                bee.move(100, 100);
+            })*/
+        //})
+        loop(rand(3,20), () => {
             get("bee").forEach(bee => {
                 wait(rand(0,5), () => {
-                    console.log("activated v2")
                     let target = choose(get("tree"));
-                    onUpdate(bee, (bee) => {
-                        bee.move(target.pos.x, target.pos.y);
-                    })
+                    bee.moveTo(target.pos.x, target.pos.y);
                 })
             });
-        })*/
+        })
             
     
     //UI elements
@@ -294,7 +310,25 @@ scene("game", () => {
             scale(0.2),
             anchor('center'),
             area(),
-            z(z_pp),
+            z(Z_PP),
+            /*state("move", [ "idle", "move" ]),
+            this.onStateEnter("idle", async () => {
+                await wait(rand(0,10))
+                this.enterState("move")
+            }),
+            this.onStateEnter("move", async () => {
+                await wait(3) //instead of this I need to change to when colliding with a tree
+                this.enterState("idle")
+            }),
+            this.onStateUpdate("move", () => {
+                let target = choose(get("tree"));
+                console.log(target);
+                const dir = target.pos.sub(this.pos).unit();
+                this.move(dir.scale(rand(100-200)));
+            }),
+            this.onStateUpdate("idle", () => {
+                this.move(100, 100);
+            }),*/
             "bee",
         ])
             pay(pr_new_bee);
@@ -354,20 +388,20 @@ go('game');
 //GENERAL FUNCTIONS
     //Zoom out
     function zoomOut(t){
-        t.width  = t.width   * click_jump;
-        t.height = t.height  * click_jump;            
+        t.width  = t.width   * CLICK_JUMP;
+        t.height = t.height  * CLICK_JUMP;            
         wait(0.1, () => {
-            t.width  = t.width  / click_jump;
-            t.height = t.height / click_jump;
+            t.width  = t.width  / CLICK_JUMP;
+            t.height = t.height / CLICK_JUMP;
         })
     }
     //Zoom in
    function zoomIn(t){
-        t.width  = t.width   / click_jump;
-        t.height = t.height  / click_jump;            
+        t.width  = t.width   / CLICK_JUMP;
+        t.height = t.height  / CLICK_JUMP;            
         wait(0.1, () => {
-            t.width  = t.width  * click_jump;
-            t.height = t.height * click_jump;
+            t.width  = t.width  * CLICK_JUMP;
+            t.height = t.height * CLICK_JUMP;
         })
     }
     //Warning in red
