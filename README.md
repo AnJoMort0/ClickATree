@@ -17,7 +17,7 @@ Click a Tree is not your average clicker game – it's your own digital forest! 
 
 ## Credits 🌟
 
-- 🧩 Concept & Development: Sophie Wart & André "AnJoMorto" Fonseca (with the help of [ChatGPT](https://chat.openai.com/))
+- 🧩 Concept & Development: Sophie Wart & André "AnJoMorto" Fonseca
 - 🎨 Visual Design: Sophie Wart & André "AnJoMorto" Fonseca (with the help of [Designer](https://www.bing.com/images/create))
 - 🎼 Melodic Magic: TBD
 
