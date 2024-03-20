@@ -62,8 +62,6 @@ scene("game", () => {
     let cash            = 0;
     let score           = 0;
     let cash_per_sec    = 0;
-    let nb_trees        = 0;
-    let nb_bees         = 0;
     //prices
         let scaling     = 1.4;
         let pr_new_tree = 20;
@@ -190,7 +188,6 @@ scene("game", () => {
         "tree",
         "clickable",
         "start_tree",
-        nb_trees++,
         cps(cps_tree),
     ]);
 
@@ -300,7 +297,6 @@ scene("game", () => {
             //exp(pr_new_tree); //PK çA MARCHE PAS??????
             pr_new_tree = pr_new_tree * scaling;
             cps(cps_tree);
-            nb_trees++;
        }
        //Add a new bee
        function addBee(){
@@ -335,7 +331,6 @@ scene("game", () => {
             //change with function
             pr_new_bee = pr_new_bee * scaling;
             cps(cps_bee);
-            nb_bees++;
        }
 
        //General Functions
