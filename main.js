@@ -14,23 +14,25 @@ kaboom({
 })
 
 //static values
+const W = width();
+const H = height();
 const SPRITE_PIXEL_SIZE = 25;
 setGravity(800);
 const CLICK_JUMP        = 1.05;
 //z values:
-    const Z_TOP_TREE = 300;
-    const Z_UI       = 500;
+    const Z_TOP_TREE = 300; //changed to be based on height
+    const Z_UI       = H    + 100;
     const Z_UI_TOP   = Z_UI + 1;
 //areas
     //buttons on the right side
-        const X_BUTTONS         = width() - 10;
+        const X_BUTTONS         = W - 10;
         const Y_FIRST_BUTTON    = 65;
     //area to spawn trees
-        const X_FIRST_TREE  = width()/2;
-        const Y_FIRST_TREE  = height()/2 * 0.75;
+        const X_FIRST_TREE  = W/2;
+        const Y_FIRST_TREE  = H/2 * 0.75;
         const X_1_TREES     = 0;
         const X_2_TREES     = X_BUTTONS - 10;
-        const Y_1_TREES     = height()/3;
+        const Y_1_TREES     = H/3;
         const Y_2_TREES     = Y_FIRST_TREE - 1;
 
 //load assets
@@ -38,6 +40,31 @@ loadRoot('assets/');
 
 //load images
     //game elements
+        //background
+        loadSprite("bg","game_elements/background/backgrounds_spritesheet.png"),{
+            sliceX: 4,
+            sliceY: 3,
+            anims :{
+                main :{
+                    from    : 0,
+                    to      : 3,
+                    speed   : 1,
+                    loop    : true,
+                },
+                sky :{
+                    from    : 4,
+                    to      : 4,
+                    speed   : 0,
+                    loop    : false,
+                },
+                water :{
+                    from    : 8,
+                    to      : 11,
+                    speed   : 0,
+                    loop    : true,
+                },
+            },
+        };
         //trees
         loadSprite('tree0',"game_elements/trees/tree0.png");
         loadSprite('tree1',"game_elements/trees/tree1.png");
@@ -95,7 +122,7 @@ scene("game", () => {
      ]);
     const text_cash = add([
         text(Math.floor(cash),{
-           width : width(),
+           width : W,
         }),
         pos(icon_cash.pos.x + 60, icon_cash.pos.y),
         anchor(icon_cash.anchor),
@@ -111,7 +138,7 @@ scene("game", () => {
      const text_cash_per_sec = add([
         text(`${Math.round(cash_per_sec * 10) / 10}/s`,{
             size    : 24,
-            width   : width(),
+            width   : W,
         }),
         pos(text_cash.pos.x, text_cash.pos.y + 35),
         anchor(text_cash.anchor),
@@ -127,9 +154,9 @@ scene("game", () => {
     //score
     const text_score = add([
         text(`Score : ${Math.floor(score)}`,{
-           width : width(),
+           width : W,
         }),
-        pos(15, height() - 30),
+        pos(15, H - 30),
         anchor("left"),
         z(Z_UI),
         {
@@ -140,11 +167,19 @@ scene("game", () => {
        "ui"
     ]);
 
+    //BACKGROUND
+     //adding the background dynamically to the screen size
+     const bg = add([
+        sprite("bg"),
+        pos(0, 0),
+     ]);
+     bg.play("main");
+
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
      const new_tree = add([
         sprite('new_tree'),
-        pos(width() - 10, 75),
+        pos(W - 10, 75),
         scale(1),
         anchor("right"),
         area(),
@@ -194,11 +229,11 @@ scene("game", () => {
         //adding starting tree
         const start_tree = add([
         sprite(`tree0`),
-        pos(vec2(width()/2, height()/2)),
+        pos(vec2(W/2, H/2)),
         scale(0.5),
         anchor("center"),
         area(),
-        z(Z_TOP_TREE),
+        z(this.pos.y),
         "tree",
         "clickable",
         "start_tree",
@@ -216,7 +251,7 @@ scene("game", () => {
                     pos(mousePos()),
                     sprite(choose(leafs)),
                     anchor("center"),
-                    scale(rand(0.008, 0.02)),
+                    scale(rand(0.8, 0.2)),
                     area({ collisionIgnore:["leaf_particle"]}),
                     body(),
                     lifespan(0.7, {fade: 0.3}),
@@ -300,7 +335,7 @@ scene("game", () => {
        function addTree() {
          const tree = add([
              sprite(choose(trees)),
-             pos(rand(0, width()), rand(height()/3, height()-100)),
+             pos(rand(0, W), rand(H/3, H-100)),
              scale(rand(0.1, 0.23)),
              anchor("center"),
              area(),
@@ -316,7 +351,7 @@ scene("game", () => {
        function addBee(){
         const bee = add([
             sprite('bee'),
-            pos(rand(0, width()), rand(0, height())),
+            pos(rand(0, W), rand(0, H)),
             scale(0.2),
             anchor('center'),
             area(),
