@@ -1,6 +1,7 @@
 //IDEAS TO ADD
     //Hide HUD button
-    //Timed game mode for the Mystères de l'Unil specifically (with cashboard?)
+    //Timed game mode for the Mystères de l'Unil specifically
+    //Tree burns when auto-clicker
 
 //===================================================================//
 //===================================================================//
@@ -13,12 +14,24 @@ kaboom({
 })
 
 //static values
+const SPRITE_PIXEL_SIZE = 25;
 setGravity(800);
-const CLICK_JUMP    = 1.05;
+const CLICK_JUMP        = 1.05;
 //z values:
-    const Z_UI      = 10;
-    const Z_UI_TOP  = 11;
-    const Z_PP      = 9;
+    const Z_TOP_TREE = 300;
+    const Z_UI       = 500;
+    const Z_UI_TOP   = Z_UI + 1;
+//areas
+    //buttons on the right side
+        const X_BUTTONS         = width() - 10;
+        const Y_FIRST_BUTTON    = 65;
+    //area to spawn trees
+        const X_FIRST_TREE  = width()/2;
+        const Y_FIRST_TREE  = height()/2 * 0.75;
+        const X_1_TREES     = 0;
+        const X_2_TREES     = X_BUTTONS - 10;
+        const Y_1_TREES     = height()/3;
+        const Y_2_TREES     = Y_FIRST_TREE - 1;
 
 //load assets
 loadRoot('assets/');
@@ -70,7 +83,7 @@ scene("game", () => {
         let cps_tree    = 0.1;
         let cps_bee     = 1;
 
-    //ADDING UI
+    //UI
     //cash
     const icon_cash = add([
         sprite('leaf0'),
@@ -127,6 +140,7 @@ scene("game", () => {
        "ui"
     ]);
 
+    //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
      const new_tree = add([
         sprite('new_tree'),
@@ -181,10 +195,10 @@ scene("game", () => {
         const start_tree = add([
         sprite(`tree0`),
         pos(vec2(width()/2, height()/2)),
-        scale(0.3),
+        scale(0.5),
         anchor("center"),
         area(),
-        z(Z_PP),
+        z(Z_TOP_TREE),
         "tree",
         "clickable",
         "start_tree",
@@ -194,7 +208,7 @@ scene("game", () => {
     //ADDING EVENT LISTENERS
     //Game elements
         //click the starting tree
-        onClick("start_tree", (t) => { 
+        onClick("tree", (t) => { 
             plus(1);
             //particles when clicked
             for (let i = 0; i < rand(1,3); i++) {
@@ -306,7 +320,7 @@ scene("game", () => {
             scale(0.2),
             anchor('center'),
             area(),
-            z(Z_PP),
+            z(Z_TOP_TREE),
             /*state("move", [ "idle", "move" ]),
             this.onStateEnter("idle", async () => {
                 await wait(rand(0,10))
