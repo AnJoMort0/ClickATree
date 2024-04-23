@@ -123,7 +123,7 @@ scene("game", () => {
         "ui",
      ]);
     const text_cash = add([
-        text(Math.floor(cash),{
+        text(formatNumber(cash, {useOrderSuffix: true, decimals: 1}),{
            width : W,
         }),
         pos(icon_cash.pos.x + 60, icon_cash.pos.y),
@@ -131,14 +131,14 @@ scene("game", () => {
         z(Z_UI),
         {
            update(){
-              this.text = Math.floor(cash);
+              this.text = formatNumber(cash, {useOrderSuffix: true, decimals: 1});
            }
         },
         "ui"
      ]);
     //cash/second
      const text_cash_per_sec = add([
-        text(`${Math.round(cash_per_sec * 10) / 10}/s`,{
+        text(formatNumber(cash_per_sec, {useOrderSuffix: true, decimals: 1}) + "/s",{
             size    : 24,
             width   : W,
         }),
@@ -147,7 +147,7 @@ scene("game", () => {
         z(Z_UI),
         {
             update(){
-                this.text = `${Math.round(cash_per_sec * 10) / 10}/s`;
+                this.text = formatNumber(cash_per_sec, {useOrderSuffix: true, decimals: 1}) + "/s";
             }
         },
         "ui",
@@ -192,10 +192,10 @@ scene("game", () => {
         "new_tree",
      ])
      const text_new_tree_price = add([
-        text(Math.floor(pr_new_tree)),
+        text(formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1})),
         {
             update(){
-            this.text = Math.floor(pr_new_tree);
+            this.text = formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1});
             }
         },
         pos(new_tree.pos.x - 95, new_tree.pos.y - 20),
@@ -203,10 +203,10 @@ scene("game", () => {
         z(Z_UI_TOP),
      ])
      const text_nb_trees = add([
-        text(Math.floor(nb_trees)),
+        text(formatNumber(nb_trees, {useOrderSuffix: true})),
         {
             update(){
-            this.text = Math.floor(nb_trees);
+            this.text = formatNumber(nb_trees, {useOrderSuffix: true});
             }
         },
         pos(new_tree.pos.x - 150, new_tree.pos.y + 30),
@@ -227,10 +227,10 @@ scene("game", () => {
         "new_bee",
      ])
      const text_new_bee_price = add([
-        text(Math.floor(pr_new_bee)),
+        text(formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1})),
         {
             update(){
-            this.text = Math.floor(pr_new_bee);
+            this.text = formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1});
             }
         },
         pos(new_bee.pos.x - 95, new_bee.pos.y - 20),
@@ -238,10 +238,10 @@ scene("game", () => {
         z(Z_UI_TOP),
      ])
      const text_nb_bees = add([
-        text(Math.floor(nb_bees)),
+        text(formatNumber(nb_bees, {useOrderSuffix: true})),
         {
             update(){
-            this.text = Math.floor(nb_bees);
+            this.text = formatNumber(nb_bees, {useOrderSuffix: true});
             }
         },
         pos(new_bee.pos.x - 150, new_bee.pos.y + 30),
@@ -277,10 +277,10 @@ scene("game", () => {
                     z(t.pos.y),
                     sprite(choose(leafs)),
                     anchor("center"),
-                    scale(rand(1, 0.5)),
+                    scale(rand(0.8, 0.4)),
                     area({ collisionIgnore:["leaf_particle"]}),
                     body(),
-                    lifespan(0.7, {fade: 0.3}),
+                    lifespan(0.5, {fade: 0.2}),
                     opacity(1),
                     move(choose([LEFT, RIGHT]), rand(30, 150)),
                     rotate(rand(0, 360)),
@@ -460,6 +460,9 @@ scene("game", () => {
         //Money Cheat
         onKeyDown("0" ,() => {
             cash = cash + 9999999999;
+        })
+        onKeyRelease("'" , () => {
+            cash = cash + 99;
         })
 })
 
