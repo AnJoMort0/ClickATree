@@ -3,6 +3,10 @@
     //Timed game mode for the Mystères de l'Unil specifically
     //Tree burns when auto-clicker
 
+//KNOWN BUGS
+    // When multiple trees overlap, the player gets multiple points in a single click
+        //* Fixed it by calling it a feature
+
 //===================================================================//
 //===================================================================//
 
@@ -20,20 +24,15 @@ const SPRITE_PIXEL_SIZE = 25;
 setGravity(800);
 const CLICK_JUMP        = 1.05;
 //z values:
-    const Z_TOP_TREE = 300; //changed to be based on height
+    //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI       = H    + 100;
     const Z_UI_TOP   = Z_UI + 1;
 //areas
     //buttons on the right side
         const X_BUTTONS         = W - 10;
         const Y_FIRST_BUTTON    = 65;
-    //area to spawn trees
-        const X_FIRST_TREE  = W/2;
-        const Y_FIRST_TREE  = H/2 * 0.75;
-        const X_1_TREES     = 0;
-        const X_2_TREES     = X_BUTTONS - 10;
-        const Y_1_TREES     = H/3;
-        const Y_2_TREES     = Y_FIRST_TREE - 1;
+    //relative scale of trees to screen height
+        const TREE_SCALE    = 1000;
 
 //load assets
 loadRoot('assets/');
@@ -173,7 +172,7 @@ scene("game", () => {
         sprite("bg"),
         pos(0, 0),
      ]);
-     bg.play("main");
+     //bg.play("main");
 
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
@@ -227,13 +226,14 @@ scene("game", () => {
 
     //ADDING OBJECTS
         //adding starting tree
+        let y_st = H/2
         const start_tree = add([
         sprite(`tree0`),
-        pos(vec2(W/2, H/2)),
-        scale(0.5),
+        pos(vec2(W/2,y_st)),
+        scale(y_st / TREE_SCALE),
         anchor("center"),
         area(),
-        z(this.pos.y),
+        z(y_st),
         "tree",
         "clickable",
         "start_tree",
@@ -249,9 +249,10 @@ scene("game", () => {
             for (let i = 0; i < rand(1,3); i++) {
                 const leaf_particle = add([
                     pos(mousePos()),
+                    z(t.pos.y),
                     sprite(choose(leafs)),
                     anchor("center"),
-                    scale(rand(0.8, 0.2)),
+                    scale(rand(1, 0.5)),
                     area({ collisionIgnore:["leaf_particle"]}),
                     body(),
                     lifespan(0.7, {fade: 0.3}),
@@ -333,13 +334,24 @@ scene("game", () => {
     //FUNCTIONS
         //Add a new tree
        function addTree() {
-         const tree = add([
+         let ranA = H/5;
+         let ranB = H;
+         if(H < 1080){
+            ranB = H - 10;
+         } else {
+            ranB = H/2 + 200;
+         };
+         const randX  = rand(0, X_BUTTONS);
+         const randY = rand(ranA, ranB);
+         const x = 0.5; //need to make it dynamic
+         //const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
+         const tree  = add([
              sprite(choose(trees)),
-             pos(rand(0, W), rand(H/3, H-100)),
-             scale(rand(0.1, 0.23)),
+             pos(randX, randY),
+             scale(randY / TREE_SCALE),
              anchor("center"),
              area(),
-             z(1),
+             z(randY),
              "tree",
           ])
             pay(pr_new_tree);
@@ -355,7 +367,7 @@ scene("game", () => {
             scale(0.2),
             anchor('center'),
             area(),
-            z(Z_TOP_TREE),
+            z(this.pos.y),
             /*state("move", [ "idle", "move" ]),
             this.onStateEnter("idle", async () => {
                 await wait(rand(0,10))
@@ -455,4 +467,95 @@ go('game');
         wait(0.5, () =>{
             t.color = '';
         })
+    }
+
+    //NEED TO TEST IT AND ADD REF TO READ.ME: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148 (answered Jul 4, 2019 at 20:48 by MarredCheese)
+    /*
+    * Return the given number as a formatted string.  The default format is a plain
+    * integer with thousands-separator commas.  The optional parameters facilitate
+    * other formats:
+    *   - decimals = the number of decimals places to round to and show
+    *   - valueIfNaN = the value to show for non-numeric input
+    *   - style
+    *     - '%': multiplies by 100 and appends a percent symbol
+    *     - '$': prepends a dollar sign
+    *   - useOrderSuffix = whether to use suffixes like k for 1,000, etc.
+    *   - orderSuffixes = the list of suffixes to use
+    *   - minOrder and maxOrder allow the order to be constrained.  Examples:
+    *     - minOrder = 1 means the k suffix should be used for numbers < 1,000
+    *     - maxOrder = 1 means the k suffix should be used for numbers >= 1,000,000
+    * 
+    * Features
+        Option to use order suffixes (k, M, etc.)
+        Option to specify a custom list of order suffixes to use
+        Option to constrain the min and max order
+        Control over the number of decimal places
+        Automatic order-separating commas
+        Optional percent or dollar formatting
+        Control over what to return in the case of non-numeric input
+        Works on negative and infinite numbers
+
+    * Example:
+        let x = 1234567.8;
+        formatNumber(x);  // '1,234,568'
+        formatNumber(x, {useOrderSuffix: true});  // '1M'
+        formatNumber(x, {useOrderSuffix: true, decimals: 3, maxOrder: 1});  // '1,234.568k'
+        formatNumber(x, {decimals: 2, style: '$'});  // '$1,234,567.80'
+
+        x = 10.615;
+        formatNumber(x, {style: '%'});  // '1,062%'
+        formatNumber(x, {useOrderSuffix: true, decimals: 1, style: '%'});  // '1.1k%'
+        formatNumber(x, {useOrderSuffix: true, decimals: 5, style: '%', minOrder: 2});  // '0.00106M%'
+
+        formatNumber(-Infinity);  // '-∞'
+        formatNumber(NaN);  // ''
+        formatNumber(NaN, {valueIfNaN: NaN});  // NaN
+    */
+    function formatNumber(number, {
+        decimals = 0,
+        valueIfNaN = '',
+        style = '',
+        useOrderSuffix = false,
+        orderSuffixes = ['', 'k', 'M', 'B', 'T'],
+        minOrder = 0,
+        maxOrder = Infinity
+    } = {}) {
+
+    let x = parseFloat(number);
+
+    if (isNaN(x))
+        return valueIfNaN;
+
+    if (style === '%')
+        x *= 100.0;
+
+    let order;
+    if (!isFinite(x) || !useOrderSuffix)
+        order = 0;
+    else if (minOrder === maxOrder)
+        order = minOrder;
+    else {
+        const unboundedOrder = Math.floor(Math.log10(Math.abs(x)) / 3);
+        order = Math.max(
+        0,
+        minOrder,
+        Math.min(unboundedOrder, maxOrder, orderSuffixes.length - 1)
+        );
+    }
+
+    const orderSuffix = orderSuffixes[order];
+    if (order !== 0)
+        x /= Math.pow(10, order * 3);
+
+    return (style === '$' ? '$' : '') +
+        x.toLocaleString(
+        'en-US',
+        {
+            style: 'decimal',
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        }
+        ) +
+        orderSuffix +
+        (style === '%' ? '%' : '');
     }
