@@ -108,6 +108,9 @@ scene("game", () => {
     //cash/second
         let cps_tree    = 0.1;
         let cps_bee     = 1;
+    //number of elements
+        let nb_trees    = 1;
+        let nb_bees     = 0;
 
     //UI
     //cash
@@ -179,7 +182,7 @@ scene("game", () => {
      const new_tree = add([
         sprite('new_tree'),
         pos(W - 10, 75),
-        scale(1),
+        scale(0.3),
         anchor("right"),
         area(),
         z(Z_UI),
@@ -199,11 +202,22 @@ scene("game", () => {
         anchor(new_tree.anchor),
         z(Z_UI_TOP),
      ])
+     const text_nb_trees = add([
+        text(Math.floor(nb_trees)),
+        {
+            update(){
+            this.text = Math.floor(nb_trees);
+            }
+        },
+        pos(new_tree.pos.x - 150, new_tree.pos.y + 30),
+        anchor(new_tree.anchor),
+        z(Z_UI_TOP),
+     ])
     //adding a new bee button
      const new_bee = add([
         sprite('new_bee'),
         pos(new_tree.pos.x, new_tree.pos.y + 130),
-        scale(0.9),
+        scale(0.3),
         anchor(new_tree.anchor),
         area(),
         z(Z_UI),
@@ -220,6 +234,17 @@ scene("game", () => {
             }
         },
         pos(new_bee.pos.x - 95, new_bee.pos.y - 20),
+        anchor(new_bee.anchor),
+        z(Z_UI_TOP),
+     ])
+     const text_nb_bees = add([
+        text(Math.floor(nb_bees)),
+        {
+            update(){
+            this.text = Math.floor(nb_bees);
+            }
+        },
+        pos(new_bee.pos.x - 150, new_bee.pos.y + 30),
         anchor(new_bee.anchor),
         z(Z_UI_TOP),
      ])
@@ -355,6 +380,7 @@ scene("game", () => {
              "tree",
           ])
             pay(pr_new_tree);
+            nb_trees     = nb_trees + 1;
             //exp(pr_new_tree); //PK çA MARCHE PAS??????
             pr_new_tree = pr_new_tree * scaling;
             cps(cps_tree);
@@ -389,8 +415,10 @@ scene("game", () => {
             "bee",
         ])
             pay(pr_new_bee);
+            nb_bees     = nb_bees + 1;
+            console.log(nb_bees);
             //change with function
-            pr_new_bee = pr_new_bee * scaling;
+            pr_new_bee  = pr_new_bee * scaling;
             cps(cps_bee);
        }
 
