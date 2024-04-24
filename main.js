@@ -224,6 +224,32 @@ scene("game", () => {
         }
      }
 
+    let time = 10;
+    const text_time = add([
+        text(`Time : ${time}`,{
+           width : width(),
+        }),
+        //position right next to Score
+        pos(300, height() - 30),
+        anchor("left"),
+        z(Z_UI),
+        {
+           update(){
+            //minus 1 second 
+            time -= dt();
+            if(time <= 0){
+                //if time reaches 0 or less, set time to 0
+                time = 0;
+                //takes you to game over screen :)
+                go("pauseMenu");
+                //gameOver();
+            }
+              this.text = `Time : ${Math.floor(time)} seconds left`;
+           }
+        },
+       "ui"
+    ]);
+
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
      const new_tree = add([
@@ -513,9 +539,15 @@ scene("game", () => {
 })
 
 scene("pauseMenu", () => {
-
+    add([
+		text("you lose!"),
+		pos(width() / 2, height() / 2 + 108),
+		scale(1),
+		anchor("center"),
+	])
+    onKeyPress("space", () => go("game"))
+	onClick(() => go("game"))
 })
-
 go('game');
 
 //GENERAL FUNCTIONS
