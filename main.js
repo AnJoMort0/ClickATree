@@ -20,13 +20,15 @@ kaboom({
 //static values
 const W = width();
 const H = height();
+setGravity(800);
+const CLICK_JUMP            = 1.05;
 const SPRITE_PIXEL_SIZE     = 25;
 const SPRITE_BG_PIXEL_SIZE  = 250;
 const SPRITE_BG_SCALE       = 3;
-const BG_Y                  = (H/2)-SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE/2 - 30;
-const NB_BG_X_TILES         = Math.floor(W/(SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE)) + 1;
-setGravity(800);
-const CLICK_JUMP        = 1.05;
+const BG_TILE_SIZE          = SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE;
+const BG_Y                  = (H/2)-BG_TILE_SIZE/2 - 30;
+const NB_BG_X_TILES         = Math.floor(W/(BG_TILE_SIZE)) + 1;
+const NB_BG_Y_TILES         = Math.floor(H/(BG_TILE_SIZE)) + 1;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI       = H    + 100;
@@ -55,7 +57,7 @@ loadRoot('assets/');
                     n: { from: 0, to: 3, speed: 1, loop: true },
                 },
             },
-            "water": {
+            "water_bg": {
                 x: 0,
                 y: 500,
                 width: 1000,
@@ -65,7 +67,7 @@ loadRoot('assets/');
                     n: { from: 0, to: 3, speed: 1, loop: true },
                 },
             },
-            "sky": {
+            "sky_bg": {
                 x: 0,
                 y: 250,
                 width: 250,
@@ -191,11 +193,35 @@ scene("game", () => {
      for (let i = 0; i < NB_BG_X_TILES; i++) {
         const bg = add([
             sprite("main_bg"),
-            pos((SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE) * i, BG_Y),
+            pos((BG_TILE_SIZE) * i, BG_Y),
             scale(SPRITE_BG_SCALE),
             "bg",
          ]);
          bg.play("n");
+     }
+     if (H > BG_TILE_SIZE) {
+        for (let j = 1; j <= NB_BG_Y_TILES; j++) {
+            for (let i = 0; i < NB_BG_X_TILES; i++) {
+                const bg = add([
+                    sprite("sky_bg"),
+                    pos((BG_TILE_SIZE) * i, BG_Y - ((BG_TILE_SIZE)*j)),
+                    scale(SPRITE_BG_SCALE),
+                    "bg",
+                 ]);
+                 bg.play("n");
+             }
+        }
+        for (let j = 1; j <= NB_BG_Y_TILES; j++) {
+            for (let i = 0; i < NB_BG_X_TILES; i++) {
+                const bg = add([
+                    sprite("water_bg"),
+                    pos((BG_TILE_SIZE) * i, BG_Y + ((BG_TILE_SIZE)*j)),
+                    scale(SPRITE_BG_SCALE),
+                    "bg",
+                 ]);
+                 bg.play("n");
+             }
+        }
      }
 
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
