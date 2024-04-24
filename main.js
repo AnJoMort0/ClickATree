@@ -38,7 +38,7 @@ const NB_BG_Y_TILES         = Math.floor(H/(BG_TILE_SIZE)) + 1;
         const X_BUTTONS         = W - 10;
         const Y_FIRST_BUTTON    = 65;
     //relative scale of trees to screen height
-        const TREE_SCALE    = 1000;
+        const TREE_SCALE    = 1500;
 
 //load assets
 loadRoot('assets/');
