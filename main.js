@@ -121,7 +121,7 @@ scene("game", () => {
     const icon_cash = add([
         sprite('leaf0'),
         pos(10, 50),
-        scale(0.03),
+        scale(1.4),
         anchor('left'),
         z(Z_UI),
         "ui",
@@ -130,7 +130,7 @@ scene("game", () => {
         text(formatNumber(cash, {useOrderSuffix: true, decimals: 1}),{
            width : W,
         }),
-        pos(icon_cash.pos.x + 60, icon_cash.pos.y),
+        pos(icon_cash.pos.x + 50, icon_cash.pos.y),
         anchor(icon_cash.anchor),
         z(Z_UI),
         {
