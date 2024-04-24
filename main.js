@@ -437,10 +437,10 @@ scene("game", () => {
     //FUNCTIONS
         //Add a new tree
        function addTree() {
-         let ranA = H/5;
-         let ranB = H;
-         if(H < 1080){
-            ranB = H - 10;
+         let ranA = H/2 - 60;
+         let ranB = 0;
+         if(H < BG_TILE_SIZE){
+            ranB = H - 120;
          } else {
             ranB = H/2 + 200;
          };
