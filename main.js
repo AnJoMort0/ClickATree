@@ -103,12 +103,16 @@ scene("game", () => {
     let cash_per_sec    = 0;
     //prices
         let scaling     = 1.4;
+        let pr_txt_x    = -95;
+        let pr_txt_y    = -20;
         let pr_new_tree = 20;
         let pr_new_bee  = 100;
     //cash/second
         let cps_tree    = 0.1;
         let cps_bee     = 1;
     //number of elements
+        let nb_txt_x    = -150;
+        let nb_txt_y    = 30;
         let nb_trees    = 1;
         let nb_bees     = 0;
 
@@ -174,6 +178,7 @@ scene("game", () => {
      const bg = add([
         sprite("bg"),
         pos(0, 0),
+        z(0),
      ]);
      //bg.play("main");
 
@@ -198,7 +203,7 @@ scene("game", () => {
             this.text = formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1});
             }
         },
-        pos(new_tree.pos.x - 95, new_tree.pos.y - 20),
+        pos(new_tree.pos.x + pr_txt_x, new_tree.pos.y + pr_txt_y),
         anchor(new_tree.anchor),
         z(Z_UI_TOP),
      ])
@@ -209,7 +214,7 @@ scene("game", () => {
             this.text = formatNumber(nb_trees, {useOrderSuffix: true});
             }
         },
-        pos(new_tree.pos.x - 150, new_tree.pos.y + 30),
+        pos(new_tree.pos.x + nb_txt_x, new_tree.pos.y + nb_txt_y),
         anchor(new_tree.anchor),
         z(Z_UI_TOP),
      ])
@@ -233,7 +238,7 @@ scene("game", () => {
             this.text = formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1});
             }
         },
-        pos(new_bee.pos.x - 95, new_bee.pos.y - 20),
+        pos(new_bee.pos.x + pr_txt_x, new_bee.pos.y + pr_txt_y),
         anchor(new_bee.anchor),
         z(Z_UI_TOP),
      ])
@@ -244,7 +249,7 @@ scene("game", () => {
             this.text = formatNumber(nb_bees, {useOrderSuffix: true});
             }
         },
-        pos(new_bee.pos.x - 150, new_bee.pos.y + 30),
+        pos(new_bee.pos.x + nb_txt_x, new_bee.pos.y + nb_txt_y),
         anchor(new_bee.anchor),
         z(Z_UI_TOP),
      ])
