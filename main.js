@@ -23,6 +23,8 @@ const H = height();
 const SPRITE_PIXEL_SIZE     = 25;
 const SPRITE_BG_PIXEL_SIZE  = 250;
 const SPRITE_BG_SCALE       = 3;
+const BG_Y                  = (H/2)-SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE/2 - 30;
+const NB_BG_X_TILES         = Math.floor(W/(SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE)) + 1;
 setGravity(800);
 const CLICK_JUMP        = 1.05;
 //z values:
@@ -184,14 +186,12 @@ scene("game", () => {
        "ui"
     ]);
 
-    console.log(Math.floor(W/(SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE)) + 1);
-
     //BACKGROUND
      //adding the background dynamically to the screen size
-     for (let i = 0; i < Math.floor(W/(SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE)) + 1; i++) {
+     for (let i = 0; i < NB_BG_X_TILES; i++) {
         const bg = add([
             sprite("main_bg"),
-            pos((SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE) * i, -H/6),
+            pos((SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE) * i, BG_Y),
             scale(SPRITE_BG_SCALE),
             "bg",
          ]);
@@ -437,7 +437,6 @@ scene("game", () => {
         ])
             pay(pr_new_bee);
             nb_bees     = nb_bees + 1;
-            console.log(nb_bees);
             //change with function
             pr_new_bee  = pr_new_bee * scaling;
             cps(cps_bee);
@@ -601,7 +600,7 @@ go('game');
 
     return (style === '$' ? '$' : '') +
         x.toLocaleString(
-        'en-US',
+        'fr-CH',    //need to change that if multiple languages selection
         {
             style: 'decimal',
             minimumFractionDigits: decimals,
