@@ -41,6 +41,7 @@ const NB_BG_Y_TILES         = Math.floor(H/(BG_TILE_SIZE)) + 1;
     //buttons on the right side
         const X_BUTTONS         = W - 10;
         const Y_FIRST_BUTTON    = 65;
+        const SCALE_BUTTON      = 0.3;
     //relative scale of trees to screen height
         const TREE_SCALE    = 1500;
 
@@ -259,7 +260,7 @@ scene("game", () => {
      const new_tree = add([
         sprite('new_tree'),
         pos(W - 10, 75),
-        scale(0.3),
+        scale(SCALE_BUTTON),
         anchor("right"),
         area(),
         z(Z_UI),
@@ -294,7 +295,7 @@ scene("game", () => {
      const new_bee = add([
         sprite('new_bee'),
         pos(new_tree.pos.x, new_tree.pos.y + new_bt_dist),
-        scale(0.3),
+        scale(SCALE_BUTTON),
         anchor(new_tree.anchor),
         area(),
         z(Z_UI),
@@ -467,7 +468,7 @@ scene("game", () => {
         const bee = add([
             sprite('bee'),
             pos(rand(0, W), rand(0, H)),
-            scale(0.2),
+            scale(1),
             anchor('center'),
             area(),
             z(this.pos.y),
@@ -552,6 +553,7 @@ scene("pauseMenu", () => {
     onKeyPress("space", () => go("game"))
 	onClick(() => go("game"))
 })
+
 go('game');
 
 //GENERAL FUNCTIONS
