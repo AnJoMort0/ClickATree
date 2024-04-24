@@ -43,7 +43,7 @@ const NB_BG_Y_TILES         = Math.floor(H/(BG_TILE_SIZE)) + 1;
         const Y_FIRST_BUTTON    = 65;
         const SCALE_BUTTON      = 0.3;
     //relative scale of trees to screen height
-        const TREE_SCALE    = 1500;
+        const TREE_SCALE    = 1/1500;
 
 //load assets
 loadRoot('assets/');
@@ -333,7 +333,7 @@ scene("game", () => {
         const start_tree = add([
         sprite(`tree0`),
         pos(vec2(W/2,y_st)),
-        scale(y_st / TREE_SCALE),
+        scale(y_st * TREE_SCALE),
         anchor("center"),
         area(),
         z(y_st),
@@ -445,13 +445,12 @@ scene("game", () => {
             ranB = H/2 + 200;
          };
          const randX  = rand(0, X_BUTTONS);
-         const randY = rand(ranA, ranB);
-         const x = 0.5; //need to make it dynamic
+         const randY  = rand(ranA, ranB);
          //const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
          const tree  = add([
              sprite(choose(trees)),
              pos(randX, randY),
-             scale(randY / TREE_SCALE),
+             scale(randY * TREE_SCALE),
              anchor("center"),
              area(),
              z(randY),
