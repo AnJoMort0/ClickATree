@@ -1,6 +1,10 @@
 //IDEAS TO ADD
     //Hide HUD button
     //Timed game mode for the Mystères de l'Unil specifically
+    //Add events
+    //Can have too many elements - need to be careful
+    //Achievements
+    //Darker colors at the beginning -> progress saturation the bigger the forest
     //Tree burns when auto-clicker
 
 //KNOWN BUGS
@@ -115,6 +119,7 @@ scene("game", () => {
     let cash            = 0;
     let score           = 0;
     let cash_per_sec    = 0;
+    let   time          = 300;
     //prices
         let scaling     = 1.4;
         let new_bt_dist = 130;
@@ -187,6 +192,31 @@ scene("game", () => {
         },
        "ui"
     ]);
+    //timer
+    const text_time = add([
+        text(`Time left : ${time}`,{
+           width : width(),
+        }),
+        //position right next to Score
+        pos(text_score.pos.x, text_score.pos.y - 30),
+        anchor("left"),
+        z(Z_UI),
+        {
+           update(){
+            //minus 1 second 
+            time -= dt();
+            if(time <= 0){
+                //if time reaches 0 or less, set time to 0
+                time = 0;
+                //takes you to game over screen :)
+                go("pauseMenu");
+                //gameOver();
+            }
+              this.text = `Time left : ` + fancyTimeFormat(time);
+           }
+        },
+       "ui"
+    ]);
 
     //BACKGROUND
      //adding the background dynamically to the screen size
@@ -223,32 +253,6 @@ scene("game", () => {
              }
         }
      }
-
-    let time = 10;
-    const text_time = add([
-        text(`Time : ${time}`,{
-           width : width(),
-        }),
-        //position right next to Score
-        pos(300, height() - 30),
-        anchor("left"),
-        z(Z_UI),
-        {
-           update(){
-            //minus 1 second 
-            time -= dt();
-            if(time <= 0){
-                //if time reaches 0 or less, set time to 0
-                time = 0;
-                //takes you to game over screen :)
-                go("pauseMenu");
-                //gameOver();
-            }
-              this.text = `Time : ${Math.floor(time)} seconds left`;
-           }
-        },
-       "ui"
-    ]);
 
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
@@ -578,7 +582,7 @@ go('game');
         })
     }
 
-    //NEED TO TEST IT AND ADD REF TO READ.ME: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148 (answered Jul 4, 2019 at 20:48 by MarredCheese)
+    //NEED TO REF IN READ.ME: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148 (answered Jul 4, 2019 at 20:48 by MarredCheese)
     /*
     * Return the given number as a formatted string.  The default format is a plain
     * integer with thousands-separator commas.  The optional parameters facilitate
@@ -668,3 +672,24 @@ go('game');
         orderSuffix +
         (style === '%' ? '%' : '');
     }
+
+    //NEED REF IN READ.ME: https://stackoverflow.com/a/11486026 (answered Jul 14, 2012 at 20:48 by Vishal)
+    function fancyTimeFormat(duration) {
+        // Hours, minutes and seconds
+        const hrs = ~~(duration / 3600);
+        const mins = ~~((duration % 3600) / 60);
+        const secs = ~~duration % 60;
+      
+        // Output like "1:01" or "4:03:59" or "123:03:59"
+        let ret = "";
+      
+        if (hrs > 0) {
+          ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+        }
+      
+        ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+        ret += "" + secs;
+      
+        return ret;
+      }
+      
