@@ -40,7 +40,7 @@ loadRoot('assets/');
 //load images
     //game elements
         //background
-        loadSprite("bg","game_elements/background/backgrounds_spritesheet.png"),{
+        /*loadSprite("bg","game_elements/background/backgrounds_spritesheet.png"),{
             sliceX: 4,
             sliceY: 3,
             anims :{
@@ -63,7 +63,19 @@ loadRoot('assets/');
                     loop    : true,
                 },
             },
-        };
+        };*/
+        loadSpriteAtlas("game_elements/background/backgrounds_spritesheet.png", {
+            "main_bg": {
+                x: 0,
+                y: 0,
+                width: 1000,
+                height: 250,
+                sliceX: 4,
+                anims: {
+                    n: { from: 0, to: 3, speed: 1, loop: true },
+                },
+            },
+        })
         //trees
         loadSprite('tree0',"game_elements/trees/tree0.png");
         loadSprite('tree1',"game_elements/trees/tree1.png");
@@ -176,11 +188,11 @@ scene("game", () => {
     //BACKGROUND
      //adding the background dynamically to the screen size
      const bg = add([
-        sprite("bg"),
-        pos(0, 0),
-        z(0),
+        sprite("main_bg"),
+        pos(0, -H/6),
+        scale(3),
      ]);
-     //bg.play("main");
+     bg.play("n");
 
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
