@@ -20,7 +20,9 @@ kaboom({
 //static values
 const W = width();
 const H = height();
-const SPRITE_PIXEL_SIZE = 25;
+const SPRITE_PIXEL_SIZE     = 25;
+const SPRITE_BG_PIXEL_SIZE  = 250;
+const SPRITE_BG_SCALE       = 3;
 setGravity(800);
 const CLICK_JUMP        = 1.05;
 //z values:
@@ -40,30 +42,6 @@ loadRoot('assets/');
 //load images
     //game elements
         //background
-        /*loadSprite("bg","game_elements/background/backgrounds_spritesheet.png"),{
-            sliceX: 4,
-            sliceY: 3,
-            anims :{
-                main :{
-                    from    : 0,
-                    to      : 3,
-                    speed   : 1,
-                    loop    : true,
-                },
-                sky :{
-                    from    : 4,
-                    to      : 4,
-                    speed   : 0,
-                    loop    : false,
-                },
-                water :{
-                    from    : 8,
-                    to      : 11,
-                    speed   : 0,
-                    loop    : true,
-                },
-            },
-        };*/
         loadSpriteAtlas("game_elements/background/backgrounds_spritesheet.png", {
             "main_bg": {
                 x: 0,
@@ -73,6 +51,26 @@ loadRoot('assets/');
                 sliceX: 4,
                 anims: {
                     n: { from: 0, to: 3, speed: 1, loop: true },
+                },
+            },
+            "water": {
+                x: 0,
+                y: 500,
+                width: 1000,
+                height: 250,
+                sliceX: 4,
+                anims: {
+                    n: { from: 0, to: 3, speed: 1, loop: true },
+                },
+            },
+            "sky": {
+                x: 0,
+                y: 250,
+                width: 250,
+                height: 250,
+                sliceX: 1,
+                anims: {
+                    n: { from: 0, to: 0},
                 },
             },
         })
@@ -115,6 +113,7 @@ scene("game", () => {
     let cash_per_sec    = 0;
     //prices
         let scaling     = 1.4;
+        let new_bt_dist = 130;
         let pr_txt_x    = -95;
         let pr_txt_y    = -20;
         let pr_new_tree = 20;
@@ -185,14 +184,19 @@ scene("game", () => {
        "ui"
     ]);
 
+    console.log(Math.floor(W/(SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE)) + 1);
+
     //BACKGROUND
      //adding the background dynamically to the screen size
-     const bg = add([
-        sprite("main_bg"),
-        pos(0, -H/6),
-        scale(3),
-     ]);
-     bg.play("n");
+     for (let i = 0; i < Math.floor(W/(SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE)) + 1; i++) {
+        const bg = add([
+            sprite("main_bg"),
+            pos((SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE) * i, -H/6),
+            scale(SPRITE_BG_SCALE),
+            "bg",
+         ]);
+         bg.play("n");
+     }
 
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
@@ -233,7 +237,7 @@ scene("game", () => {
     //adding a new bee button
      const new_bee = add([
         sprite('new_bee'),
-        pos(new_tree.pos.x, new_tree.pos.y + 130),
+        pos(new_tree.pos.x, new_tree.pos.y + new_bt_dist),
         scale(0.3),
         anchor(new_tree.anchor),
         area(),
