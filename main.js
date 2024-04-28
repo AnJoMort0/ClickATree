@@ -107,8 +107,16 @@ loadRoot('assets/');
 //SCENES
 
 scene("startMenu", () => {
-
+    add([
+		text("you lose!"),
+		pos(width() / 2, height() / 2 + 108),
+		scale(1),
+		anchor("center"),
+	])
+    onKeyPress("space", () => go("game"))
+	onClick(() => go("game"))
 })
+go('game');
 
 scene("game", () => {
     //DECLARING VARIABLES
