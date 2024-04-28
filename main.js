@@ -1,6 +1,10 @@
 //IDEAS TO ADD
     //Hide HUD button
     //Timed game mode for the Mystères de l'Unil specifically
+    //Add events
+    //Can have too many elements - need to be careful
+    //Achievements
+    //Darker colors at the beginning -> progress saturation the bigger the forest
     //Tree burns when auto-clicker
 
 //KNOWN BUGS
@@ -37,8 +41,9 @@ const NB_BG_Y_TILES         = Math.floor(H/(BG_TILE_SIZE)) + 1;
     //buttons on the right side
         const X_BUTTONS         = W - 10;
         const Y_FIRST_BUTTON    = 65;
+        const SCALE_BUTTON      = 0.3;
     //relative scale of trees to screen height
-        const TREE_SCALE    = 1500;
+        const TREE_SCALE    = 1/1500;
 
 //load assets
 loadRoot('assets/');
@@ -123,6 +128,7 @@ scene("game", () => {
     let cash            = 0;
     let score           = 0;
     let cash_per_sec    = 0;
+    let   time          = 300;
     //prices
         let scaling     = 1.4;
         let new_bt_dist = 130;
@@ -195,6 +201,31 @@ scene("game", () => {
         },
        "ui"
     ]);
+    //timer
+    const text_time = add([
+        text(`Time left : ${time}`,{
+           width : width(),
+        }),
+        //position right next to Score
+        pos(text_score.pos.x, text_score.pos.y - 30),
+        anchor("left"),
+        z(Z_UI),
+        {
+           update(){
+            //minus 1 second 
+            time -= dt();
+            if(time <= 0){
+                //if time reaches 0 or less, set time to 0
+                time = 0;
+                //takes you to game over screen :)
+                go("pauseMenu");
+                //gameOver();
+            }
+              this.text = `Time left : ` + fancyTimeFormat(time);
+           }
+        },
+       "ui"
+    ]);
 
     //BACKGROUND
      //adding the background dynamically to the screen size
@@ -232,38 +263,12 @@ scene("game", () => {
         }
      }
 
-    let time = 10;
-    const text_time = add([
-        text(`Time : ${time}`,{
-           width : width(),
-        }),
-        //position right next to Score
-        pos(300, height() - 30),
-        anchor("left"),
-        z(Z_UI),
-        {
-           update(){
-            //minus 1 second 
-            time -= dt();
-            if(time <= 0){
-                //if time reaches 0 or less, set time to 0
-                time = 0;
-                //takes you to game over screen :)
-                go("pauseMenu");
-                //gameOver();
-            }
-              this.text = `Time : ${Math.floor(time)} seconds left`;
-           }
-        },
-       "ui"
-    ]);
-
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
      const new_tree = add([
         sprite('new_tree'),
         pos(W - 10, 75),
-        scale(0.3),
+        scale(SCALE_BUTTON),
         anchor("right"),
         area(),
         z(Z_UI),
@@ -298,7 +303,7 @@ scene("game", () => {
      const new_bee = add([
         sprite('new_bee'),
         pos(new_tree.pos.x, new_tree.pos.y + new_bt_dist),
-        scale(0.3),
+        scale(SCALE_BUTTON),
         anchor(new_tree.anchor),
         area(),
         z(Z_UI),
@@ -336,7 +341,7 @@ scene("game", () => {
         const start_tree = add([
         sprite(`tree0`),
         pos(vec2(W/2,y_st)),
-        scale(y_st / TREE_SCALE),
+        scale(y_st * TREE_SCALE),
         anchor("center"),
         area(),
         z(y_st),
@@ -440,21 +445,20 @@ scene("game", () => {
     //FUNCTIONS
         //Add a new tree
        function addTree() {
-         let ranA = H/5;
-         let ranB = H;
-         if(H < 1080){
-            ranB = H - 10;
+         let ranA = H/2 - 60;
+         let ranB = 0;
+         if(H < BG_TILE_SIZE){
+            ranB = H - 120;
          } else {
             ranB = H/2 + 200;
          };
          const randX  = rand(0, X_BUTTONS);
-         const randY = rand(ranA, ranB);
-         const x = 0.5; //need to make it dynamic
+         const randY  = rand(ranA, ranB);
          //const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
          const tree  = add([
              sprite(choose(trees)),
              pos(randX, randY),
-             scale(randY / TREE_SCALE),
+             scale(randY * TREE_SCALE),
              anchor("center"),
              area(),
              z(randY),
@@ -471,7 +475,7 @@ scene("game", () => {
         const bee = add([
             sprite('bee'),
             pos(rand(0, W), rand(0, H)),
-            scale(0.2),
+            scale(1),
             anchor('center'),
             area(),
             z(this.pos.y),
@@ -556,6 +560,7 @@ scene("pauseMenu", () => {
     onKeyPress("space", () => go("game"))
 	onClick(() => go("game"))
 })
+
 go('game');
 
 //GENERAL FUNCTIONS
@@ -586,7 +591,7 @@ go('game');
         })
     }
 
-    //NEED TO TEST IT AND ADD REF TO READ.ME: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148 (answered Jul 4, 2019 at 20:48 by MarredCheese)
+    //NEED TO REF IN READ.ME: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148 (answered Jul 4, 2019 at 20:48 by MarredCheese)
     /*
     * Return the given number as a formatted string.  The default format is a plain
     * integer with thousands-separator commas.  The optional parameters facilitate
@@ -676,3 +681,24 @@ go('game');
         orderSuffix +
         (style === '%' ? '%' : '');
     }
+
+    //NEED REF IN READ.ME: https://stackoverflow.com/a/11486026 (answered Jul 14, 2012 at 20:48 by Vishal)
+    function fancyTimeFormat(duration) {
+        // Hours, minutes and seconds
+        const hrs = ~~(duration / 3600);
+        const mins = ~~((duration % 3600) / 60);
+        const secs = ~~duration % 60;
+      
+        // Output like "1:01" or "4:03:59" or "123:03:59"
+        let ret = "";
+      
+        if (hrs > 0) {
+          ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+        }
+      
+        ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+        ret += "" + secs;
+      
+        return ret;
+      }
+      
