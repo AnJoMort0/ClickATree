@@ -30,20 +30,18 @@ const SPRITE_PIXEL_SIZE     = 25;
 const SPRITE_BG_PIXEL_SIZE  = 250;
 const SPRITE_BG_SCALE       = 3;
 const BG_TILE_SIZE          = SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE;
-const BG_Y                  = (H/2)-BG_TILE_SIZE/2 - 30;
+const BG_Y                  = H/2;
 const NB_BG_X_TILES         = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES         = Math.floor(H/(BG_TILE_SIZE)) + 1;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
-    const Z_UI       = H    + 100;
-    const Z_UI_TOP   = Z_UI + 1;
-//areas
-    //buttons on the right side
-        const X_BUTTONS         = W - 10;
-        const Y_FIRST_BUTTON    = 65;
-        const SCALE_BUTTON      = 0.3;
-    //relative scale of trees to screen height
-        const TREE_SCALE    = 1/1500;
+    const Z_UI        = H    + 100;
+    const Z_UI_TOP    = Z_UI + 1;
+    const Z_UI_BOTTOM = Z_UI - 1;
+//scale buttons
+    const SCALE_BUTTON      = 0.3;
+//relative scale of trees to screen height
+    const TREE_SCALE    = 1/1500; 
 
 //load assets
 loadRoot('assets/');
@@ -97,6 +95,27 @@ loadRoot('assets/');
         //other
         loadSprite('bee', 'game_elements/other/bee.png');
     //ui elements
+        //icons
+        loadSpriteAtlas("ui/status_icons/icons_spritesheet.png", {
+            "pollution_icon" : {
+                x: 0,
+                y: 0,
+                width: 25,
+                height: 25,
+            },
+            "defo_icon" : {
+                x: 0,
+                y: 25,
+                width: 25,
+                height: 25,
+            },
+            "fire_icon" : {
+                x: 0,
+                y: 50,
+                width: 25,
+                height: 25,
+            }
+        })
         //new buttons
         loadSprite('new_tree', "ui/new_buttons/new_tree_button.png");
         loadSprite('new_bee', "ui/new_buttons/new_bee_button.png")
@@ -116,14 +135,26 @@ scene("startMenu", () => {
 
 
 scene("game", () => {
+    //DECLARING CONSTANTS
+     //Areas
+        //new buttons
+         const X_BUTTONS         = W - 10;
+         const Y_FIRST_BUTTON    = 65;
+        //cash
+         const CASHBOX  = add([anchor("center"),pos(W/2,30)  ,z(Z_UI_BOTTOM),"ui"]);
+         const SCOREBOX = add([anchor("left")  ,pos(15 ,H-30),z(Z_UI_BOTTOM),"ui"]);
+         const TOPLBOX  = add([anchor("left")  ,pos(15 ,30)  ,z(Z_UI_BOTTOM),"ui"]);
+     //UI
+        const ICON_DIST     = 40;
+        const NEW_BT_DIST   = 130;
+
     //DECLARING VARIABLES
     let cash            = 0;
     let score           = 0;
     let cash_per_sec    = 0;
-    let   time          = 300;
+    let time            = 300;
     //prices
         let scaling     = 1.4;
-        let new_bt_dist = 130;
         let pr_txt_x    = -95;
         let pr_txt_y    = -20;
         let pr_new_tree = 20;
@@ -134,41 +165,41 @@ scene("game", () => {
     //number of elements
         let nb_txt_x    = -150;
         let nb_txt_y    = 30;
+        let nb_txt_size = 1;
         let nb_trees    = 1;
         let nb_bees     = 0;
 
     //UI
     //cash
-    const icon_cash = add([
-        sprite('leaf0'),
-        pos(10, 50),
-        scale(1.4),
-        anchor('left'),
-        z(Z_UI),
-        "ui",
-     ]);
-    const text_cash = add([
+     const text_cash = CASHBOX.add([
         text(formatNumber(cash, {useOrderSuffix: true, decimals: 1}),{
-           width : W,
+            width : W,
         }),
-        pos(icon_cash.pos.x + 50, icon_cash.pos.y),
-        anchor(icon_cash.anchor),
+        anchor("left"),
+        pos(-30, 0),
         z(Z_UI),
         {
-           update(){
-              this.text = formatNumber(cash, {useOrderSuffix: true, decimals: 1});
-           }
+            update(){
+                this.text = formatNumber(cash, {useOrderSuffix: true, decimals: 1});
+            }
         },
         "ui"
      ]);
-    //cash/second
-     const text_cash_per_sec = add([
+     const icon_cash = CASHBOX.add([
+        sprite('leaf0'),
+        anchor("right"),
+        pos(text_cash.pos.x - 5, 0),
+        z(Z_UI),
+        scale(1.4),
+        "ui",
+     ]);
+     const text_cash_per_sec = CASHBOX.add([
         text(formatNumber(cash_per_sec, {useOrderSuffix: true, decimals: 1}) + "/s",{
-            size    : 24,
+            size    : 24,   
             width   : W,
         }),
-        pos(text_cash.pos.x, text_cash.pos.y + 35),
-        anchor(text_cash.anchor),
+        anchor("left"),
+        pos(icon_cash.pos.x, 35),
         z(Z_UI),
         {
             update(){
@@ -177,14 +208,13 @@ scene("game", () => {
         },
         "ui",
      ])
-
     //score
-    const text_score = add([
+     const text_score = SCOREBOX.add([
         text(`Score : ${Math.floor(score)}`,{
            width : W,
         }),
-        pos(15, H - 30),
         anchor("left"),
+        pos(0, 0),
         z(Z_UI),
         {
            update(){
@@ -194,13 +224,13 @@ scene("game", () => {
        "ui"
     ]);
     //timer
-    const text_time = add([
-        text(`Time left : ${time}`,{
-           width : width(),
+    const text_time = TOPLBOX.add([
+        text(`Temps restant : ` + fancyTimeFormat(time),{
+           width : W,
+           size : 30,
         }),
-        //position right next to Score
-        pos(text_score.pos.x, text_score.pos.y - 30),
         anchor("left"),
+        pos(0,0),
         z(Z_UI),
         {
            update(){
@@ -210,50 +240,62 @@ scene("game", () => {
                 //if time reaches 0 or less, set time to 0
                 time = 0;
                 //takes you to game over screen :)
-                go("pauseMenu");
-                //gameOver();
+                go("gameOver");
             }
-              this.text = `Time left : ` + fancyTimeFormat(time);
+              this.text = `Temps restant : ` + fancyTimeFormat(time);
            }
         },
        "ui"
     ]);
 
-    //BACKGROUND
-     //adding the background dynamically to the screen size
-     for (let i = 0; i < NB_BG_X_TILES; i++) {
-        const bg = add([
-            sprite("main_bg"),
-            pos((BG_TILE_SIZE) * i, BG_Y),
-            scale(SPRITE_BG_SCALE),
-            "bg",
-         ]);
-         bg.play("n");
-     }
-     if (H > BG_TILE_SIZE) {
-        for (let j = 1; j <= NB_BG_Y_TILES; j++) {
-            for (let i = 0; i < NB_BG_X_TILES; i++) {
-                const bg = add([
-                    sprite("sky_bg"),
-                    pos((BG_TILE_SIZE) * i, BG_Y - ((BG_TILE_SIZE)*j)),
-                    scale(SPRITE_BG_SCALE),
-                    "bg",
-                 ]);
-                 bg.play("n");
-             }
-        }
-        for (let j = 1; j <= NB_BG_Y_TILES; j++) {
-            for (let i = 0; i < NB_BG_X_TILES; i++) {
-                const bg = add([
-                    sprite("water_bg"),
-                    pos((BG_TILE_SIZE) * i, BG_Y + ((BG_TILE_SIZE)*j)),
-                    scale(SPRITE_BG_SCALE),
-                    "bg",
-                 ]);
-                 bg.play("n");
-             }
-        }
-     }
+    //EVENTS UI
+    const EVENTS = add([anchor("left"),pos(0,text_time.pos.y + 60),z(Z_UI_BOTTOM),"ui"])
+    function emptyBar(){
+        drawRect({
+            pos: vec2(30, 0),
+            width: 100,
+            height: 13,
+            anchor: "left",
+            fill: false,
+            outline: { color: BLACK, width: 1.5 },
+        })
+    }
+     //pollution
+     const icon_pollution = EVENTS.add([
+        sprite('pollution_icon'),
+        anchor('left'),
+        pos(0,0),
+        z(Z_UI),
+        scale(1.4),
+        "ui",
+     ]);
+        icon_pollution.onDraw(() => {
+            emptyBar();
+        })
+    //deforestation
+    const icon_defo = EVENTS.add([
+        sprite('defo_icon'),
+        anchor('left'),
+        pos(0, icon_pollution.pos.y + ICON_DIST),
+        z(Z_UI),
+        scale(icon_pollution.scale),
+        "ui",
+     ]);
+        icon_defo.onDraw(() => {
+            emptyBar();
+        })
+    //fire
+    const icon_fire = add([
+        sprite('fire_icon'),
+        anchor('left'),
+        pos(0, 140), //for some reason using the relative pos doesn0t work here
+        z(Z_UI),
+        scale(icon_pollution.scale),
+        "ui",
+     ]);
+        icon_fire.onDraw(() => {
+            emptyBar();
+        })
 
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
@@ -294,7 +336,7 @@ scene("game", () => {
     //adding a new bee button
      const new_bee = add([
         sprite('new_bee'),
-        pos(new_tree.pos.x, new_tree.pos.y + new_bt_dist),
+        pos(new_tree.pos.x, new_tree.pos.y + NEW_BT_DIST),
         scale(SCALE_BUTTON),
         anchor(new_tree.anchor),
         area(),
@@ -327,14 +369,56 @@ scene("game", () => {
         z(Z_UI_TOP),
      ])
 
+    //BACKGROUND
+     //adding the background dynamically to the screen size
+     for (let i = 0; i < NB_BG_X_TILES; i++) {
+        const bg = add([
+            sprite("main_bg"),
+            anchor("left"),
+            pos((BG_TILE_SIZE) * i, BG_Y),
+            scale(SPRITE_BG_SCALE),
+            z(0),
+            "bg",
+         ]);
+         bg.play("n");
+     }
+     if (H > BG_TILE_SIZE) {
+        for (let j = 1; j <= NB_BG_Y_TILES; j++) {
+            for (let i = 0; i < NB_BG_X_TILES; i++) {
+                const bg = add([
+                    sprite("sky_bg"),
+                    anchor("left"),
+                    pos((BG_TILE_SIZE) * i, BG_Y - ((BG_TILE_SIZE)*j)),
+                    scale(SPRITE_BG_SCALE),
+                    z(0),
+                    "bg",
+                 ]);
+                 bg.play("n");
+             }
+        }
+        for (let j = 1; j <= NB_BG_Y_TILES; j++) {
+            for (let i = 0; i < NB_BG_X_TILES; i++) {
+                const bg = add([
+                    sprite("water_bg"),
+                    anchor("left"),
+                    pos((BG_TILE_SIZE) * i, BG_Y + ((BG_TILE_SIZE)*j)),
+                    scale(SPRITE_BG_SCALE),
+                    z(0),
+                    "bg",
+                 ]);
+                 bg.play("n");
+             }
+        }
+     }
+
     //ADDING OBJECTS
         //adding starting tree
-        let y_st = H/2
+        let y_st = H/2 + 50;
         const start_tree = add([
         sprite(`tree0`),
         pos(vec2(W/2,y_st)),
         scale(y_st * TREE_SCALE),
-        anchor("center"),
+        anchor("bot"),
         area(),
         z(y_st),
         "tree",
@@ -349,7 +433,7 @@ scene("game", () => {
         onClick("tree", (t) => { 
             plus(1);
             //particles when clicked
-            for (let i = 0; i < rand(1,3); i++) {
+            for (let i = 0; i < rand(0,3); i++) {
                 const leaf_particle = add([
                     pos(mousePos()),
                     z(t.pos.y),
@@ -365,7 +449,7 @@ scene("game", () => {
                     offscreen({destroy: true}),
                     "leaf_particle",
                 ])
-                leaf_particle.jump(rand(200, 440))
+                leaf_particle.jump(rand(100, 350))
             }
             zoomOut(t);
         })
@@ -429,29 +513,29 @@ scene("game", () => {
             })
 
     //AUTOMATIC STUFF
-       //Each element gives cash overtime
-       loop(1, () => {
+        loop(1, () => {
+            //Each element gives cash overtime
             plus(cash_per_sec);
-       })
+
+            //Flashes time at multiple occasions
+            if ((time < 61 && time >= 60) || (time < 31 && time >= 30) || (time <= 15)) {
+                smallWarning(text_time);
+            }
+        })
 
     //FUNCTIONS
-        //Add a new tree
+       //Add a new tree
        function addTree() {
-         let ranA = H/2 - 60;
-         let ranB = 0;
-         if(H < BG_TILE_SIZE){
-            ranB = H - 120;
-         } else {
-            ranB = H/2 + 200;
-         };
-         const randX  = rand(0, X_BUTTONS);
-         const randY  = rand(ranA, ranB);
+         let ranYA = H/2;
+         let ranYB = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
+         const randX  = rand(0, W);
+         const randY  = rand(ranYA, ranYB);
          //const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
          const tree  = add([
              sprite(choose(trees)),
              pos(randX, randY),
              scale(randY * TREE_SCALE),
-             anchor("center"),
+             anchor("bot"),
              area(),
              z(randY),
              "tree",
@@ -522,9 +606,6 @@ scene("game", () => {
             cash_per_sec = cash_per_sec + x;
         }
 
-        onKeyRelease("t", () => {
-            console.log(get("tree"));
-        })
         //Debug
         onKeyRelease("d", () => {
             if(debug.inspect != true){
@@ -542,7 +623,7 @@ scene("game", () => {
         })
 })
 
-scene("pauseMenu", () => {
+scene("gameOver", () => {
     add([
 		text("you lose!"),
 		pos(width() / 2, height() / 2 + 108),
@@ -579,6 +660,13 @@ go('game');
         shake(1);
         t.color = rgb (255, 0, 0);
         wait(0.5, () =>{
+            t.color = '';
+        })
+    }
+
+    function smallWarning(t){
+        t.color = rgb (255, 0, 0);
+        wait(0.3, () =>{
             t.color = '';
         })
     }
