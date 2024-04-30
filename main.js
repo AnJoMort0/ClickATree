@@ -94,6 +94,7 @@ loadRoot('assets/');
         })
         //other
         loadSprite('bee', 'game_elements/other/bee.png');
+        loadSprite('bear', "game_elements/other/bear.png");
     //ui elements
         //icons
         loadSpriteAtlas("ui/status_icons/icons_spritesheet.png", {
@@ -260,6 +261,16 @@ scene("game", () => {
             outline: { color: BLACK, width: 1.5 },
         })
     }
+    //bear
+    const icon_bear = EVENTS.add([
+        sprite('bear'),
+        anchor('left'),
+        pos(900, 590),
+        z(Z_UI),
+        scale(5),
+        "game_elements",
+    ]);
+    
      //pollution
      const icon_pollution = EVENTS.add([
         sprite('pollution_icon'),
@@ -781,6 +792,3 @@ go('game');
       
         return ret;
       }
-      
-      //pop-up dialog
-      
