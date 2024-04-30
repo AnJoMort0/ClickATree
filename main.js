@@ -782,3 +782,5 @@ go('game');
         return ret;
       }
       
+      //pop-up dialog
+      
