@@ -1,5 +1,5 @@
 //IDEAS TO ADD
-    //Timed game mode for the Mystères de l'Unil specifically --> need to add the menu
+    //Timed game mode for the Mystères de l'Unil specifically --> need to add the menu and change values depending on choosen game mode (add kid mode and adult mode as well)
     //Add events
     //Can have too many elements - need to be careful
     //Achievements
@@ -26,6 +26,7 @@ const W = width();
 const H = height();
 setGravity(800);
 const CLICK_JUMP                = 1.05;
+
 const SPRITE_PIXEL_SIZE         = 25;
 const SPRITE_ICON_SCALE         = 1.4;
 const ICON_SIZE                 = SPRITE_PIXEL_SIZE * SPRITE_ICON_SCALE;
@@ -40,6 +41,7 @@ const BUTTON_NB_TXT_SCALE       = 1.3;
 const BG_Y                      = H/2;
 const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
+const BEAR_SCALE                = 6;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI        = H    + 100;
@@ -151,7 +153,7 @@ scene("game", () => {
          const SCOREBOX = add([anchor("left")  ,pos(15  ,H-30),z(Z_UI_BOTTOM),"ui"]);
          const TOPLBOX  = add([anchor("left")  ,pos(15  ,30)  ,z(Z_UI_BOTTOM),"ui"]);
          const NEWBOX   = add([anchor("right") ,pos(W-15,15)  ,z(Z_UI_BOTTOM),"ui"]);
-         const BEARBOX  = add([anchor("bot")   ,pos(W/2 ,H-100),z(Z_UI_BOTTOM),"ui"]);
+         const BEARBOX  = add([anchor("bot")   ,pos(W/2 ,H),z(Z_UI_BOTTOM),"ui"]);
      //UI
         const ICON_DIST     = 40;
         const NEW_BT_DIST   = 5;
@@ -180,8 +182,10 @@ scene("game", () => {
         const MAX_EVENT_STAT = 100;
         let pollu_stat  = 0;
         let pollu_boost = 2;
+        let pollu_color = rgb(31, 60, 33); //if change this need to change lower
         let defo_stat   = 0;
-        let defo_boost  = 2;
+        let defo_boost  = 1.5;
+        let defo_color  = rgb(89, 66, 53); //if change this need to change lower
         let fire_stat   = 0;
         let fire_boost  = 2;
 
@@ -259,114 +263,6 @@ scene("game", () => {
                 go("gameOver");
             }
               this.text = `Temps restant : ` + fancyTimeFormat(time);
-
-              //text bubble + text appear when it is 4 minutes
-              //chatgpt code
-              if(time <= 5 * 60 && time > 4 * 60){
-                if(!this.shownText){
-                    let bubble_bear = add([
-                        rect(width() - 600, 120, { radius: 32 }),
-                        anchor("center"),
-                        pos(650, 600),
-                        outline(4),
-                    ]);
-                    let text_bear = add([
-                        text("The timer"),
-                        pos(450, 560),
-                        scale(0.5),
-                        color(1, 0, 0),
-                    ]);
-                    this.shownText = true;
-                    onKeyPress("space", () => {
-                        destroy(bubble_bear);
-                        destroy(text_bear);
-                    });
-                }
-              }
-              if(time <=4 * 60 && time > 3 * 60){
-                if(!this.shownText2){
-                    let bubble_bear2 = add([
-                        rect(width() - 600, 120, {radius: 32}),
-                        anchor("center"),
-                        pos(650, 600),
-                        outline(4),
-                    ]);
-                    let text_bear2 = add([
-                        text("is here"),
-                        pos(450, 560),
-                        scale(0.5),
-                        color(1, 0, 0),
-                    ]);
-                    this.shownText2 = true;
-                    onKeyPress("space", () => {
-                        destroy(bubble_bear2);
-                        destroy(text_bear2);
-                    });
-                }
-              }
-              if(time <= 3 * 60 && time > 2 * 60){
-                if(!this.shownText3){
-                    let bubble_bear3 = add([
-                        rect(width() - 600, 120, {radius: 32}),
-                        anchor("center"),
-                        pos(650, 600),
-                        outline(4),
-                    ]);
-                    let text_bear3 = add([
-                        text("Hello, je m'appelle Ours!"),
-                        pos(450, 560),
-                        scale(0.5),
-                        color(1, 0, 0),
-                    ]);
-                    this.shownText3 = true;
-                    onKeyPress("space", () => {
-                        destroy(bubble_bear3);
-                        destroy(text_bear3);
-                    });
-                }
-              }
-              if(time <= 2 * 60 && time > 1 * 60){
-                if(!this.shownText4){
-                    let bubble_bear4 = add([
-                        rect(width() - 600, 120, {radius: 32}),
-                        anchor("center"),
-                        pos(650, 600),
-                        outline(4),
-                    ]); 
-                    let text_bear4 = add([
-                        text("Go, go!"),
-                        pos(450, 560),
-                        scale(0.5),
-                        color(1, 0, 0),
-                    ]); 
-                    this.shownText4 = true;
-                    onKeyPress("space", () => {
-                        destroy(bubble_bear4);
-                        destroy(text_bear4);
-                    });
-                }
-              }
-              if(time <= 1 * 60 && time > 0 * 60){
-                if(!this.shownText5){
-                    let bubble_bear5 = add([
-                        rect(width() - 600, 120, {radius: 32}),
-                        anchor("center"),
-                        pos(650, 600),
-                        outline(4),
-                    ]); 
-                    let text_bear5 = add([
-                        text(`Hurry up!\nClick on as many times as\nyou can on the tree!`),
-                        pos(450, 560),
-                        scale(0.5),
-                        color(1, 0, 0),
-                    ]); 
-                    this.shownText5 = true;
-                    onKeyPress("space", () => {
-                        destroy(bubble_bear5);
-                        destroy(text_bear5);
-                    });
-                }
-              }
            }
         },
        "ui"
@@ -377,29 +273,13 @@ scene("game", () => {
     function emptyBar(){
         drawRect({
             pos: vec2(30, 0),
-            width: MAX_EVENT_STAT,
+            width: MAX_EVENT_STAT + 2,
             height: 13,
             anchor: "left",
             fill: false,
-            outline: { color: BLACK, width: 1.5 },
+            outline: { color: BLACK, width: 2 },
         })
     }
-    //bear
-    const icon_bear = EVENTS.add([
-        sprite('bear'),
-        anchor('left'),
-        pos(900, 590),
-        z(Z_UI),
-        scale(5),
-        "game_elements",
-    ]);
-
-    // Define bear dialog
-    const dialogs = [
-        ["bear", "hi my name is Bear"],
-        ["bear", "what's your name?"],
-    ];
-
      //pollution
      const icon_pollution = EVENTS.add([
         sprite('pollution_icon'),
@@ -415,7 +295,7 @@ scene("game", () => {
                 width: pollu_stat,
                 height: 13,
                 anchor: "left",
-                color: rgb(31, 60, 33),
+                color: pollu_color,
             })
             emptyBar();
         })
@@ -434,7 +314,7 @@ scene("game", () => {
                 width: defo_stat,
                 height: 13,
                 anchor: "left",
-                color: rgb(89, 66, 53),
+                color: defo_color,
             })
             emptyBar();
         })
@@ -451,6 +331,22 @@ scene("game", () => {
             emptyBar();
         })
 
+    //DIALOGUE UI
+     //bear
+     const icon_bear = BEARBOX.add([
+         sprite('bear'),
+         anchor('bot'),
+         pos(W/2 - 100,0),
+         z(Z_UI),
+         scale(BEAR_SCALE),
+         "game_elements",
+     ]);
+    
+     // Define bear dialog
+     const dialogs = [
+         ["bear", "hi my name is Bear"],
+         ["bear", "what's your name?"],
+     ];
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
      const new_tree = NEWBOX.add([
@@ -616,6 +512,13 @@ scene("game", () => {
             }
             zoomOut(t);
         })
+        //skip dialogues
+        onClick("dialogue", (t) => {
+            destroy("dialogue");
+        })
+        onKeyRelease(() => {
+            destroy("dialogue");
+        })
     
     //Animations
         //bee moving
@@ -695,6 +598,20 @@ scene("game", () => {
             if ((time < 61 && time >= 60) || (time < 31 && time >= 30) || (time <= 15)) {
                 smallWarning(text_time);
             }
+            
+            //Flashes the bars when full
+            if (pollu_stat >= MAX_EVENT_STAT) {
+                pollu_color = rgb(31, 100, 33);
+                wait(0.3, () =>{
+                    pollu_color = rgb(31, 60, 33);
+                })
+            }
+            if (defo_stat >= MAX_EVENT_STAT) {
+                defo_color = rgb(120, 66, 63);
+                wait(0.3, () =>{
+                    defo_color = rgb(89, 66, 53);
+                })
+            }
         })
 
     //FUNCTIONS
@@ -754,6 +671,27 @@ scene("game", () => {
             //change with function
             pr_new_bee  = pr_new_bee * scaling;
             cps(cps_bee);
+       }
+       //Add a dialogue box
+       function diaBubble(dia_array, n_in_array){
+            const dia_bubble = BEARBOX.add([
+                rect(W - 600, 120, { radius: 32 }),
+                anchor("top"),
+                pos(0,0),
+                z(Z_UI_BOTTOM),
+                outline(4),
+                "dialogue",
+                "ui",
+            ])
+            const text_bubble = dia_bubble.add([
+                text(dia_array[n_in_array]),
+                anchor("center"),
+                pos(0,0),
+                size(24),
+                color(BLACK),
+                "dialogue",
+                "ui",
+            ])
        }
 
        //General Functions
@@ -837,7 +775,6 @@ go('game');
             t.color = '';
         })
     }
-
     function smallWarning(t){
         t.color = rgb (255, 0, 0);
         wait(0.3, () =>{
