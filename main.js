@@ -1,11 +1,11 @@
 //IDEAS TO ADD
-    //Hide HUD button
-    //Timed game mode for the Mystères de l'Unil specifically
+    //Timed game mode for the Mystères de l'Unil specifically --> need to add the menu
     //Add events
     //Can have too many elements - need to be careful
     //Achievements
     //Darker colors at the beginning -> progress saturation the bigger the forest
-    //Tree burns when auto-clicker
+    //Increase fire event when auto-clicker
+    //Hide HUD button
 
 //KNOWN BUGS
     // When multiple trees overlap, the player gets multiple points in a single click
@@ -151,30 +151,39 @@ scene("game", () => {
          const SCOREBOX = add([anchor("left")  ,pos(15  ,H-30),z(Z_UI_BOTTOM),"ui"]);
          const TOPLBOX  = add([anchor("left")  ,pos(15  ,30)  ,z(Z_UI_BOTTOM),"ui"]);
          const NEWBOX   = add([anchor("right") ,pos(W-15,15)  ,z(Z_UI_BOTTOM),"ui"]);
+         const BEARBOX  = add([anchor("bot")   ,pos(W/2 ,H-100),z(Z_UI_BOTTOM),"ui"]);
      //UI
         const ICON_DIST     = 40;
         const NEW_BT_DIST   = 5;
 
     //DECLARING VARIABLES
-    let cash            = 0;
-    let score           = 0;
-    let cash_per_sec    = 0;
-    let time            = 300;
-    //prices
+     let cash            = 0;
+     let score           = 0;
+     let cash_per_sec    = 0;
+     let time            = 300;
+     //prices
         let scaling     = 1.4;
         let pr_txt_x    = -95;
         let pr_txt_y    = -20;
         let pr_new_tree = 20;
         let pr_new_bee  = 100;
-    //cash/second
+     //cash/second
         let cps_tree    = 0.1;
         let cps_bee     = 1;
-    //number of elements
+     //number of elements
         let nb_txt_x    = -150;
         let nb_txt_y    = 30;
         let nb_txt_size = 1;
         let nb_trees    = 1;
         let nb_bees     = 0;
+     //events
+        const MAX_EVENT_STAT = 100;
+        let pollu_stat  = 0;
+        let pollu_boost = 2;
+        let defo_stat   = 0;
+        let defo_boost  = 2;
+        let fire_stat   = 0;
+        let fire_boost  = 2;
 
     //UI
     //cash
@@ -368,7 +377,7 @@ scene("game", () => {
     function emptyBar(){
         drawRect({
             pos: vec2(30, 0),
-            width: 100,
+            width: MAX_EVENT_STAT,
             height: 13,
             anchor: "left",
             fill: false,
@@ -401,6 +410,13 @@ scene("game", () => {
         "ui",
      ]);
         icon_pollution.onDraw(() => {
+            drawRect({
+                pos: vec2(30, 0),
+                width: pollu_stat,
+                height: 13,
+                anchor: "left",
+                color: rgb(31, 60, 33),
+            })
             emptyBar();
         })
     //deforestation
@@ -413,6 +429,13 @@ scene("game", () => {
         "ui",
      ]);
         icon_defo.onDraw(() => {
+            drawRect({
+                pos: vec2(30, 0),
+                width: defo_stat,
+                height: 13,
+                anchor: "left",
+                color: rgb(89, 66, 53),
+            })
             emptyBar();
         })
     //fire
@@ -656,6 +679,17 @@ scene("game", () => {
         loop(1, () => {
             //Each element gives cash overtime
             plus(cash_per_sec);
+
+            //Increase the events stats
+            let r = choose([0,0,0,0,0,0,0,0,0,1]);
+            if (r == 0 && pollu_stat <= MAX_EVENT_STAT) {
+                pollu_stat = pollu_stat + pollu_boost;
+            }
+            let r2 = choose([0,0,1]);
+            if (r2 == 0 && defo_stat <= MAX_EVENT_STAT) {
+                defo_stat = defo_stat + defo_boost;
+            }
+            console.log(`r: ${r}, pollu: ${pollu_stat} -- r2: ${r2}, defo: ${defo_stat}`);
 
             //Flashes time at multiple occasions
             if ((time < 61 && time >= 60) || (time < 31 && time >= 30) || (time <= 15)) {
