@@ -340,7 +340,7 @@ scene("game", () => {
                         outline(4),
                     ]); 
                     let text_bear5 = add([
-                        text("Hurry up!\n Click on as many times as you can on the tree!"),
+                        text(`Hurry up!\nClick on as many times as\nyou can on the tree!`),
                         pos(450, 560),
                         scale(0.5),
                         color(1, 0, 0),
