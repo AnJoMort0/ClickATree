@@ -162,7 +162,7 @@ scene("game", () => {
      let cash            = 0;
      let score           = 0;
      let cash_per_sec    = 0;
-     let time            = 300;
+     let time            = 5;
      //prices
         let scaling     = 1.4;
         let pr_txt_x    = -95;
@@ -253,19 +253,11 @@ scene("game", () => {
         pos(0,0),
         z(Z_UI),
         {
-           update(){
-            //minus 1 second 
-            time -= dt();
-            if(time <= 0){
-                //if time reaches 0 or less, set time to 0
-                time = 0;
-                //takes you to game over screen
-                go("gameOver");
+            update(){
+                this.text = `Temps restant : ` + fancyTimeFormat(time);
             }
-              this.text = `Temps restant : ` + fancyTimeFormat(time);
-           }
-        },
-       "ui"
+         },
+       "ui",
     ]);
 
     //EVENTS UI
@@ -581,6 +573,10 @@ scene("game", () => {
 
     //AUTOMATIC STUFF
         loop(1, () => {
+            //Timer
+            if(time > 0){time = time - 1;}
+            console.log(time);
+
             //Each element gives cash overtime
             plus(cash_per_sec);
 
@@ -613,6 +609,15 @@ scene("game", () => {
                     defo_color = rgb(89, 66, 53);
                 })
             }
+        });
+
+        onUpdate(() => {
+         //Timer relative actions
+             if (time <= 0) {
+                go("gameOver");
+             }
+             //Dialogues
+             
         })
 
     //FUNCTIONS
