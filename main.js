@@ -153,7 +153,7 @@ scene("game", () => {
          const SCOREBOX = add([anchor("left")  ,pos(15  ,H-30),z(Z_UI_BOTTOM),"ui"]);
          const TOPLBOX  = add([anchor("left")  ,pos(15  ,30)  ,z(Z_UI_BOTTOM),"ui"]);
          const NEWBOX   = add([anchor("right") ,pos(W-15,15)  ,z(Z_UI_BOTTOM),"ui"]);
-         const BEARBOX  = add([anchor("bot")   ,pos(W/2 ,H),z(Z_UI_BOTTOM),"ui"]);
+         const BEARBOX  = add([anchor("bot")   ,pos(W/2 ,H)   ,z(Z_UI_BOTTOM),"ui"]);
      //UI
         const ICON_DIST     = 40;
         const NEW_BT_DIST   = 5;
