@@ -25,21 +25,26 @@ kaboom({
 const W = width();
 const H = height();
 setGravity(800);
-const CLICK_JUMP            = 1.05;
-const SPRITE_PIXEL_SIZE     = 25;
-const SPRITE_BG_PIXEL_SIZE  = 250;
-const SPRITE_BG_SCALE       = 3;
-const BG_TILE_SIZE          = SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE;
-const BG_Y                  = H/2;
-const NB_BG_X_TILES         = Math.floor(W/(BG_TILE_SIZE)) + 1;
-const NB_BG_Y_TILES         = Math.floor(H/(BG_TILE_SIZE)) + 1;
+const CLICK_JUMP                = 1.05;
+const SPRITE_PIXEL_SIZE         = 25;
+const SPRITE_ICON_SCALE         = 1.4;
+const ICON_SIZE                 = SPRITE_PIXEL_SIZE * SPRITE_ICON_SCALE;
+const SPRITE_BG_PIXEL_SIZE      = 250;
+const SPRITE_BG_SCALE           = 3;
+const BG_TILE_SIZE              = SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE;
+const SPRITE_BUTTON_PIXEL_SIZE  = 400;
+const SPRITE_BUTTON_SCALE       = 0.2;
+const BUTTON_SIZE               = SPRITE_BUTTON_PIXEL_SIZE * SPRITE_BUTTON_SCALE;
+const BUTTON_PRICE_TXT_SCALE    = 1.5;
+const BUTTON_NB_TXT_SCALE       = 1.3;
+const BG_Y                      = H/2;
+const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
+const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI        = H    + 100;
     const Z_UI_TOP    = Z_UI + 1;
     const Z_UI_BOTTOM = Z_UI - 1;
-//scale buttons
-    const SCALE_BUTTON      = 0.3;
 //relative scale of trees to screen height
     const TREE_SCALE    = 1/1500; 
 
@@ -142,12 +147,13 @@ scene("game", () => {
          const X_BUTTONS         = W - 10;
          const Y_FIRST_BUTTON    = 65;
         //cash
-         const CASHBOX  = add([anchor("center"),pos(W/2,30)  ,z(Z_UI_BOTTOM),"ui"]);
-         const SCOREBOX = add([anchor("left")  ,pos(15 ,H-30),z(Z_UI_BOTTOM),"ui"]);
-         const TOPLBOX  = add([anchor("left")  ,pos(15 ,30)  ,z(Z_UI_BOTTOM),"ui"]);
+         const CASHBOX  = add([anchor("center"),pos(W/2 ,30)  ,z(Z_UI_BOTTOM),"ui"]);
+         const SCOREBOX = add([anchor("left")  ,pos(15  ,H-30),z(Z_UI_BOTTOM),"ui"]);
+         const TOPLBOX  = add([anchor("left")  ,pos(15  ,30)  ,z(Z_UI_BOTTOM),"ui"]);
+         const NEWBOX   = add([anchor("right") ,pos(W-15,15)  ,z(Z_UI_BOTTOM),"ui"]);
      //UI
         const ICON_DIST     = 40;
-        const NEW_BT_DIST   = 130;
+        const NEW_BT_DIST   = 5;
 
     //DECLARING VARIABLES
     let cash            = 0;
@@ -189,9 +195,9 @@ scene("game", () => {
      const icon_cash = CASHBOX.add([
         sprite('leaf0'),
         anchor("right"),
-        pos(text_cash.pos.x - 5, 0),
+        pos(text_cash.pos.x - 7, 0),
         z(Z_UI),
-        scale(1.4),
+        scale(SPRITE_ICON_SCALE),
         "ui",
      ]);
      const text_cash_per_sec = CASHBOX.add([
@@ -391,7 +397,7 @@ scene("game", () => {
         anchor('left'),
         pos(0,0),
         z(Z_UI),
-        scale(1.4),
+        scale(SPRITE_ICON_SCALE),
         "ui",
      ]);
         icon_pollution.onDraw(() => {
@@ -403,7 +409,7 @@ scene("game", () => {
         anchor('left'),
         pos(0, icon_pollution.pos.y + ICON_DIST),
         z(Z_UI),
-        scale(icon_pollution.scale),
+        scale(SPRITE_ICON_SCALE),
         "ui",
      ]);
         icon_defo.onDraw(() => {
@@ -415,7 +421,7 @@ scene("game", () => {
         anchor('left'),
         pos(0, 140), //for some reason using the relative pos doesn0t work here
         z(Z_UI),
-        scale(icon_pollution.scale),
+        scale(SPRITE_ICON_SCALE),
         "ui",
      ]);
         icon_fire.onDraw(() => {
@@ -424,46 +430,51 @@ scene("game", () => {
 
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
-     const new_tree = add([
+     const new_tree = NEWBOX.add([
         sprite('new_tree'),
-        pos(W - 10, 75),
-        scale(SCALE_BUTTON),
-        anchor("right"),
-        area(),
+        anchor("topright"),
+        pos(0,0),
         z(Z_UI),
+        scale(SPRITE_BUTTON_SCALE),
+        area(),
         "ui",
         "button",
         "new_button",
         "new_tree",
      ])
-     const text_new_tree_price = add([
-        text(formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1})),
-        {
-            update(){
-            this.text = formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1});
-            }
-        },
-        pos(new_tree.pos.x + pr_txt_x, new_tree.pos.y + pr_txt_y),
-        anchor(new_tree.anchor),
-        z(Z_UI_TOP),
-     ])
-     const text_nb_trees = add([
-        text(formatNumber(nb_trees, {useOrderSuffix: true})),
-        {
-            update(){
-            this.text = formatNumber(nb_trees, {useOrderSuffix: true});
-            }
-        },
-        pos(new_tree.pos.x + nb_txt_x, new_tree.pos.y + nb_txt_y),
-        anchor(new_tree.anchor),
-        z(Z_UI_TOP),
-     ])
+        const text_new_tree_price = new_tree.add([
+            text(formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1}),{
+                size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
+            }),
+            {
+                update(){
+                this.text = formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1});
+                }
+            },
+            anchor("right"),
+            pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
+            z(Z_UI_TOP),
+        ])
+        const text_nb_trees = new_tree.add([
+            text(formatNumber(nb_trees, {useOrderSuffix: true}),{
+                size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
+            }),
+            {
+                update(){
+                this.text = formatNumber(nb_trees, {useOrderSuffix: true});
+                }
+            },
+            anchor("right"),
+            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
+            z(Z_UI_TOP),
+        ])
     //adding a new bee button
-     const new_bee = add([
+     const new_bee = NEWBOX.add([
         sprite('new_bee'),
-        pos(new_tree.pos.x, new_tree.pos.y + NEW_BT_DIST),
-        scale(SCALE_BUTTON),
-        anchor(new_tree.anchor),
+        anchor("topright"),
+        pos(new_tree.pos.x, new_tree.pos.y + BUTTON_SIZE + NEW_BT_DIST),
+        scale(SPRITE_BUTTON_SCALE),
+        anchor("topright"),
         area(),
         z(Z_UI),
         "ui",
@@ -471,28 +482,32 @@ scene("game", () => {
         "new_button",
         "new_bee",
      ])
-     const text_new_bee_price = add([
-        text(formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1})),
-        {
-            update(){
-            this.text = formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1});
-            }
-        },
-        pos(new_bee.pos.x + pr_txt_x, new_bee.pos.y + pr_txt_y),
-        anchor(new_bee.anchor),
-        z(Z_UI_TOP),
-     ])
-     const text_nb_bees = add([
-        text(formatNumber(nb_bees, {useOrderSuffix: true})),
-        {
-            update(){
-            this.text = formatNumber(nb_bees, {useOrderSuffix: true});
-            }
-        },
-        pos(new_bee.pos.x + nb_txt_x, new_bee.pos.y + nb_txt_y),
-        anchor(new_bee.anchor),
-        z(Z_UI_TOP),
-     ])
+        const text_new_bee_price = new_bee.add([
+            text(formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1}),{
+                size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
+            }),
+            {
+                update(){
+                this.text = formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1});
+                }
+            },
+            anchor("right"),
+            pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
+            z(Z_UI_TOP),
+        ])
+        const text_nb_bees = new_bee.add([
+            text(formatNumber(nb_bees, {useOrderSuffix: true}),{
+                size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
+            }),
+            {
+                update(){
+                this.text = formatNumber(nb_bees, {useOrderSuffix: true});
+                }
+            },
+            anchor("right"),
+            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
+            z(Z_UI_TOP),
+        ])
 
     //BACKGROUND
      //adding the background dynamically to the screen size
