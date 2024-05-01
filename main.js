@@ -240,10 +240,32 @@ scene("game", () => {
             if(time <= 0){
                 //if time reaches 0 or less, set time to 0
                 time = 0;
-                //takes you to game over screen :)
+                //takes you to game over screen
                 go("gameOver");
             }
               this.text = `Temps restant : ` + fancyTimeFormat(time);
+
+              if(time <= 4 * 60 && time > 3 * 60){
+                if(!this.shownText){
+                    let bubble_bear = add([
+                        rect(width() - 600, 120, { radius: 32 }),
+                        anchor("center"),
+                        pos(650, 600),
+                        outline(4),
+                    ]);
+                    let text_bear = add([
+                        text("The timer"),
+                        pos(450, 560),
+                        scale(0.5),
+                        color(1, 0, 0),
+                    ]);
+                    this.shownText = true;
+                    onKeyPress("space", () => {
+                        destroy(bubble_bear);
+                        destroy(text_bear);
+                    })
+                }
+              }
            }
         },
        "ui"
@@ -270,7 +292,13 @@ scene("game", () => {
         scale(5),
         "game_elements",
     ]);
-    
+
+    // Define bear dialog
+    const dialogs = [
+        ["bear", "hi my name is Bear"],
+        ["bear", "what's your name?"],
+    ];
+
      //pollution
      const icon_pollution = EVENTS.add([
         sprite('pollution_icon'),
