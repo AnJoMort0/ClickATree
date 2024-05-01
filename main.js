@@ -271,7 +271,7 @@ scene("game", () => {
                         outline(4),
                     ]);
                     let text_bear = add([
-                        text("The timer"),
+                        text(`Hello, je m'appelle Ours!`),
                         pos(450, 560),
                         scale(0.5),
                         color(1, 0, 0),
@@ -393,12 +393,6 @@ scene("game", () => {
         scale(5),
         "game_elements",
     ]);
-
-    // Define bear dialog
-    const dialogs = [
-        ["bear", "hi my name is Bear"],
-        ["bear", "what's your name?"],
-    ];
 
      //pollution
      const icon_pollution = EVENTS.add([
