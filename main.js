@@ -162,7 +162,7 @@ scene("game", () => {
      let cash            = 0;
      let score           = 0;
      let cash_per_sec    = 0;
-     let time            = 5;
+     let time            = 300;
      //prices
         let scaling     = 1.4;
         let pr_txt_x    = -95;
@@ -506,11 +506,8 @@ scene("game", () => {
             zoomOut(t);
         })
         //skip dialogues
-        onClick("dialogue", (t) => {
-            destroy("dialogue");
-        })
-        onKeyRelease(() => {
-            destroy("dialogue");
+        onKeyRelease("space", () => {
+            destroyAll("dialogue");
         })
     
     //Animations
@@ -575,7 +572,6 @@ scene("game", () => {
         loop(1, () => {
             //Timer
             if(time > 0){time = time - 1;}
-            console.log(time);
 
             //Each element gives cash overtime
             plus(cash_per_sec);
@@ -589,7 +585,6 @@ scene("game", () => {
             if (r2 == 0 && defo_stat <= MAX_EVENT_STAT) {
                 defo_stat = defo_stat + defo_boost;
             }
-            console.log(`r: ${r}, pollu: ${pollu_stat} -- r2: ${r2}, defo: ${defo_stat}`);
 
             //Flashes time at multiple occasions
             if ((time < 61 && time >= 60) || (time < 31 && time >= 30) || (time <= 15)) {
@@ -613,10 +608,16 @@ scene("game", () => {
 
         onUpdate(() => {
          //Timer relative actions
-             if (time <= 0) {
+         switch(time){
+            case 4.95*60 :
+                diaBubble(examples[0]);
+                break;
+            case 0 : 
                 go("gameOver");
-             }
+                break;
+         }
              //Dialogues
+            //EXEMPLES POUR SOPHIE (dialogues sont au fond du code):
              
         })
 
@@ -679,25 +680,28 @@ scene("game", () => {
             cps(cps_bee);
        }
        //Add a dialogue box
-       function diaBubble(dia_array, n_in_array){
+       function diaBubble(array_with_number){
+            destroyAll("dialogue");
             const dia_bubble = BEARBOX.add([
                 rect(W - 600, 120, { radius: 32 }),
-                anchor("top"),
+                anchor("bottom"),
                 pos(0,0),
                 z(Z_UI_BOTTOM),
                 outline(4),
+                area(),
                 "dialogue",
                 "ui",
             ])
             const text_bubble = dia_bubble.add([
-                text(dia_array[n_in_array]),
+                text(array_with_number[1]),
                 anchor("center"),
                 pos(0,0),
-                size(24),
                 color(BLACK),
+                area(),
                 "dialogue",
                 "ui",
             ])
+            icon_bear.sprite = array_with_number[0];
        }
 
        //General Functions
