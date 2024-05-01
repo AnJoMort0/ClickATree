@@ -893,3 +893,31 @@ go('game');
       
         return ret;
       }
+      
+      //dialogs of bear (+ its different emotions)
+      //bear = normal bear, smiling slightly - bear_scared, bear_wink (fun facts), starry-eyed bear
+      const dialogs = [
+        //intro
+        ["bear", "Hello, je m'appelle Ours! Tu peux cliquer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
+        ["bear", "Peux-tu m'aider à planter des arbres?"],
+        ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres."],
+        ["bear", "Tu pourras également acheter des abeilles qui sont importantes pour la pollinisation."], 
+        ["bear", "À toi de jouer! Tu as 5 minutes pour m'aider à créer une belle forêt."],
+        //pollution
+        ["bear_scared", "Attention!! La barre de pollution augmente vite!"],
+        ["bear_wink", "Savais-tu qu'un milieu pollué a de graves conséquences comme l'accumulation de toxines dans la chaîne alimentaire et l'ingestion de plastique?"], 
+        ["bear_scared", "Clique sur les déchets afin de faire descendre la barre de pollution."],
+        //when pollution barre down a certain amount
+        ["bear", "Merci beaucoup d'avoir enlevé tous les déchets! Continue à rajouter le plus d'arbres possible!"],
+        //deforestation, how to stop it?
+        ["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
+        ["bear_wink", "Savais-tu que la destruction des habitats est la principale cause de la perte de diversité des espèces en millieu terrestre?"], 
+        ["bear_scared", "!"],
+        ["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
+        //incendie
+        ["bear_scared", "Attention!! La barre d'incendie augmente vite!"],
+        ["bear_wink", "Savais-tu que 20% des causes de déforestation dans le monde sont dues aux incendies naturels?"],
+        ["bear_scared", "Clique sur le feu afin de faire descendre la barre d'incendie."],
+        ["bear", "Merci beaucoup d’avoir sauvé ma forêt ! Continue à rajouter le plus d'arbres possible!"],
+        //fin
+      ]
