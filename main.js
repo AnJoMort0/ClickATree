@@ -42,6 +42,7 @@ const BG_Y                      = H/2;
 const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
 const BEAR_SCALE                = 6;
+const BEAR_SMALL_SCALE         = BEAR_SCALE/1.5;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI        = H    + 100;
@@ -324,22 +325,18 @@ scene("game", () => {
             emptyBar();
         })
 
-    //DIALOGUE UI
+    //DIALOG UI
      //bear
      const icon_bear = BEARBOX.add([
          sprite('bear'),
          anchor('bot'),
          pos(W/2 - 100,0),
-         z(Z_UI),
-         scale(BEAR_SCALE),
+         z(Z_UI_TOP),
+         scale(BEAR_SMALL_SCALE),
+         area(),
          "game_elements",
      ]);
     
-     // Define bear dialog
-     const dialogs = [
-         ["bear", "hi my name is Bear"],
-         ["bear", "what's your name?"],
-     ];
     //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
      //adding a new tree button
      const new_tree = NEWBOX.add([
@@ -505,9 +502,15 @@ scene("game", () => {
             }
             zoomOut(t);
         })
-        //skip dialogues
-        onKeyRelease("space", () => {
-            destroyAll("dialogue");
+
+        //skip dialogs
+        onKeyRelease("space", (t) => {
+            destroyAll("dialog");
+            icon_bear.use(scale(BEAR_SMALL_SCALE));
+        })
+        onClick("dialog", (t) => {
+            destroyAll("dialog");
+            icon_bear.use(scale(BEAR_SMALL_SCALE));
         })
     
     //Animations
@@ -609,16 +612,10 @@ scene("game", () => {
         onUpdate(() => {
          //Timer relative actions
          switch(time){
-            case 4.95*60 :
-                diaBubble(examples[0]);
-                break;
             case 0 : 
                 go("gameOver");
                 break;
          }
-             //Dialogues
-            //EXEMPLES POUR SOPHIE (dialogues sont au fond du code):
-             
         })
 
     //FUNCTIONS
@@ -679,29 +676,29 @@ scene("game", () => {
             pr_new_bee  = pr_new_bee * scaling;
             cps(cps_bee);
        }
-       //Add a dialogue box
+       //Add a dialog box
        function diaBubble(array_with_number){
-            destroyAll("dialogue");
-            const dia_bubble = BEARBOX.add([
-                rect(W - 600, 120, { radius: 32 }),
-                anchor("bottom"),
-                pos(0,0),
+            destroyAll("dialog");
+            const bubble = add([ //CAN'T ADD IT IN BEARBOX BECAUSE BEARBOX CAN'T HAVE THE AREA() FUNCTION
+                rect(W/1.5, H/8, { radius: 32 }),
+                anchor("center"),
+                pos(BEARBOX.pos.x - 15, H - H/8),
                 z(Z_UI_BOTTOM),
                 outline(4),
                 area(),
-                "dialogue",
-                "ui",
+                "dialog",
             ])
-            const text_bubble = dia_bubble.add([
-                text(array_with_number[1]),
+            const txt_bubble = add([
+                text(array_with_number[1], { size: 20, width: W/1.5 - 15, align: "center" }),
+                pos(bubble.pos),
                 anchor("center"),
-                pos(0,0),
-                color(BLACK),
+                color(0, 0, 0),
+                z(Z_UI_BOTTOM),
                 area(),
-                "dialogue",
-                "ui",
+                "dialog",
             ])
-            icon_bear.sprite = array_with_number[0];
+            icon_bear.use(sprite(array_with_number[0]));
+            icon_bear.use(scale(BEAR_SCALE));
        }
 
        //General Functions
@@ -755,8 +752,6 @@ scene("gameOver", () => {
     onKeyPress("space", () => go("game"))
 	onClick(() => go("game"))
 })
-
-go('game');
 
 //GENERAL FUNCTIONS
     //Zoom out
@@ -903,9 +898,11 @@ go('game');
         return ret;
       }
       
-      //dialogs of bear (+ its different emotions)
-      //bear = normal bear, smiling slightly - bear_scared, bear_wink (fun facts), starry-eyed bear
-      const dialogs = [
+
+
+//DIALOGS
+    //bear = normal bear, smiling slightly - bear_scared, bear_wink (fun facts), starry-eyed bear
+    const dialogs = [
         //intro
         ["bear", "Hello, je m'appelle Ours! Tu peux cliquer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear", "Peux-tu m'aider à planter des arbres?"],
@@ -930,3 +927,6 @@ go('game');
         ["bear", "Merci beaucoup d’avoir sauvé ma forêt ! Continue à rajouter le plus d'arbres possible!"],
         //fin
       ]
+
+
+go('game');
