@@ -5,6 +5,7 @@
     //Achievements
     //Darker colors at the beginning -> progress saturation the bigger the forest
     //Increase fire event when auto-clicker
+    //Have all scales depend on screen size
     //Hide HUD button
 
 //KNOWN BUGS
@@ -42,7 +43,7 @@ const BG_Y                      = H/2;
 const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
 const BEAR_SCALE                = 6;
-const BEAR_SMALL_SCALE         = BEAR_SCALE/1.5;
+const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI        = H    + 100;
@@ -182,13 +183,17 @@ scene("game", () => {
      //events
         const MAX_EVENT_STAT = 100;
         let pollu_stat  = 0;
+        let pollu_over  = 0;
         let pollu_boost = 2;
         let pollu_color = rgb(31, 60, 33); //if change this need to change lower
         let defo_stat   = 0;
+        let defo_over   = 0;
         let defo_boost  = 1.5;
         let defo_color  = rgb(89, 66, 53); //if change this need to change lower
         let fire_stat   = 0;
-        let fire_boost  = 2;
+        let fire_over   = 0;
+        let fire_boost  = 3;
+        let fire_color  = rgb(255, 119, 0) //if change this need to change lower
 
     //UI
     //cash
@@ -322,6 +327,13 @@ scene("game", () => {
         "ui",
      ]);
         icon_fire.onDraw(() => {
+            drawRect({
+                pos: vec2(30, 0),
+                width: fire_stat,
+                height: 13,
+                anchor: "left",
+                color: fire_color,
+            })
             emptyBar();
         })
 
@@ -334,6 +346,7 @@ scene("game", () => {
          z(Z_UI_TOP),
          scale(BEAR_SMALL_SCALE),
          area(),
+         "bear",
          "game_elements",
      ]);
     
@@ -504,14 +517,50 @@ scene("game", () => {
         })
 
         //skip dialogs
+        let q = 0;
         onKeyRelease("space", (t) => {
             destroyAll("dialog");
             icon_bear.use(scale(BEAR_SMALL_SCALE));
+            q++;
+            console.log(q);
         })
         onClick("dialog", (t) => {
             destroyAll("dialog");
             icon_bear.use(scale(BEAR_SMALL_SCALE));
+            q++;
+            console.log(q);
         })
+
+        //get a fun fact
+        onClick("bear", (t) => {
+            diaBubble(choose(dia_funfact));
+        })
+
+    //UI elements
+        //click any button
+        onClick("button", (b) => {
+            zoomIn(b);
+        })
+
+        //New itens buttons
+            //New tree
+            onClick("new_tree", (t) =>{
+                if(cash < pr_new_tree){
+                    warning(text_cash);
+                    warning(text_new_tree_price);
+                } else {
+                    addTree();
+                }
+            })
+            //New bee
+            onClick("new_bee", (t) =>{
+                if(cash < pr_new_bee){
+                    warning(text_cash);
+                    warning(text_new_bee_price);
+                } else {
+                    addBee();
+                }
+            })
     
     //Animations
         //bee moving
@@ -543,78 +592,128 @@ scene("game", () => {
                 })
             });
         })
-            
-    
-    //UI elements
-        //click any button
-        onClick("button", (b) => {
-            zoomIn(b);
-        })
-
-        //New itens buttons
-            //New tree
-            onClick("new_tree", (t) =>{
-                if(cash < pr_new_tree){
-                    warning(text_cash);
-                    warning(text_new_tree_price);
-                } else {
-                    addTree();
-                }
-            })
-            //New bee
-            onClick("new_bee", (t) =>{
-                if(cash < pr_new_bee){
-                    warning(text_cash);
-                    warning(text_new_bee_price);
-                } else {
-                    addBee();
-                }
-            })
 
     //AUTOMATIC STUFF
         loop(1, () => {
-            //Timer
-            if(time > 0){time = time - 1;}
-
-            //Each element gives cash overtime
-            plus(cash_per_sec);
-
-            //Increase the events stats
-            let r = choose([0,0,0,0,0,0,0,0,0,1]);
-            if (r == 0 && pollu_stat <= MAX_EVENT_STAT) {
-                pollu_stat = pollu_stat + pollu_boost;
-            }
-            let r2 = choose([0,0,1]);
-            if (r2 == 0 && defo_stat <= MAX_EVENT_STAT) {
-                defo_stat = defo_stat + defo_boost;
-            }
-
-            //Flashes time at multiple occasions
-            if ((time < 61 && time >= 60) || (time < 31 && time >= 30) || (time <= 15)) {
-                smallWarning(text_time);
-            }
-            
-            //Flashes the bars when full
-            if (pollu_stat >= MAX_EVENT_STAT) {
-                pollu_color = rgb(31, 100, 33);
-                wait(0.3, () =>{
-                    pollu_color = rgb(31, 60, 33);
-                })
-            }
-            if (defo_stat >= MAX_EVENT_STAT) {
-                defo_color = rgb(120, 66, 63);
-                wait(0.3, () =>{
-                    defo_color = rgb(89, 66, 53);
-                })
+            if (get("dialog").length == 0) { //Pauses the game if dialogue is opened
+                //Timer
+                if(time > 0){time = time - 1;}
+    
+                //Each element gives cash overtime
+                plus(cash_per_sec);
+    
+                //Increase the events stats
+                let r_pollu = choose([0,0,0,0,0,0,0,0,0,1]);
+                if (r_pollu == 0 && pollu_stat <= MAX_EVENT_STAT) {
+                    pollu_stat = pollu_stat + pollu_boost;
+                }
+                let r_defo = choose([0,0,1]);
+                if (r_defo == 0 && defo_stat <= MAX_EVENT_STAT) {
+                    defo_stat = defo_stat + defo_boost;
+                }
+                if (pollu_stat >= MAX_EVENT_STAT){
+                    pollu_over = pullu_over + pollu_boost;
+                    if(fire_stat <= MAX_EVENT_STAT){
+                        fire_stat = fire_stat + fire_boost;
+                    }
+                }
+                if (defo_stat >= MAX_EVENT_STAT){
+                    defo_over = defo_over + defo_boost;
+                    if(fire_stat <= MAX_EVENT_STAT){
+                        fire_stat = fire_stat + fire_boost;
+                    }
+                }
+    
+                //Flashes time at multiple occasions
+                if ((time < 61 && time >= 60) || (time < 31 && time >= 30) || (time <= 15)) {
+                    smallWarning(text_time);
+                }
+                
+                //Flashes the bars when full
+                if (pollu_stat >= MAX_EVENT_STAT) {
+                    pollu_color = rgb(31, 100, 33);
+                    wait(0.3, () =>{
+                        pollu_color = rgb(31, 60, 33);
+                    })
+                }
+                if (defo_stat >= MAX_EVENT_STAT) {
+                    defo_color = rgb(120, 66, 63);
+                    wait(0.3, () =>{
+                        defo_color = rgb(89, 66, 53);
+                    })
+                }
+                if (fire_stat >= MAX_EVENT_STAT) {
+                    fire_color = rgb(255, 150, 20);
+                    wait(0.3, () =>{
+                        fire_color = rgb(255, 119, 0);
+                    })
+                }
             }
         });
 
+        let p = 0; let d = 0; let f = 0;
         onUpdate(() => {
+         //Intro dialogue
+         if (q < dia_intro.length) {
+            diaBubble(dia_intro[q]);
+         }
+
          //Timer relative actions
          switch(time){
             case 0 : 
                 go("gameOver");
                 break;
+         }
+         //Pollution relative actions
+         if (pollu_stat > 50 && p == 0) {
+            p++;
+            diaBubble(dia_pollution[p]);
+         }
+         if(pollu_over >= MAX_EVENT_STAT && p == 1) {
+            p++;
+            diaBubble(dia_pollution[p]);
+         }
+         if(pollu_over >= 15 && p == 2){
+            p++;
+            diaBubble(dia_pollution[p]);
+         }
+         if(pollu_stat < MAX_EVENT_STAT && p == 3){
+            p++;
+            diaBubble(dia_pollution[p]);
+         }
+         //Deforestation relative actions
+         if (defo_stat > 50 && d == 0) {
+            d++;
+            diaBubble(dia_deforestation[d]);
+         }
+         if(defo_over >= MAX_EVENT_STAT && d == 1) {
+            d++;
+            diaBubble(dia_deforestation[d]);
+         }
+         if(defo_over >= 15 && d == 2){
+            d++;
+            diaBubble(dia_deforestation[d]);
+         }
+         if(defo_stat < MAX_EVENT_STAT && d == 3){
+            d++;
+            diaBubble(dia_deforestation[d]);
+         }
+         //Fire relative actions
+         if (fire_stat > 50 && f == 0) {
+            f++;
+            diaBubble(dia_fire[f]);
+         }
+         if(fire_over >= MAX_EVENT_STAT && f == 1) {
+            f++;
+            diaBubble(dia_fire[f]);
+         }
+         if(fire_over >= 15 && f == 2){
+            f++;
+            diaBubble(dia_fire[f]);
+         }
+         if(fire_stat < MAX_EVENT_STAT && f == 3){
+            f++;
+            diaBubble(dia_fire[f]);
          }
         })
 
@@ -902,31 +1001,35 @@ scene("gameOver", () => {
 
 //DIALOGS
     //bear = normal bear, smiling slightly - bear_scared, bear_wink (fun facts), starry-eyed bear
-    const dialogs = [
-        //intro
+    const dia_intro = [
         ["bear", "Hello, je m'appelle Ours! Tu peux cliquer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear", "Peux-tu m'aider à planter des arbres?"],
         ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres."],
         ["bear", "Tu pourras également acheter des abeilles qui sont importantes pour la pollinisation."], 
         ["bear", "À toi de jouer! Tu as 5 minutes pour m'aider à créer une belle forêt."],
-        //pollution
+    ]
+    const dia_pollution = [
         ["bear_scared", "Attention!! La barre de pollution augmente vite!"],
         ["bear_wink", "Savais-tu qu'un milieu pollué a de graves conséquences comme l'accumulation de toxines dans la chaîne alimentaire et l'ingestion de plastique?"], 
         ["bear_scared", "Clique sur les déchets afin de faire descendre la barre de pollution."],
         //when pollution barre down a certain amount
         ["bear", "Merci beaucoup d'avoir enlevé tous les déchets! Continue à rajouter le plus d'arbres possible!"],
-        //deforestation, how to stop it?
+    ]
+    const dia_deforestation = [
         ["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
         ["bear_wink", "Savais-tu que la destruction des habitats est la principale cause de la perte de diversité des espèces en millieu terrestre?"], 
         ["bear_scared", "!"],
         ["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
-        //incendie
+    ]
+    const dia_fire = [
         ["bear_scared", "Attention!! La barre d'incendie augmente vite!"],
         ["bear_wink", "Savais-tu que 20% des causes de déforestation dans le monde sont dues aux incendies naturels?"],
         ["bear_scared", "Clique sur le feu afin de faire descendre la barre d'incendie."],
         ["bear", "Merci beaucoup d’avoir sauvé ma forêt ! Continue à rajouter le plus d'arbres possible!"],
-        //fin
-      ]
+    ]
+    const dia_funfact = [
+        ["bear_wink", "Ceci est un test !"],
+    ]
 
 
 go('game');
