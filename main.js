@@ -104,6 +104,8 @@ loadRoot('assets/');
         //other
         loadSprite('bee', 'game_elements/other/bee.png');
         loadSprite('bear', 'game_elements/other/bear.png');
+        loadSprite('bear_scared', 'game_elements/other/bear_scared.png');
+        loadSprite('bear_wink', 'game_elements/other/bear_wink.png');
     //ui elements
         //icons
         loadSpriteAtlas("ui/status_icons/icons_spritesheet.png", {
@@ -128,7 +130,7 @@ loadRoot('assets/');
         })
         //new buttons
         loadSprite('new_tree', "ui/new_buttons/new_tree_button.png");
-        loadSprite('new_bee', "ui/new_buttons/new_bee_button.png")
+        loadSprite('new_bee', "ui/new_buttons/new_bee_button.png");
 //load ui sounds
     //loadSound('button_click',"audio/other/click.wav");
 //load sfx
@@ -612,7 +614,7 @@ scene("game", () => {
                     defo_stat = defo_stat + defo_boost;
                 }
                 if (pollu_stat >= MAX_EVENT_STAT){
-                    pollu_over = pullu_over + pollu_boost;
+                    pollu_over = pollu_over + pollu_boost;
                     if(fire_stat <= MAX_EVENT_STAT){
                         fire_stat = fire_stat + fire_boost;
                     }
@@ -1005,7 +1007,7 @@ scene("gameOver", () => {
         ["bear", "Hello, je m'appelle Ours! Tu peux cliquer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear", "Peux-tu m'aider à planter des arbres?"],
         ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres."],
-        ["bear", "Tu pourras également acheter des abeilles qui sont importantes pour la pollinisation."], 
+        ["bear", "Tu pourras également acheter des abeilles qui ont un rôle important pour la pollinisation."], 
         ["bear", "À toi de jouer! Tu as 5 minutes pour m'aider à créer une belle forêt."],
     ]
     const dia_pollution = [
