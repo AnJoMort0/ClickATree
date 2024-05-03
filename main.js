@@ -669,53 +669,53 @@ scene("game", () => {
          //Pollution relative actions
          if (pollu_stat > 50 && p == 0) {
             p++;
-            diaBubble(dia_pollution[p]);
+            diaBubble(dia_pollution[0]);
          }
          if(pollu_over >= MAX_EVENT_STAT && p == 1) {
             p++;
-            diaBubble(dia_pollution[p]);
+            diaBubble(dia_pollution[1]);
          }
          if(pollu_over >= 15 && p == 2){
             p++;
-            diaBubble(dia_pollution[p]);
+            diaBubble(dia_pollution[2]);
          }
          if(pollu_stat < MAX_EVENT_STAT && p == 3){
             p++;
-            diaBubble(dia_pollution[p]);
+            diaBubble(dia_pollution[3]);
          }
          //Deforestation relative actions
          if (defo_stat > 50 && d == 0) {
             d++;
-            diaBubble(dia_deforestation[d]);
+            diaBubble(dia_deforestation[0]);
          }
          if(defo_over >= MAX_EVENT_STAT && d == 1) {
             d++;
-            diaBubble(dia_deforestation[d]);
+            diaBubble(dia_deforestation[1]);
          }
          if(defo_over >= 15 && d == 2){
             d++;
-            diaBubble(dia_deforestation[d]);
+            diaBubble(dia_deforestation[2]);
          }
          if(defo_stat < MAX_EVENT_STAT && d == 3){
             d++;
-            diaBubble(dia_deforestation[d]);
+            diaBubble(dia_deforestation[3]);
          }
          //Fire relative actions
          if (fire_stat > 50 && f == 0) {
             f++;
-            diaBubble(dia_fire[f]);
+            diaBubble(dia_fire[0]);
          }
          if(fire_over >= MAX_EVENT_STAT && f == 1) {
             f++;
-            diaBubble(dia_fire[f]);
+            diaBubble(dia_fire[1]);
          }
          if(fire_over >= 15 && f == 2){
             f++;
-            diaBubble(dia_fire[f]);
+            diaBubble(dia_fire[2]);
          }
          if(fire_stat < MAX_EVENT_STAT && f == 3){
             f++;
-            diaBubble(dia_fire[f]);
+            diaBubble(dia_fire[3]);
          }
         })
 
