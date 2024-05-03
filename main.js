@@ -103,7 +103,7 @@ loadRoot('assets/');
         })
         //other
         loadSprite('bee', 'game_elements/other/bee.png');
-        loadSprite('bear', "game_elements/other/bear.png");
+        loadSprite('bear', 'game_elements/other/bear.png');
     //ui elements
         //icons
         loadSpriteAtlas("ui/status_icons/icons_spritesheet.png", {
