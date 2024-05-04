@@ -11,8 +11,8 @@
 //KNOWN BUGS
     // When multiple trees overlap, the player gets multiple points in a single click
         //* Fixed it by calling it a feature
-    //The bees go behind the tree
     //You can continue clicking the trees and placing them even when the time stops
+        //* Fixed
 
 //===================================================================//
 //===================================================================//
@@ -198,6 +198,8 @@ scene("game", () => {
         let fire_over   = 0;
         let fire_boost  = 3;
         let fire_color  = rgb(255, 119, 0) //if change this need to change lower
+     //others
+        let diaL = get("dialog").length; //length to check if the dialogue is existent
 
     //UI
     //cash
@@ -494,30 +496,32 @@ scene("game", () => {
     ]);
 
     //ADDING EVENT LISTENERS
-    //Game elements
+    //Game elements (inside an if(get("dialog").lenght == 0) to make sure it is impossible to click things if dialogues are on)
         //click the starting tree
         onClick("tree", (t) => { 
-            plus(1);
-            //particles when clicked
-            for (let i = 0; i < rand(0,3); i++) {
-                const leaf_particle = add([
-                    pos(mousePos()),
-                    z(t.pos.y),
-                    sprite(choose(leafs)),
-                    anchor("center"),
-                    scale(rand(0.8, 0.4)),
-                    area({ collisionIgnore:["leaf_particle"]}),
-                    body(),
-                    lifespan(0.5, {fade: 0.2}),
-                    opacity(1),
-                    move(choose([LEFT, RIGHT]), rand(30, 150)),
-                    rotate(rand(0, 360)),
-                    offscreen({destroy: true}),
-                    "leaf_particle",
-                ])
-                leaf_particle.jump(rand(100, 350))
+            if (diaL == 0) {
+                plus(1);
+                //particles when clicked
+                for (let i = 0; i < rand(0,3); i++) {
+                    const leaf_particle = add([
+                        pos(mousePos()),
+                        z(t.pos.y),
+                        sprite(choose(leafs)),
+                        anchor("center"),
+                        scale(rand(0.8, 0.4)),
+                        area({ collisionIgnore:["leaf_particle"]}),
+                        body(),
+                        lifespan(0.5, {fade: 0.2}),
+                        opacity(1),
+                        move(choose([LEFT, RIGHT]), rand(30, 150)),
+                        rotate(rand(0, 360)),
+                        offscreen({destroy: true}),
+                        "leaf_particle",
+                    ])
+                    leaf_particle.jump(rand(100, 350))
+                }
+                zoomOut(t);
             }
-            zoomOut(t);
         })
 
         //skip dialogs
@@ -543,43 +547,34 @@ scene("game", () => {
     //UI elements
         //click any button
         onClick("button", (b) => {
-            zoomIn(b);
+            if (diaL == 0) {
+                zoomIn(b);
+            }
         })
 
         //New itens buttons
             //New tree
-            //onClick("new_tree", (t) =>{
-            //    if(cash < pr_new_tree){
-            //        warning(text_cash);
-            //        warning(text_new_tree_price);
-            //    } else {
-            //        addTree();
-            //    }
-            //})
+            onClick("new_tree", (t) =>{
+                if (diaL == 0) {
+                    if(cash < pr_new_tree){
+                        warning(text_cash);
+                        warning(text_new_tree_price);
+                    } else {
+                        addTree();
+                    }
+                }
+            })
             //New bee
-            //onClick("new_bee", (t) =>{
-            //    if(cash < pr_new_bee){
-            //        warning(text_cash);
-            //        warning(text_new_bee_price);
-            //    } else {
-            //        addBee();
-            //    }
-            //})
-
-            //const new_tree_test = (t) => {
-            //    if(cash < pr_new_tree){
-            //            warning(text_cash);
-            //            warning(text_new_tree_price);
-            //    } else {
-            //            addTree();
-            //    }
-            //};
-            //onClick("new_tree", new_tree_test);
-
-            //function dialog(){
-            //    return document.getElementById("dialog")
-            //}
-
+            onClick("new_bee", (t) =>{
+                if (diaL == 0) {
+                    if(cash < pr_new_bee){
+                        warning(text_cash);
+                        warning(text_new_bee_price);
+                    } else {
+                        addBee();
+                    }
+                }
+            })
     
     //Animations
         //bee moving
@@ -603,45 +598,23 @@ scene("game", () => {
                 bee.move(100, 100);
             })*/
         //})
-        loop(rand(3,20), () => {
-            get("bee").forEach(bee => {
-                wait(rand(0,5), () => {
-                    let target = choose(get("tree"));
-                    bee.moveTo(target.pos.x, target.pos.y);
-                })
-            });
-        })
+        // loop(rand(3,20), () => {
+        //     get("bee").forEach(bee => {
+        //         wait(rand(0,5), () => {
+        //             let target = choose(get("tree"));
+        //             bee.moveTo(target.pos.x, target.pos.y);
+        //         })
+        //     });
+        // })
 
     //AUTOMATIC STUFF
         loop(1, () => {
-            if (get("dialog").length == 0) { //Pauses the game if dialogue is opened
+            if (diaL == 0) { //Pauses the game if dialogue is opened
                 //Timer
                 if(time > 0){
                     time = time - 1
-                };
-                //moved this here from line 550, left original in
-                onClick("new_tree", (t) =>{
-                    if(get("dialog").length == 0){
-                        if(cash < pr_new_tree){
-                            warning(text_cash);
-                            warning(text_new_tree_price);
-                        } else {
-                            addTree();
-                        }
-                    }
-                });
-                onClick("new_bee", (t) =>{
-                    if(get("dialog").length == 0){
-                        if(cash < pr_new_bee){
-                            warning(text_cash);
-                            warning(text_new_bee_price);
-                        } else {
-                            addBee();
-                        }
-                    }
-                });
-                
-    
+                };       
+                      
                 //Each element gives cash overtime
                 plus(cash_per_sec);
     
@@ -695,7 +668,9 @@ scene("game", () => {
         });
 
         let p = 0; let d = 0; let f = 0;
-        onUpdate(() => {
+        onUpdate(() => {    
+        diaL = get("dialog").length; //length to check if the dialogue is existent
+    
          //Intro dialogue
          if (q < dia_intro.length) {
             diaBubble(dia_intro[q]);
