@@ -11,6 +11,8 @@
 //KNOWN BUGS
     // When multiple trees overlap, the player gets multiple points in a single click
         //* Fixed it by calling it a feature
+    //The bees go behind the tree
+    //You can continue clicking the trees and placing them even when the time stops
 
 //===================================================================//
 //===================================================================//
