@@ -557,14 +557,14 @@ scene("game", () => {
             //    }
             //})
             //New bee
-            onClick("new_bee", (t) =>{
-                if(cash < pr_new_bee){
-                    warning(text_cash);
-                    warning(text_new_bee_price);
-                } else {
-                    addBee();
-                }
-            })
+            //onClick("new_bee", (t) =>{
+            //    if(cash < pr_new_bee){
+            //        warning(text_cash);
+            //        warning(text_new_bee_price);
+            //    } else {
+            //        addBee();
+            //    }
+            //})
 
             //const new_tree_test = (t) => {
             //    if(cash < pr_new_tree){
@@ -627,6 +627,16 @@ scene("game", () => {
                             warning(text_new_tree_price);
                         } else {
                             addTree();
+                        }
+                    }
+                });
+                onClick("new_bee", (t) =>{
+                    if(get("dialog").length == 0){
+                        if(cash < pr_new_bee){
+                            warning(text_cash);
+                            warning(text_new_bee_price);
+                        } else {
+                            addBee();
                         }
                     }
                 });
