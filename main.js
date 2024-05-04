@@ -548,14 +548,14 @@ scene("game", () => {
 
         //New itens buttons
             //New tree
-            onClick("new_tree", (t) =>{
-                if(cash < pr_new_tree){
-                    warning(text_cash);
-                    warning(text_new_tree_price);
-                } else {
-                    addTree();
-                }
-            })
+            //onClick("new_tree", (t) =>{
+            //    if(cash < pr_new_tree){
+            //        warning(text_cash);
+            //        warning(text_new_tree_price);
+            //    } else {
+            //        addTree();
+            //    }
+            //})
             //New bee
             onClick("new_bee", (t) =>{
                 if(cash < pr_new_bee){
@@ -565,6 +565,21 @@ scene("game", () => {
                     addBee();
                 }
             })
+
+            //const new_tree_test = (t) => {
+            //    if(cash < pr_new_tree){
+            //            warning(text_cash);
+            //            warning(text_new_tree_price);
+            //    } else {
+            //            addTree();
+            //    }
+            //};
+            //onClick("new_tree", new_tree_test);
+
+            //function dialog(){
+            //    return document.getElementById("dialog")
+            //}
+
     
     //Animations
         //bee moving
@@ -601,7 +616,21 @@ scene("game", () => {
         loop(1, () => {
             if (get("dialog").length == 0) { //Pauses the game if dialogue is opened
                 //Timer
-                if(time > 0){time = time - 1;}
+                if(time > 0){
+                    time = time - 1
+                };
+                //moved this here from line 550, left original in
+                onClick("new_tree", (t) =>{
+                    if(get("dialog").length == 0){
+                        if(cash < pr_new_tree){
+                            warning(text_cash);
+                            warning(text_new_tree_price);
+                        } else {
+                            addTree();
+                        }
+                    }
+                });
+                
     
                 //Each element gives cash overtime
                 plus(cash_per_sec);
