@@ -108,9 +108,9 @@ loadRoot('assets/');
         loadSprite('bee', 'game_elements/other/bee.png');
         loadSprite('trash', 'game_elements/other/trashcan_.png')
         //bear
-        loadSprite('bear', 'game_elements/other/bear.png');
-        loadSprite('bear_scared', 'game_elements/other/bear_scared.png');
-        loadSprite('bear_wink', 'game_elements/other/bear_wink.png');
+        loadSprite('bear', 'game_elements/bear/bear.png');
+        loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
+        loadSprite('bear_wink', 'game_elements/bear/bear_wink.png');
     //ui elements
         //icons
         loadSpriteAtlas("ui/status_icons/icons_spritesheet.png", {
@@ -671,7 +671,6 @@ scene("game", () => {
 
     //AUTOMATIC STUFF
         loop(1, () => {
-            console.log("cps : " + cash_per_sec + " // cps_final : " + cps_final);
             if (diaL == 0) { //Pauses the game if dialogue is opened
                 //Timer
                 if(time > 0){
