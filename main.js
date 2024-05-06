@@ -171,6 +171,8 @@ scene("game", () => {
      let cash            = 0;
      let score           = 0;
      let cash_per_sec    = 0;
+     let cps_penalty     = 1;
+     let cps_final       = cash_per_sec / cps_penalty;
      let time            = 300;
      //prices
         let scaling     = 1.4;
@@ -230,7 +232,7 @@ scene("game", () => {
         "ui",
      ]);
      const text_cash_per_sec = CASHBOX.add([
-        text(formatNumber(cash_per_sec, {useOrderSuffix: true, decimals: 1}) + "/s",{
+        text(formatNumber(cps_final, {useOrderSuffix: true, decimals: 1}) + "/s",{
             size    : 24,   
             width   : W,
         }),
@@ -239,7 +241,7 @@ scene("game", () => {
         z(Z_UI),
         {
             update(){
-                this.text = formatNumber(cash_per_sec, {useOrderSuffix: true, decimals: 1}) + "/s";
+                this.text = formatNumber(cps_final, {useOrderSuffix: true, decimals: 1}) + "/s";
             }
         },
         "ui",
@@ -277,7 +279,7 @@ scene("game", () => {
     ]);
 
     //EVENTS UI
-    const EVENTS = add([anchor("left"),pos(0,text_time.pos.y + 60),z(Z_UI_BOTTOM),"ui"])
+    const EVENTS = add([anchor("left"),pos(10,text_time.pos.y + 65),z(Z_UI_BOTTOM),"ui"])
     function emptyBar(){
         drawRect({
             pos: vec2(30, 0),
@@ -312,7 +314,7 @@ scene("game", () => {
     const icon_defo = EVENTS.add([
         sprite('defo_icon'),
         anchor('left'),
-        pos(0, icon_pollution.pos.y + ICON_DIST),
+        pos(icon_pollution.pos.x, icon_pollution.pos.y + ICON_DIST),
         z(Z_UI),
         scale(SPRITE_ICON_SCALE),
         "ui",
@@ -331,7 +333,7 @@ scene("game", () => {
     const icon_fire = add([
         sprite('fire_icon'),
         anchor('left'),
-        pos(0, 140), //for some reason using the relative pos doesn0t work here
+        pos(10, 145), //for some reason using the relative pos doesn0t work here
         z(Z_UI),
         scale(SPRITE_ICON_SCALE),
         "ui",
@@ -669,6 +671,7 @@ scene("game", () => {
 
     //AUTOMATIC STUFF
         loop(1, () => {
+            console.log("cps : " + cash_per_sec + " // cps_final : " + cps_final);
             if (diaL == 0) { //Pauses the game if dialogue is opened
                 //Timer
                 if(time > 0){
@@ -676,7 +679,7 @@ scene("game", () => {
                 };       
                       
                 //Each element gives cash overtime
-                plus(cash_per_sec);
+                plus(cps_final);
     
                 //Increase the events stats
                 let r_pollu = choose([0,0,0,0,0,0,0,0,0,1]);
@@ -741,7 +744,7 @@ scene("game", () => {
         nb_trees    = get('tree').length;
         nb_bees     = get('bee').length;
         nb_trash    = get('trash').length;
-    
+
          //Intro dialogue
          if (q < dia_intro.length) {
             diaBubble(dia_intro[q]);
@@ -753,6 +756,7 @@ scene("game", () => {
                 go("gameOver");
                 break;
          }
+
          //Pollution relative actions
          if (pollu_stat > 50 && p == 0) {
             p++;
@@ -803,6 +807,14 @@ scene("game", () => {
          if(fire_stat < MAX_EVENT_STAT && f == 3){
             f++;
             diaBubble(dia_fire[3]);
+         }
+
+         //negative effects of pollution
+         cps_final   = cash_per_sec / cps_penalty;
+         if (nb_trash == 0) {
+            cps_penalty = 1;
+         } else {
+            cps_penalty = nb_trash;
          }
         })
 
@@ -879,9 +891,10 @@ scene("game", () => {
        }
        //Add a dialog box
        function diaBubble(array_with_number){
+            let width = W/1.5;
             destroyAll("dialog");
             const bubble = add([ //CAN'T ADD IT IN BEARBOX BECAUSE BEARBOX CAN'T HAVE THE AREA() FUNCTION
-                rect(W/1.5, H/8, { radius: 32 }),
+                rect(width, H/8, { radius: 32 }),
                 anchor("center"),
                 pos(BEARBOX.pos.x - 15, H - H/8),
                 z(Z_UI_BOTTOM),
@@ -890,7 +903,7 @@ scene("game", () => {
                 "dialog",
             ])
             const txt_bubble = add([
-                text(array_with_number[1], { size: 20, width: W/1.5 - 15, align: "center" }),
+                text(array_with_number[1], { size: 20, width: width - 15, align: "center" }),
                 pos(bubble.pos),
                 anchor("center"),
                 color(0, 0, 0),
