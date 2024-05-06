@@ -51,8 +51,9 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
     const Z_UI        = H    + 100;
     const Z_UI_TOP    = Z_UI + 1;
     const Z_UI_BOTTOM = Z_UI - 1;
-//relative scale of trees to screen height
+//relative scale of objects to screen height
     const TREE_SCALE    = 1/1500; 
+    const TRASH_SCALE   = 3;
 
 //load assets
 loadRoot('assets/');
@@ -103,8 +104,10 @@ loadRoot('assets/');
         leafs.forEach((spr) => {
             loadSprite(spr, `game_elements/leafs/${spr}.png`);
         })
-        //other
+        //others
         loadSprite('bee', 'game_elements/other/bee.png');
+        loadSprite('trash', 'game_elements/other/trashcan_.png')
+        //bear
         loadSprite('bear', 'game_elements/other/bear.png');
         loadSprite('bear_scared', 'game_elements/other/bear_scared.png');
         loadSprite('bear_wink', 'game_elements/other/bear_wink.png');
@@ -182,8 +185,9 @@ scene("game", () => {
         let nb_txt_x    = -150;
         let nb_txt_y    = 30;
         let nb_txt_size = 1;
-        let nb_trees    = 1;
-        let nb_bees     = 0;
+        let nb_trees    = get('tree').length;
+        let nb_bees     = get('bee').length;
+        let nb_trash    = get('trash').length;
      //events
         const MAX_EVENT_STAT = 100;
         let pollu_stat  = 0;
@@ -497,7 +501,7 @@ scene("game", () => {
 
     //ADDING EVENT LISTENERS
     //Game elements (inside an if(get("dialog").lenght == 0) to make sure it is impossible to click things if dialogues are on)
-        //click the starting tree
+        //click any tree
         onClick("tree", (t) => { 
             if (diaL == 0) {
                 plus(1);
@@ -523,21 +527,77 @@ scene("game", () => {
                 zoomOut(t);
             }
         })
+        //click the trashcans
+        onClick("trash", (t) => { 
+            if (diaL == 0) {
+                //particles when clicked
+                for (let i = 0; i < 1; i++) {
+                    const trash_particle = add([
+                        pos(mousePos()),
+                        z(t.pos.y + 10),
+                        sprite('pollution_icon'),
+                        anchor("center"),
+                        scale(rand(1, 0.6)),
+                        area({ collisionIgnore:["trash_particle"]}),
+                        body(),
+                        lifespan(0.5, {fade: 0.2}),
+                        opacity(1),
+                        move(choose([LEFT, RIGHT]), rand(30, 150)),
+                        rotate(rand(0, 360)),
+                        offscreen({destroy: true}),
+                        "trash_particle",
+                    ])
+                    trash_particle.jump(rand(100, 350))
+                }
+                zoomOut(t);
+                minusPollu();
+                if(pollu_over <= 0){
+                    let ran = choose([0,1,1,1,1,1,1,1]);
+                    if (ran == 0) {
+                        destroy(t);
+                    }
+                }
+                if(pollu_stat < 15){
+                    destroyAll("trash")
+                }
+            }
+        })
+        onDestroy("trash", (t) =>{
+            for (let i = 0; i < rand(5); i++) {
+                const trash_particle = add([
+                    pos(t.pos),
+                    z(t.pos.y + 10),
+                    sprite('pollution_icon'),
+                    anchor("center"),
+                    scale(rand(1, 0.6)),
+                    area({ collisionIgnore:["trash_particle"]}),
+                    body(),
+                    lifespan(0.5, {fade: 0.2}),
+                    opacity(1),
+                    move(choose([LEFT, RIGHT]), rand(30, 150)),
+                    rotate(rand(0, 360)),
+                    offscreen({destroy: true}),
+                    "trash_particle",
+                ])
+                trash_particle.jump(rand(100, 350))
+            }
+        })
 
         //skip dialogs
         let q = 0;
         onKeyRelease("space", (t) => {
             destroyAll("dialog");
+            icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
             q++;
-            console.log(q);
         })
-        onClick("dialog", (t) => {
+        /*onClick("dialog", (t) => {
             destroyAll("dialog");
+            icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
             q++;
-            console.log(q);
-        })
+
+        })*/
 
         //get a fun fact
         onClick("bear", (t) => {
@@ -628,16 +688,24 @@ scene("game", () => {
                     defo_stat = defo_stat + defo_boost;
                 }
                 if (pollu_stat >= MAX_EVENT_STAT){
-                    pollu_over = pollu_over + pollu_boost;
+                    pollu_over++;
                     if(fire_stat <= MAX_EVENT_STAT){
                         fire_stat = fire_stat + fire_boost;
                     }
                 }
                 if (defo_stat >= MAX_EVENT_STAT){
-                    defo_over = defo_over + defo_boost;
+                    defo_over++;
                     if(fire_stat <= MAX_EVENT_STAT){
                         fire_stat = fire_stat + fire_boost;
                     }
+                }
+                if (fire_stat >= MAX_EVENT_STAT){
+                    fire_over++;
+                }
+
+                //Adds trashcans
+                if(pollu_over % 5 == 0 && pollu_over != 0) {
+                    addTrash();
                 }
     
                 //Flashes time at multiple occasions
@@ -645,7 +713,7 @@ scene("game", () => {
                     smallWarning(text_time);
                 }
                 
-                //Flashes the bars when full
+                //Flashes the events  bars when full
                 if (pollu_stat >= MAX_EVENT_STAT) {
                     pollu_color = rgb(31, 100, 33);
                     wait(0.3, () =>{
@@ -669,7 +737,10 @@ scene("game", () => {
 
         let p = 0; let d = 0; let f = 0;
         onUpdate(() => {    
-        diaL = get("dialog").length; //length to check if the dialogue is existent
+        diaL        = get("dialog").length; //length to check if the dialogue is existent
+        nb_trees    = get('tree').length;
+        nb_bees     = get('bee').length;
+        nb_trash    = get('trash').length;
     
          //Intro dialogue
          if (q < dia_intro.length) {
@@ -793,6 +864,19 @@ scene("game", () => {
             pr_new_bee  = pr_new_bee * scaling;
             cps(cps_bee);
        }
+        //Add a new trash
+       function addTrash() {
+         const randX  = rand(0, W - BUTTON_SIZE);
+         const trash  = add([
+             sprite('trash'),
+             pos(randX, H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)),
+             scale(TRASH_SCALE),
+             anchor("bot"),
+             area(),
+             z(H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE) + 10),
+             "trash",
+          ])
+       }
        //Add a dialog box
        function diaBubble(array_with_number){
             destroyAll("dialog");
@@ -840,6 +924,18 @@ scene("game", () => {
         //Increase cash per second
         function cps(x){
             cash_per_sec = cash_per_sec + x;
+        }
+
+        //Remove pollu-stat
+        function minusPollu(){
+            if (pollu_over > 0) {
+                pollu_over = pollu_over - pollu_boost;
+                console.log("pollu_over : " + pollu_over);
+            }
+            if(pollu_over <= 0 && pollu_stat > 0){
+                pollu_stat = pollu_stat - pollu_boost;
+                console.log("pollu_stat : " + pollu_stat);
+            }
         }
 
         //Debug
