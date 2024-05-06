@@ -138,8 +138,11 @@ loadRoot('assets/');
         loadSprite('new_bee', "ui/new_buttons/new_bee_button.png");
 //load ui sounds
     //loadSound('button_click',"audio/other/click.wav");
+    loadSound('button_click', "audio/other/click.wav");
+    loadSound('tree_fall',"audio/other/tree_fall.wav");
+    loadSound('fire',"audio/other/fire.wav");
 //load sfx
-    //loadSound('birds_bg',"audio/sfx/birds.wav");
+    loadSound('birds_bg',"audio/sfx/bird.wav");
 //load music
     //loadSound('default_music',"audio/music/default.wav");
 
