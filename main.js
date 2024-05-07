@@ -210,11 +210,11 @@ scene("game", () => {
         let nb_trash    = get('trash').length;
      //events
         const MAX_EVENT_STAT = 100;
-        let pollu_stat  = 90;
+        let pollu_stat  = 0;
         let pollu_over  = 0;
         let pollu_boost = 2;
         let pollu_color = rgb(31, 60, 33); //if change this need to change lower
-        let defo_stat   = 90;
+        let defo_stat   = 0;
         let defo_over   = 0;
         let defo_boost  = 1.5;
         let defo_color  = rgb(89, 66, 53); //if change this need to change lower
@@ -517,7 +517,6 @@ scene("game", () => {
         "tree",
         "clickable",
         "start_tree",
-        cps(cps_tree),
     ]);
 
     //ADDING EVENT LISTENERS
@@ -832,6 +831,14 @@ scene("game", () => {
         nb_bees     = get('bee').length;
         nb_trash    = get('trash').length;
 
+         cash_per_sec = (nb_trees * cps_tree) + (nb_bees * cps_bee);
+         cps_final   = cash_per_sec / cps_penalty;
+         if (nb_trash == 0) {
+            cps_penalty = 1;
+         } else {
+            cps_penalty = nb_trash;
+         }
+
          //Intro dialogue
          if (q < dia_intro.length) {
             diaBubble(dia_intro[q]);
@@ -895,14 +902,6 @@ scene("game", () => {
             f++;
             diaBubble(dia_fire[3]);
          }
-
-         //negative effects of pollution
-         cps_final   = cash_per_sec / cps_penalty;
-         if (nb_trash == 0) {
-            cps_penalty = 1;
-         } else {
-            cps_penalty = nb_trash;
-         }
         })
 
     //FUNCTIONS
@@ -923,10 +922,8 @@ scene("game", () => {
              "tree",
           ])
             pay(pr_new_tree);
-            nb_trees     = nb_trees + 1;
             //exp(pr_new_tree); //PK çA MARCHE PAS??????
             pr_new_tree = pr_new_tree * scaling;
-            cps(cps_tree);
        }
        //Add a new bee
        function addBee(){
@@ -940,10 +937,8 @@ scene("game", () => {
             "bee",
         ])
             pay(pr_new_bee);
-            nb_bees     = nb_bees + 1;
             //change with function
             pr_new_bee  = pr_new_bee * scaling;
-            cps(cps_bee);
        }
         //Add a new trash
          function addTrash() {
@@ -1031,11 +1026,6 @@ scene("game", () => {
             console.log(x);
             x = x * scaling;
             console.log(x);
-        }
-
-        //Increase cash per second
-        function cps(x){
-            cash_per_sec = cash_per_sec + x;
         }
 
         //Remove pollu-stat
