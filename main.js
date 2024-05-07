@@ -144,7 +144,7 @@ loadRoot('assets/');
 //load sfx
     loadSound('birds_bg',"audio/sfx/bird.wav");
 //load music
-    //loadSound('default_music',"audio/music/default.wav");
+    loadSound('default_music',"audio/music/music.wav");
 
 //============================//
 
