@@ -583,6 +583,36 @@ scene("game", () => {
                 }
             }
         })
+        //click the bulldozer
+        onClick("bulldozer", (t) => { 
+            if (diaL == 0) {
+                //particles when clicked
+                for (let i = 0; i < rand(5); i++) {
+                    const smoke_particle = add([
+                        pos(mousePos()),
+                        z(t.z + 1),
+                        sprite('smoke', {
+                            anim: "main",
+                        }),
+                        anchor("center"),
+                        scale(rand(0.05, 0.1)),
+                        area({ collisionIgnore:["smoke_particle"]}),
+                        body(),
+                        lifespan(0.3, {fade: 0.2}),
+                        opacity(1),
+                        move(choose([LEFT,RIGHT]), rand(30, 150)),
+                        offscreen({destroy: true}),
+                        "smoke_particle",
+                    ])
+                    smoke_particle.jump(rand(400, 500));
+                }
+                zoomOut(t);
+                minusDefo();
+                if(defo_stat < 5){
+                    destroy(t);
+                }
+            }
+        })
         onDestroy("trash", (t) =>{
             for (let i = 0; i < rand(5); i++) {
                 const trash_particle = add([
@@ -623,6 +653,27 @@ scene("game", () => {
                 leaf_particle.jump(rand(100, 350));
             }
             rT = choose(get('tree')); //get a random tree for the bulldozer to follow
+        })
+        onDestroy("bulldozer", (t) => {
+            for (let i = 0; i < rand(10,30); i++) {
+                const smoke_particle = add([
+                    pos(mousePos()),
+                    z(t.z + 1),
+                    sprite('smoke', {
+                        anim: "main",
+                    }),
+                    anchor("center"),
+                    scale(rand(0.05, 0.1)),
+                    area({ collisionIgnore:["smoke_particle"]}),
+                    body(),
+                    lifespan(0.3, {fade: 0.2}),
+                    opacity(1),
+                    move(choose([LEFT,RIGHT]), rand(30, 150)),
+                    offscreen({destroy: true}),
+                    "smoke_particle",
+                ])
+                smoke_particle.jump(rand(400, 500));
+            }
         })
 
         //skip dialogs
@@ -677,37 +728,6 @@ scene("game", () => {
                     }
                 }
             })
-    
-    //Animations
-        //bee moving
-        //get("bee").forEach(bee => {
-            /*console.log(bee);
-            bee.onStateEnter("idle", async () => {
-                await wait(rand(0,10))
-                bee.enterState("move")
-            })
-            bee.onStateEnter("move", async () => {
-                await wait(3) //instead of this I need to change to when colliding with a tree
-                bee.enterState("idle")
-            })
-            bee.onStateUpdate("move", () => {
-                let target = choose(get("tree"));
-                console.log(target);
-                const dir = target.pos.sub(bee.pos).unit();
-                bee.move(dir.scale(rand(100-200)));
-            })
-            bee.onStateUpdate("idle", () => {
-                bee.move(100, 100);
-            })*/
-        //})
-        // loop(rand(3,20), () => {
-        //     get("bee").forEach(bee => {
-        //         wait(rand(0,5), () => {
-        //             let target = choose(get("tree"));
-        //             bee.moveTo(target.pos.x, target.pos.y);
-        //         })
-        //     });
-        // })
 
     //AUTOMATIC STUFF
         let randTree = choose(get('tree'));
@@ -779,26 +799,28 @@ scene("game", () => {
                     })
                 }
 
-                //move the bulldozer
+                //spawn smoke particles on the bulldozer
                 if (get('bulldozer').length != 0) {
                     let bd = get('bulldozer')[0];
-                    const smoke_particle = add([ // the smoke spawner is not working for some reason, the sprites don't seem to be working
-                        pos(bd.pos),
-                        z(Z_UI),
+                    let smoke_dir = LEFT;
+                    if(bd.flipX == false){smoke_dir = RIGHT;} else {smoke_dir = LEFT;};
+                    const smoke_particle = add([
+                        pos(bd.pos.x, bd.pos.y - 30),
+                        z(bd.z-1),
                         sprite('smoke', {
                             anim: "main",
                         }),
                         anchor("center"),
-                        scale(rand(10)),
+                        scale(rand(0.05, 0.1)),
                         area({ collisionIgnore:["smoke_particle"]}),
                         body(),
-                        lifespan(0.5, {fade: 0.3}),
-                        opacity(1),
-                        move(choose([LEFT, RIGHT]), rand(30, 150)),
+                        lifespan(0.3, {fade: 0.2}),
+                        opacity(0.8),
+                        move(smoke_dir, rand(30, 150)),
                         offscreen({destroy: true}),
                         "smoke_particle",
                     ])
-                    smoke_particle.jump(rand(400, 700))
+                    smoke_particle.jump(rand(400, 500));
                 }
             }
         });
@@ -915,24 +937,6 @@ scene("game", () => {
             anchor('center'),
             area(),
             z(this.pos.y),
-            /*state("move", [ "idle", "move" ]),
-            this.onStateEnter("idle", async () => {
-                await wait(rand(0,10))
-                this.enterState("move")
-            }),
-            this.onStateEnter("move", async () => {
-                await wait(3) //instead of this I need to change to when colliding with a tree
-                this.enterState("idle")
-            }),
-            this.onStateUpdate("move", () => {
-                let target = choose(get("tree"));
-                console.log(target);
-                const dir = target.pos.sub(this.pos).unit();
-                this.move(dir.scale(rand(100-200)));
-            }),
-            this.onStateUpdate("idle", () => {
-                this.move(100, 100);
-            }),*/
             "bee",
         ])
             pay(pr_new_bee);
@@ -958,21 +962,23 @@ scene("game", () => {
         //Add a bulldozer
          function addBulldozer() {
             rT = choose(get('tree'));
-            console.log(rT.pos);
             const bulldozer = add([
                 sprite('bulldozer'),
                 anchor("bot"),
-                pos(100, H/2),
+                pos(-100, H/2),
                 {
                     update(){
                         if (diaL == 0 && nb_trees > 1) {
                             this.z = this.pos.y;
-                            this.moveTo(rT.pos.x, rT.pos.y + 10, 25);
-                            this.onCollide("tree", (tree) => {
-                                wait(2, () => {
-                                    destroy(tree);
-                                })
-                            })
+                            if (this.pos.x > rT.pos.x) {
+                                this.flipX = false;
+                            } else {
+                                this.flipX = true;
+                            }
+                            this.moveTo(rT.pos.x, rT.pos.y + 10, 50);
+                            if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y + 10){
+                                destroy(rT);
+                            }
                         }
                     },
                 },
@@ -1039,6 +1045,15 @@ scene("game", () => {
             }
             if(pollu_over <= 0 && pollu_stat > 0){
                 pollu_stat = pollu_stat - pollu_boost;
+            }
+        }
+        //Remove defo-stat
+        function minusDefo(){
+            if (defo_over > 0) {
+                defo_over = defo_over - defo_boost;
+            }
+            if(defo_over <= 0 && defo_stat > 0){
+                defo_stat = defo_stat - defo_boost;
             }
         }
 
