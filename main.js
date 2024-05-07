@@ -14,6 +14,10 @@
     //You can continue clicking the trees and placing them even when the time stops
         //* Fixed
 
+//Add to README
+    //2 function codes down the js page
+    //Smoke sprite : https://miguelnero.itch.io/particle-smoke
+
 //===================================================================//
 //===================================================================//
 
@@ -52,8 +56,9 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
     const Z_UI_TOP    = Z_UI + 1;
     const Z_UI_BOTTOM = Z_UI - 1;
 //relative scale of objects to screen height
-    const TREE_SCALE    = 1/1500; 
-    const TRASH_SCALE   = 3;
+    const TREE_SCALE        = 1/1500; 
+    const TRASH_SCALE       = 3;
+    const BULLDOZER_SCALE   = 4;
 
 //load assets
 loadRoot('assets/');
@@ -107,10 +112,22 @@ loadRoot('assets/');
         //others
         loadSprite('bee', 'game_elements/other/bee.png');
         loadSprite('trash', 'game_elements/other/trashcan_.png')
+        loadSprite('bulldozer', 'game_elements/other/bulldozer.png')
         //bear
         loadSprite('bear', 'game_elements/bear/bear.png');
         loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
         loadSprite('bear_wink', 'game_elements/bear/bear_wink.png');
+        //vfx
+        loadSprite('smoke', 'game_elements/vfx/smoke.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
+            sliceX: 3,
+            sliceY: 3,
+            anims: {
+                main: {
+                    from: 0,
+                    to: 6,
+                },
+            },
+        })
     //ui elements
         //icons
         loadSpriteAtlas("ui/status_icons/icons_spritesheet.png", {
@@ -179,27 +196,22 @@ scene("game", () => {
      let time            = 300;
      //prices
         let scaling     = 1.4;
-        let pr_txt_x    = -95;
-        let pr_txt_y    = -20;
         let pr_new_tree = 20;
         let pr_new_bee  = 100;
      //cash/second
         let cps_tree    = 0.1;
         let cps_bee     = 1;
      //number of elements
-        let nb_txt_x    = -150;
-        let nb_txt_y    = 30;
-        let nb_txt_size = 1;
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
         let nb_trash    = get('trash').length;
      //events
         const MAX_EVENT_STAT = 100;
-        let pollu_stat  = 0;
+        let pollu_stat  = 90;
         let pollu_over  = 0;
         let pollu_boost = 2;
         let pollu_color = rgb(31, 60, 33); //if change this need to change lower
-        let defo_stat   = 0;
+        let defo_stat   = 90;
         let defo_over   = 0;
         let defo_boost  = 1.5;
         let defo_color  = rgb(89, 66, 53); //if change this need to change lower
@@ -209,6 +221,7 @@ scene("game", () => {
         let fire_color  = rgb(255, 119, 0) //if change this need to change lower
      //others
         let diaL = get("dialog").length; //length to check if the dialogue is existent
+        let rT = choose(get('tree')); //get a random tree for the bulldozer to follow
 
     //UI
     //cash
@@ -562,7 +575,7 @@ scene("game", () => {
                         destroy(t);
                     }
                 }
-                if(pollu_stat < 15){
+                if(pollu_stat < 5){
                     destroyAll("trash")
                 }
             }
@@ -586,6 +599,27 @@ scene("game", () => {
                 ])
                 trash_particle.jump(rand(100, 350))
             }
+        })
+        onDestroy("tree", (t) => {
+            for (let i = 0; i < rand(10,20); i++) {
+                const leaf_particle = add([
+                    pos(t.pos),
+                    z(t.pos.y + 10),
+                    sprite(choose(leafs)),
+                    anchor("center"),
+                    scale(rand(1, 0.6)),
+                    area({ collisionIgnore:["leaf_particle"]}),
+                    body(),
+                    lifespan(0.5, {fade: 0.2}),
+                    opacity(1),
+                    move(choose([LEFT, RIGHT]), rand(30, 150)),
+                    rotate(rand(0, 360)),
+                    offscreen({destroy: true}),
+                    "leaf_particle",
+                ])
+                leaf_particle.jump(rand(100, 350));
+            }
+            rT = choose(get('tree')); //get a random tree for the bulldozer to follow
         })
 
         //skip dialogs
@@ -673,6 +707,7 @@ scene("game", () => {
         // })
 
     //AUTOMATIC STUFF
+        let randTree = choose(get('tree'));
         loop(1, () => {
             if (diaL == 0) { //Pauses the game if dialogue is opened
                 //Timer
@@ -702,6 +737,9 @@ scene("game", () => {
                     defo_over++;
                     if(fire_stat <= MAX_EVENT_STAT){
                         fire_stat = fire_stat + fire_boost;
+                    }
+                    if(get("bulldozer").length == 0){
+                        addBulldozer();
                     }
                 }
                 if (fire_stat >= MAX_EVENT_STAT){
@@ -736,6 +774,28 @@ scene("game", () => {
                     wait(0.3, () =>{
                         fire_color = rgb(255, 119, 0);
                     })
+                }
+
+                //move the bulldozer
+                if (get('bulldozer').length != 0) {
+                    let bd = get('bulldozer')[0];
+                    const smoke_particle = add([ // the smoke spawner is not working for some reason, the sprites don't seem to be working
+                        pos(bd.pos),
+                        z(Z_UI),
+                        sprite('smoke', {
+                            anim: "main",
+                        }),
+                        anchor("center"),
+                        scale(rand(10)),
+                        area({ collisionIgnore:["smoke_particle"]}),
+                        body(),
+                        lifespan(0.5, {fade: 0.3}),
+                        opacity(1),
+                        move(choose([LEFT, RIGHT]), rand(30, 150)),
+                        offscreen({destroy: true}),
+                        "smoke_particle",
+                    ])
+                    smoke_particle.jump(rand(400, 700))
                 }
             }
         });
@@ -879,18 +939,46 @@ scene("game", () => {
             cps(cps_bee);
        }
         //Add a new trash
-       function addTrash() {
-         const randX  = rand(0, W - BUTTON_SIZE);
+         function addTrash() {
+         const randX  = rand(0, W - icon_bear.pos.x);
+         const randY  = rand((H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)) + 10, (H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)) - 10);
          const trash  = add([
              sprite('trash'),
-             pos(randX, H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)),
+             pos(randX, randY),
              scale(TRASH_SCALE),
              anchor("bot"),
              area(),
-             z(H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE) + 10),
+             z(randY),
              "trash",
           ])
-       }
+         }
+        //Add a bulldozer
+         function addBulldozer() {
+            rT = choose(get('tree'));
+            console.log(rT.pos);
+            const bulldozer = add([
+                sprite('bulldozer'),
+                anchor("bot"),
+                pos(100, H/2),
+                {
+                    update(){
+                        if (diaL == 0 && nb_trees > 1) {
+                            this.z = this.pos.y;
+                            this.moveTo(rT.pos.x, rT.pos.y + 10, 25);
+                            this.onCollide("tree", (tree) => {
+                                wait(2, () => {
+                                    destroy(tree);
+                                })
+                            })
+                        }
+                    },
+                },
+                z(1),
+                scale(BULLDOZER_SCALE),
+                area(),
+                "bulldozer",
+            ])
+         }
        //Add a dialog box
        function diaBubble(array_with_number){
             let width = W/1.5;
@@ -945,11 +1033,9 @@ scene("game", () => {
         function minusPollu(){
             if (pollu_over > 0) {
                 pollu_over = pollu_over - pollu_boost;
-                console.log("pollu_over : " + pollu_over);
             }
             if(pollu_over <= 0 && pollu_stat > 0){
                 pollu_stat = pollu_stat - pollu_boost;
-                console.log("pollu_stat : " + pollu_stat);
             }
         }
 
