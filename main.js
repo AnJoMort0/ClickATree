@@ -776,26 +776,26 @@ scene("game", () => {
                     })
                 }
 
-                //move the bulldozer
+                //spawn smoke particles on the bulldozer
                 if (get('bulldozer').length != 0) {
-                    let bd = get('bulldozer')[0];
-                    const smoke_particle = add([ // the smoke spawner is not working for some reason, the sprites don't seem to be working
-                        pos(bd.pos),
-                        z(Z_UI),
+                    /*let bd = get('bulldozer')[0];
+                    const smoke_particle = add([
+                        pos(bd.pos.x, bd.pos.y - 30),
+                        z(bd.z-1),
                         sprite('smoke', {
                             anim: "main",
                         }),
                         anchor("center"),
-                        scale(rand(10)),
+                        scale(rand(0.05, 0.1)),
                         area({ collisionIgnore:["smoke_particle"]}),
                         body(),
-                        lifespan(0.5, {fade: 0.3}),
-                        opacity(1),
-                        move(choose([LEFT, RIGHT]), rand(30, 150)),
+                        lifespan(0.3, {fade: 0.2}),
+                        opacity(0.8),
+                        move(choose([LEFT, RIGHT]), rand(30, 150)), //need to move the direction depending on the bulldozer direction
                         offscreen({destroy: true}),
                         "smoke_particle",
                     ])
-                    smoke_particle.jump(rand(400, 700))
+                    smoke_particle.jump(rand(300, 500))*/ //---> for some reason it's spawning a whole bunch of particles instead of a single one per second
                 }
             }
         });
@@ -964,12 +964,15 @@ scene("game", () => {
                     update(){
                         if (diaL == 0 && nb_trees > 1) {
                             this.z = this.pos.y;
-                            this.moveTo(rT.pos.x, rT.pos.y + 10, 25);
-                            this.onCollide("tree", (tree) => {
-                                wait(2, () => {
-                                    destroy(tree);
-                                })
-                            })
+                            if (this.pos.x > rT.pos.x) {
+                                this.flipX = false;
+                            } else {
+                                this.flipX = true;
+                            }
+                            this.moveTo(rT.pos.x, rT.pos.y + 10, 50);
+                            if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y + 10){
+                                destroy(rT);
+                            }
                         }
                     },
                 },
