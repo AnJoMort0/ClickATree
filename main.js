@@ -242,6 +242,7 @@ scene("game", () => {
         let fire_color  = rgb(255, 119, 0) //if change this need to change lower
      //others
         let diaL = get("dialog").length; //length to check if the dialogue is existent
+        let health_tree = 20;
 
     //UI
     //cash
@@ -571,6 +572,7 @@ scene("game", () => {
         anchor("bot"),
         area(),
         z(y_st),
+        health(health_tree),
         "tree",
         "clickable",
         "start_tree",
@@ -582,6 +584,7 @@ scene("game", () => {
         onClick("tree", (t) => { 
             if (diaL == 0) {
                 plus(1);
+
                 //particles when clicked
                 for (let i = 0; i < rand(0,3); i++) {
                     const leaf_particle = add([
@@ -987,6 +990,7 @@ scene("game", () => {
              anchor("bot"),
              area(),
              z(randY),
+             health(health_tree),
              "tree",
           ])
             pay(pr_new_tree);
@@ -995,7 +999,7 @@ scene("game", () => {
        }
         //Add custom new tree
        function addCustTree(x,y) {
-         //const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
+         let clicked = 0;
          const tree  = add([
              sprite(choose(trees)),
              pos(x,y),
@@ -1003,11 +1007,10 @@ scene("game", () => {
              anchor("bot"),
              area(),
              z(y),
+             health(health_tree),
              "tree",
           ])
-            pay(pr_new_tree);
             //exp(pr_new_tree); //PK çA MARCHE PAS??????
-            pr_new_tree = pr_new_tree * scaling;
        }
        //Add a new bee
        function addBee(){
@@ -1159,6 +1162,9 @@ scene("game", () => {
                 area(),
                 "bird",
             ])
+            pay(pr_new_bird);
+            //change with function
+            pr_new_bird  = pr_new_bird * scaling;
          }
        //Add a dialog box
        function diaBubble(array_with_number){
