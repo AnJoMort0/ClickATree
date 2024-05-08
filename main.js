@@ -1413,6 +1413,7 @@ scene("gameOver", () => {
         ["bear", "Hello, je m'appelle Ours! Tu peux cliquer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear", "Peux-tu m'aider à planter des arbres?"],
         ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres."],
+        //abeilles - oiseaux
         ["bear", "Tu pourras également acheter des abeilles qui ont un rôle important pour la pollinisation."], 
         ["bear", "À toi de jouer! Tu as 5 minutes pour m'aider à créer une belle forêt."],
     ]
@@ -1420,7 +1421,6 @@ scene("gameOver", () => {
         ["bear_scared", "Attention!! La barre de pollution augmente vite!"],
         ["bear_wink", "Savais-tu qu'un milieu pollué a de graves conséquences comme l'accumulation de toxines dans la chaîne alimentaire et l'ingestion de plastique?"], 
         ["bear_scared", "Clique sur les déchets afin de faire descendre la barre de pollution."],
-        //when pollution barre down a certain amount
         ["bear", "Merci beaucoup d'avoir enlevé tous les déchets! Continue à rajouter le plus d'arbres possible!"],
     ]
     const dia_deforestation = [
@@ -1429,6 +1429,7 @@ scene("gameOver", () => {
         ["bear_scared", "!"],
         ["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
     ]
+    //potentiellement enlever 
     const dia_fire = [
         ["bear_scared", "Attention!! La barre d'incendie augmente vite!"],
         ["bear_wink", "Savais-tu que 20% des causes de déforestation dans le monde sont dues aux incendies naturels?"],
@@ -1437,6 +1438,7 @@ scene("gameOver", () => {
     ]
     const dia_funfact = [
         ["bear_wink", "Ceci est un test !"],
+        ["bear_wink", "Ceci est un 2e test :)"],
     ]
 
 
