@@ -16,7 +16,8 @@
 
 //Add to README
     //2 function codes down the js page
-    //Smoke sprite : https://miguelnero.itch.io/particle-smoke
+    //Smoke spritesheet : https://miguelnero.itch.io/particle-smoke
+    //Bird spritesheet : https://rmazanek.itch.io/bird
 
 //===================================================================//
 //===================================================================//
@@ -58,7 +59,11 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
 //relative scale of objects to screen height
     const TREE_SCALE        = 1/1500; 
     const TRASH_SCALE       = 3;
-    const BULLDOZER_SCALE   = 4;
+    const BULLDOZER_SCALE   = 1/80;
+    const BIRD_SCALE        = 1/320;
+//speed of moving elements
+    const BULLDOZER_SPEED   = 50;
+    const BIRD_SPEED        = 40;
 
 //load assets
 loadRoot('assets/');
@@ -113,6 +118,20 @@ loadRoot('assets/');
         loadSprite('bee', 'game_elements/other/bee.png');
         loadSprite('trash', 'game_elements/other/trashcan_.png')
         loadSprite('bulldozer', 'game_elements/other/bulldozer.png')
+        loadSprite('bird', 'game_elements/other/bird.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
+            sliceX: 11,
+            sliceY: 8,
+            anims: {
+                explode:    {from: 0 ,to: 7 ,loop: false},
+                iddle:      {from: 11,to: 19,loop: true},
+                iddle2:     {from: 22,to: 29,loop: true},
+                eat:        {from: 33,to: 40,loop: false},
+                hop:        {from: 44,to: 49,loop: false},
+                takeoff:    {from: 55,to: 65,loop: false},
+                fly:        {from: 66,to: 74,loop: true},
+                land:       {from: 77,to: 83,loop: false},
+            },
+        })
         //bear
         loadSprite('bear', 'game_elements/bear/bear.png');
         loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
@@ -122,10 +141,7 @@ loadRoot('assets/');
             sliceX: 3,
             sliceY: 3,
             anims: {
-                main: {
-                    from: 0,
-                    to: 6,
-                },
+                main: {from: 0,to: 6,},
             },
         })
     //ui elements
@@ -200,13 +216,15 @@ scene("game", () => {
      //prices
         let scaling     = 1.4;
         let pr_new_tree = 20;
+        let pr_new_bird = 200;
         let pr_new_bee  = 100;
      //cash/second
         let cps_tree    = 0.1;
-        let cps_bee     = 1;
+        let cps_bee     = 5;
      //number of elements
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
+        let nb_birds    = get('bird').length
         let nb_trash    = get('trash').length;
      //events
         const MAX_EVENT_STAT = 100;
@@ -224,7 +242,6 @@ scene("game", () => {
         let fire_color  = rgb(255, 119, 0) //if change this need to change lower
      //others
         let diaL = get("dialog").length; //length to check if the dialogue is existent
-        let rT = choose(get('tree')); //get a random tree for the bulldozer to follow
 
     //UI
     //cash
@@ -421,11 +438,51 @@ scene("game", () => {
             pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
             z(Z_UI_TOP),
         ])
+        //adding a new bird button
+        const new_bird = NEWBOX.add([
+            sprite('new_bee'), // change to new bird when made
+            anchor("topright"),
+            pos(new_tree.pos.x, new_tree.pos.y + BUTTON_SIZE + NEW_BT_DIST),
+            scale(SPRITE_BUTTON_SCALE),
+            anchor("topright"),
+            area(),
+            z(Z_UI),
+            "ui",
+            "button",
+            "new_button",
+            "new_bird",
+         ])
+            const text_new_bird_price = new_bird.add([
+                text(formatNumber(pr_new_bird, {useOrderSuffix: true, decimals: 1}),{
+                    size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
+                }),
+                {
+                    update(){
+                    this.text = formatNumber(pr_new_bird, {useOrderSuffix: true, decimals: 1});
+                    }
+                },
+                anchor("right"),
+                pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
+                z(Z_UI_TOP),
+            ])
+            const text_nb_birds = new_bird.add([
+                text(formatNumber(nb_birds, {useOrderSuffix: true}),{
+                    size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
+                }),
+                {
+                    update(){
+                    this.text = formatNumber(nb_birds, {useOrderSuffix: true});
+                    }
+                },
+                anchor("right"),
+                pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
+                z(Z_UI_TOP),
+            ])
     //adding a new bee button
      const new_bee = NEWBOX.add([
         sprite('new_bee'),
         anchor("topright"),
-        pos(new_tree.pos.x, new_tree.pos.y + BUTTON_SIZE + NEW_BT_DIST),
+        pos(new_bird.pos.x, new_bird.pos.y + BUTTON_SIZE + NEW_BT_DIST),
         scale(SPRITE_BUTTON_SCALE),
         anchor("topright"),
         area(),
@@ -651,7 +708,6 @@ scene("game", () => {
                 ])
                 leaf_particle.jump(rand(100, 350));
             }
-            rT = choose(get('tree')); //get a random tree for the bulldozer to follow
         })
         onDestroy("bulldozer", (t) => {
             for (let i = 0; i < rand(10,30); i++) {
@@ -713,6 +769,17 @@ scene("game", () => {
                         warning(text_new_tree_price);
                     } else {
                         addTree();
+                    }
+                }
+            })
+            //New bee
+            onClick("new_bird", (t) =>{
+                if (diaL == 0) {
+                    if(cash < pr_new_bird){
+                        warning(text_cash);
+                        warning(text_new_bird_price);
+                    } else {
+                        addBird();
                     }
                 }
             })
@@ -829,6 +896,7 @@ scene("game", () => {
         diaL        = get("dialog").length; //length to check if the dialogue is existent
         nb_trees    = get('tree').length;
         nb_bees     = get('bee').length;
+        nb_birds    = get('bird').length;
         nb_trash    = get('trash').length;
 
          cash_per_sec = (nb_trees * cps_tree) + (nb_bees * cps_bee);
@@ -901,8 +969,8 @@ scene("game", () => {
          if(fire_stat < MAX_EVENT_STAT && f == 3){
             f++;
             diaBubble(dia_fire[3]);
-         }
-        })
+         }       
+    })
 
     //FUNCTIONS
        //Add a new tree
@@ -919,6 +987,22 @@ scene("game", () => {
              anchor("bot"),
              area(),
              z(randY),
+             "tree",
+          ])
+            pay(pr_new_tree);
+            //exp(pr_new_tree); //PK çA MARCHE PAS??????
+            pr_new_tree = pr_new_tree * scaling;
+       }
+        //Add custom new tree
+       function addCustTree(x,y) {
+         //const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
+         const tree  = add([
+             sprite(choose(trees)),
+             pos(x,y),
+             scale(y * TREE_SCALE),
+             anchor("bot"),
+             area(),
+             z(y),
              "tree",
           ])
             pay(pr_new_tree);
@@ -956,7 +1040,7 @@ scene("game", () => {
          }
         //Add a bulldozer
          function addBulldozer() {
-            rT = choose(get('tree'));
+            let rT = choose(get('tree'));
             const bulldozer = add([
                 sprite('bulldozer'),
                 anchor("bot"),
@@ -965,22 +1049,115 @@ scene("game", () => {
                     update(){
                         if (diaL == 0 && nb_trees > 1) {
                             this.z = this.pos.y;
+                            /*//dynamically scale bulldozer
+                            if (get('bulldozer').length != 0) {
+                                get('bulldozer')[0].scale = get('bulldozer')[0].pos.y * BULLDOZER_SCALE;
+                            }*/ //-----> makes it untoucheable for some reason 
                             if (this.pos.x > rT.pos.x) {
                                 this.flipX = false;
                             } else {
                                 this.flipX = true;
                             }
-                            this.moveTo(rT.pos.x, rT.pos.y + 10, 50);
+                            this.moveTo(rT.pos.x, rT.pos.y + 10, BULLDOZER_SPEED);
                             if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y + 10){
                                 destroy(rT);
+                                rT = choose(get('tree'));
                             }
                         }
                     },
                 },
                 z(1),
-                scale(BULLDOZER_SCALE),
+                scale(H/2 * BULLDOZER_SCALE),
                 area(),
                 "bulldozer",
+            ])
+         }
+        //Add new bird
+        function addBird() {
+            let b = 0;
+            let rT = choose(get('tree'));
+            let ranYA = H/2;
+            let ranYB = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
+            let randX  = rand(0, W);
+            let randY  = rand(ranYA, ranYB);
+            const bird = add([
+                sprite('bird', {
+                    anim : "fly",
+                }),
+                anchor("bot"),
+                pos(choose(-10, W+10), H/2),
+                {
+                    update(){
+                        if (diaL === 0) {
+                            this.z = this.pos.y + 100;
+                            this.scale = this.pos.y * BIRD_SCALE;
+                            if (b === 0) {
+                                if (this.pos.x > rT.pos.x) {
+                                    this.flipX = true;
+                                } else {
+                                    this.flipX = false;
+                                }
+                                this.moveTo(rT.pos.x, rT.pos.y - 50, BIRD_SPEED);
+                                if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y - 50){
+                                    b++;
+                                    this.z = rT.z + 1;
+                                    this.play("land");
+                                };
+                            }
+                            if (b === 1) {
+                                this.onAnimEnd((anim) => {
+                                    if(anim === "land" && b === 1){
+                                        b++;
+                                        this.play("eat");
+                                    };
+                                    if(anim === "eat" && b === 2){
+                                        b++;
+                                        if (this.pos.x > randX) {
+                                            this.flipX = true;
+                                        } else {
+                                            this.flipX = false;
+                                        }
+                                        this.moveTo(randX, randY, BIRD_SPEED);
+                                        this.play("takeoff");
+                                    };
+                                    if(anim === "takeoff" && b === 3){
+                                        b++
+                                        this.play("fly");
+                                        if (this.pos.x > randX) {
+                                            this.flipX = true;
+                                        } else {
+                                            this.flipX = false;
+                                        }
+                                        this.moveTo(randX, randY, BIRD_SPEED);
+                                    };
+                                    if(anim === "land" && b === 5){
+                                        b++;
+                                        this.play("eat");
+                                    }
+                                    if(anim === "eat" && b === 6){
+                                        b = 0;
+                                        addCustTree(this.pos.x, this.pos.y);
+                                        this.play("fly");
+                                        rT = choose(get('tree'));
+                                        randX  = rand(0, W);
+                                        randY  = rand(ranYA, ranYB);
+                                    }
+                                });
+                            }
+                            if(b === 4 && this.pos.x != randX && this.pos.y != randY){
+                                this.moveTo(randX, randY, BIRD_SPEED);
+                            }
+                            if(b === 4 && this.pos.x == randX && this.pos.y == randY){
+                                b++;
+                                this.play("land");
+                            }
+                        }
+                    },
+                },
+                z(1),
+                scale(BIRD_SCALE),
+                area(),
+                "bird",
             ])
          }
        //Add a dialog box
