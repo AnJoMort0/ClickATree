@@ -173,14 +173,14 @@ loadRoot('assets/');
         loadSprite('new_bee', "ui/new_buttons/new_bee_button.png");
 //load ui sounds
     //loadSound('button_click',"audio/other/click.wav"): by Nathan Gibson https://nathangibson.myportfolio.com 
-    loadSound('button_click', "audio/other/click.wav");
+    loadSound('button_click', "audio/other/button/click.wav");
     //by FilmCow https://filmcow.itch.io/filmcow-sfx
-    loadSound('tree_fall',"audio/other/tree_fall.wav");
+    loadSound('tree_fall',"audio/other/deforestation/tree_fall.wav");
     //by Diablo Luna https://pudretediablo.itch.io/butterfly
-    loadSound('fire',"audio/other/fire.wav");
+    loadSound('fire',"audio/other/fire/fire.wav");
 //load sfx
         //by Diablo Luna https://pudretediablo.itch.io/butterfly
-    loadSound('birds_bg',"audio/sfx/bird.wav");
+    loadSound('birds_bg',"audio/sfx/birds/bird.wav");
 //load music: by mayragandra https://mayragandra.itch.io/freeambientmusic 
     loadSound('default_music',"audio/music/music.wav");
 
