@@ -53,11 +53,11 @@ const BEAR_SCALE                = 6;
 const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
-    const Z_UI        = H    + 100;
+    const Z_UI        = H    + 125;
     const Z_UI_TOP    = Z_UI + 1;
     const Z_UI_BOTTOM = Z_UI - 1;
 //relative scale of objects to screen height
-    const TREE_SCALE        = 1/1500; 
+    const TREE_SCALE        = 1/100; 
     const TRASH_SCALE       = 3;
     const BULLDOZER_SCALE   = 1/80;
     const BIRD_SCALE        = 1/320;
