@@ -106,7 +106,9 @@ loadRoot('assets/');
         //trees
         loadSprite('tree0',"game_elements/trees/tree0.png");
         loadSprite('tree1',"game_elements/trees/tree1.png");
-        const trees = ["tree0", "tree1"];
+        loadSprite('tree2',"game_elements/trees/tree2.png");
+        loadSprite('tree3',"game_elements/trees/tree3.png");
+        const trees = ["tree0", "tree1", "tree2", "tree3"];
         //leafs
         loadSprite('leaf0', "game_elements/leafs/leaf0.png");
         loadSprite('leaf1', "game_elements/leafs/leaf1.png");
