@@ -171,6 +171,7 @@ loadRoot('assets/');
         //new buttons
         loadSprite('new_tree', "ui/new_buttons/new_tree_button.png");
         loadSprite('new_bee', "ui/new_buttons/new_bee_button.png");
+        loadSprite('new_bird', "ui/new_buttons/new_bird_button.png");
 //load ui sounds
     //loadSound('button_click',"audio/other/click.wav"): by Nathan Gibson https://nathangibson.myportfolio.com 
     loadSound('button_click', "audio/other/button/click.wav");
@@ -443,7 +444,7 @@ scene("game", () => {
         ])
         //adding a new bird button
         const new_bird = NEWBOX.add([
-            sprite('new_bee'), // change to new bird when made
+            sprite('new_bird'), // change to new bird when made
             anchor("topright"),
             pos(new_tree.pos.x, new_tree.pos.y + BUTTON_SIZE + NEW_BT_DIST),
             scale(SPRITE_BUTTON_SCALE),
