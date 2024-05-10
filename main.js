@@ -138,6 +138,7 @@ loadRoot('assets/');
         loadSprite('bear', 'game_elements/bear/bear.png');
         loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
         loadSprite('bear_wink', 'game_elements/bear/bear_wink.png');
+        loadSprite('bear_happy', 'game_elements/bear/bear_happy.png');
         //vfx
         loadSprite('smoke', 'game_elements/vfx/smoke.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
             sliceX: 3,
@@ -1254,13 +1255,13 @@ scene("game", () => {
 scene("gameOver", () => {
      let y_st = H/1; 
      const icon_bear = add([
-        sprite('bear'),
+        sprite('bear_happy'),
         anchor('bot'),
         pos(vec2(W/2,y_st)),
         z(Z_UI_TOP),
         scale(BEAR_SMALL_SCALE),
         area(),
-        "bear",
+        "bear_happy",
         "game_elements",
     ]);
     add([
