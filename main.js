@@ -444,7 +444,7 @@ scene("game", () => {
         ])
         //adding a new bird button
         const new_bird = NEWBOX.add([
-            sprite('new_bird'), // change to new bird when made
+            sprite('new_bird'), 
             anchor("topright"),
             pos(new_tree.pos.x, new_tree.pos.y + BUTTON_SIZE + NEW_BT_DIST),
             scale(SPRITE_BUTTON_SCALE),
@@ -567,7 +567,7 @@ scene("game", () => {
 
     //ADDING OBJECTS
         //adding starting tree
-        let y_st = H/2 + 50;
+        let y_st = H/2 + 50; vec2(W/2,y_st)
         const start_tree = add([
         sprite(`tree0`),
         pos(vec2(W/2,y_st)),
@@ -1250,13 +1250,25 @@ scene("game", () => {
         })
 })
 
+
 scene("gameOver", () => {
+     let y_st = H/1; 
+     const icon_bear = add([
+        sprite('bear'),
+        anchor('bot'),
+        pos(vec2(W/2,y_st)),
+        z(Z_UI_TOP),
+        scale(BEAR_SMALL_SCALE),
+        area(),
+        "bear",
+        "game_elements",
+    ]);
     add([
 		text("you lose!"),
 		pos(width() / 2, height() / 2 + 108),
 		scale(1),
 		anchor("center"),
-	])
+	]);
     onKeyPress("space", () => go("game"))
 	onClick(() => go("game"))
 })
