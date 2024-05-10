@@ -134,6 +134,7 @@ loadRoot('assets/');
                 land:       {from: 77,to: 83,loop: false},
             },
         })
+        loadSprite('honey', 'game_elements/other/honey.png');
         //bear
         loadSprite('bear', 'game_elements/bear/bear.png');
         loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
@@ -181,7 +182,7 @@ loadRoot('assets/');
     //by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('fire',"audio/other/fire/fire.wav");
 //load sfx
-        //by Diablo Luna https://pudretediablo.itch.io/butterfly
+    //by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('birds_bg',"audio/sfx/birds/bird.wav");
 //load music: by mayragandra https://mayragandra.itch.io/freeambientmusic 
     loadSound('default_music',"audio/music/music.wav");
@@ -1259,17 +1260,23 @@ scene("gameOver", () => {
         anchor('bot'),
         pos(vec2(W/2,y_st)),
         z(Z_UI_TOP),
-        scale(BEAR_SMALL_SCALE),
+        scale(8),
         area(),
         "bear_happy",
         "game_elements",
     ]);
     add([
-		text("you lose!"),
-		pos(width() / 2, height() / 2 + 108),
-		scale(1),
+		sprite('honey'),
+		pos(width() / 2, height() / 3),
+		scale(15),
 		anchor("center"),
 	]);
+    add([
+        text("Score le plus élevé"),
+        pos(width() / 2, height() / 1.5),
+        scale(1),
+        anchor("center"),
+    ]);
     onKeyPress("space", () => go("game"))
 	onClick(() => go("game"))
 })
