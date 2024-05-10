@@ -1254,6 +1254,7 @@ scene("game", () => {
 
 
 scene("gameOver", () => {
+    setBackground(rgb(79, 146, 240));
      let y_st = H/1; 
      const icon_bear = add([
         sprite('bear_happy'),
@@ -1272,7 +1273,7 @@ scene("gameOver", () => {
 		anchor("center"),
 	]);
     add([
-        text("Score le plus élevé"),
+        text("Record"),
         pos(width() / 2, height() / 1.5),
         scale(1),
         anchor("center"),
