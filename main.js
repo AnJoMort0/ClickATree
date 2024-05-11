@@ -174,6 +174,7 @@ loadRoot('assets/');
         loadSprite('new_tree', "ui/new_buttons/new_tree_button.png");
         loadSprite('new_bee', "ui/new_buttons/new_bee_button.png");
         loadSprite('new_bird', "ui/new_buttons/new_bird_button.png");
+        loadSprite('info', "ui/new_buttons/info_button.png");
 //load ui sounds
     //loadSound('button_click',"audio/other/click.wav"): by Nathan Gibson https://nathangibson.myportfolio.com 
     loadSound('button_click', "audio/other/button/click.wav");
@@ -524,6 +525,25 @@ scene("game", () => {
             pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
             z(Z_UI_TOP),
         ])
+
+        //test: info button
+        const information = NEWBOX.add([
+            sprite('info'), 
+            anchor("topright"),
+            pos(new_tree.pos.x - 165, new_tree.pos.y),
+            scale(1),
+            anchor("topright"),
+            area(),
+            z(Z_UI),
+            "ui",
+            "button",
+            "new_button",
+            "info",
+         ])
+        //test: get info
+        onClick("info", (t) => {
+            diaBubble(choose(dia_info));
+        })
 
     //BACKGROUND
      //adding the background dynamically to the screen size
@@ -1493,6 +1513,10 @@ scene("gameOver", () => {
     const dia_funfact = [
         ["bear_wink", "Ceci est un test !"],
         ["bear_wink", "Ceci est un 2e test :)"],
+    ]
+    const dia_info = [
+        ["bear_wink", "Tu pourras acheter tes arbres ici."],
+        ["bear_wink", "hi."]
     ]
 
 
