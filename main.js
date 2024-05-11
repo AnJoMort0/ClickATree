@@ -987,6 +987,11 @@ scene("game", () => {
          let ranYB = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
          const randX  = rand(0, W);
          const randY  = rand(ranYA, ranYB);
+
+         const saturation = calculateSaturation(randY, ranYA, ranYB);
+
+        // CHATGPT Calculate RGB values based on saturation level
+        const color = calculateColor(saturation);
          //const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
          const tree  = add([
              sprite(choose(trees)),
@@ -997,11 +1002,38 @@ scene("game", () => {
              z(randY),
              health(health_tree),
              "tree",
-          ])
+          ]);
+          tree.color = rgb(color.red, color.green, color.blue);
             pay(pr_new_tree);
             //exp(pr_new_tree); //PK çA MARCHE PAS??????
             pr_new_tree = pr_new_tree * scaling;
        }
+       function calculateSaturation(yPos, minY, maxY) {
+            // Calculate the percentage of yPos within the range minY to maxY
+            const percentage = (yPos - minY) / (maxY - minY);
+        
+            // Calculate saturation based on the percentage
+            // For demonstration, we'll linearly interpolate from 100 to 0 as yPos increases
+            const saturation = 100 - (percentage * 100);
+        
+            return saturation;
+        }
+        
+        function calculateColor(saturation) {
+            // Calculate RGB values based on saturation
+            // For demonstration, we'll use a simple linear interpolation from gray to fully saturated color
+            //ICI POUR CHANGER SATURATION - trial and error
+            const grayValue = 600; // Middle gray value
+            const maxColorValue = 100; // Maximum color value
+            const colorValue = grayValue + ((maxColorValue - grayValue) * (saturation / 100));
+        
+            // Return an object containing RGB values
+            return {
+                red: colorValue,
+                green: colorValue,
+                blue: colorValue
+            };
+        }
         //Add custom new tree
        function addCustTree(x,y) {
          let clicked = 0;
