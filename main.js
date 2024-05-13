@@ -60,9 +60,11 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
     const TRASH_SCALE       = 3;
     const BULLDOZER_SCALE   = 1/80;
     const BIRD_SCALE        = 1/320;
+    const BEE_SCALE         = 1/400;
 //speed of moving elements
     const BULLDOZER_SPEED   = 50;
     const BIRD_SPEED        = 40;
+    const BEE_SPEED         = 30;
 
 //load assets
 loadRoot('assets/');
@@ -1056,13 +1058,34 @@ scene("game", () => {
        }
        //Add a new bee
        function addBee(){
+        let rF = choose(get('flowered'));
         const bee = add([
             sprite('bee'),
             pos(rand(0, W), rand(0, H)),
-            scale(1),
+            scale(BEE_SCALE),
             anchor('center'),
             area(),
             z(this.pos.y),
+            {
+                update(){
+                    if (diaL == 0) {
+                        this.z = this.pos.y + 100;
+                        //dynamically scale bee
+                        if (get('bee').length != 0) {
+                            get('bee')[0].scale = get('bee')[0].pos.y * BEE_SCALE;
+                        }
+                        if (this.pos.x > rF.pos.x) {
+                            this.flipX = true;
+                        } else {
+                            this.flipX = false;
+                        }
+                        this.moveTo(rF.pos.x, rF.pos.y - 50, BEE_SPEED);
+                        if(this.pos.x == rF.pos.x && this.pos.y == rF.pos.y - 50){
+                            rF = choose(get('flowered'));
+                        }
+                    }
+                },
+            },
             "bee",
         ])
             pay(pr_new_bee);
