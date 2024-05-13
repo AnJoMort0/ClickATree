@@ -4,8 +4,8 @@
     //Can have too many elements - need to be careful
     //Achievements
     //Darker colors at the beginning -> progress saturation the bigger the forest
-    //Increase fire event when auto-clicker
     //Have all scales depend on screen size
+    //Create a fire event when auto-clicker
     //Hide HUD button
 
 //KNOWN BUGS
@@ -244,10 +244,6 @@ scene("game", () => {
         let defo_over   = 0;
         let defo_boost  = 1.5;
         let defo_color  = rgb(89, 66, 53); //if change this need to change lower
-        let fire_stat   = 0;
-        let fire_over   = 0;
-        let fire_boost  = 3;
-        let fire_color  = rgb(255, 119, 0) //if change this need to change lower
      //others
         let diaL = get("dialog").length; //length to check if the dialogue is existent
         //let health_tree = 20;
@@ -371,25 +367,6 @@ scene("game", () => {
                 height: 13,
                 anchor: "left",
                 color: defo_color,
-            })
-            emptyBar();
-        })
-    //fire
-    const icon_fire = add([
-        sprite('fire_icon'),
-        anchor('left'),
-        pos(10, 145), //for some reason using the relative pos doesn0t work here
-        z(Z_UI),
-        scale(SPRITE_ICON_SCALE),
-        "ui",
-     ]);
-        icon_fire.onDraw(() => {
-            drawRect({
-                pos: vec2(30, 0),
-                width: fire_stat,
-                height: 13,
-                anchor: "left",
-                color: fire_color,
             })
             emptyBar();
         })
@@ -922,21 +899,12 @@ scene("game", () => {
                 }
                 if (pollu_stat >= MAX_EVENT_STAT){
                     pollu_over++;
-                    if(fire_stat <= MAX_EVENT_STAT){
-                        fire_stat = fire_stat + fire_boost;
-                    }
                 }
                 if (defo_stat >= MAX_EVENT_STAT){
                     defo_over++;
-                    if(fire_stat <= MAX_EVENT_STAT){
-                        fire_stat = fire_stat + fire_boost;
-                    }
                     if(get("bulldozer").length == 0){
                         addBulldozer();
                     }
-                }
-                if (fire_stat >= MAX_EVENT_STAT){
-                    fire_over++;
                 }
 
                 //Adds trashcans
@@ -960,12 +928,6 @@ scene("game", () => {
                     defo_color = rgb(120, 66, 63);
                     wait(0.3, () =>{
                         defo_color = rgb(89, 66, 53);
-                    })
-                }
-                if (fire_stat >= MAX_EVENT_STAT) {
-                    fire_color = rgb(255, 150, 20);
-                    wait(0.3, () =>{
-                        fire_color = rgb(255, 119, 0);
                     })
                 }
 
@@ -1056,24 +1018,7 @@ scene("game", () => {
          if(defo_stat < MAX_EVENT_STAT && d == 3){
             d++;
             diaBubble(dia_deforestation[3]);
-         }
-         //Fire relative actions
-         if (fire_stat > 50 && f == 0) {
-            f++;
-            diaBubble(dia_fire[0]);
-         }
-         if(fire_over >= MAX_EVENT_STAT && f == 1) {
-            f++;
-            diaBubble(dia_fire[1]);
-         }
-         if(fire_over >= 15 && f == 2){
-            f++;
-            diaBubble(dia_fire[2]);
-         }
-         if(fire_stat < MAX_EVENT_STAT && f == 3){
-            f++;
-            diaBubble(dia_fire[3]);
-         }       
+         } 
     })
 
     //FUNCTIONS
@@ -1581,13 +1526,6 @@ scene("gameOver", () => {
         ["bear_wink", "Savais-tu que la destruction des habitats est la principale cause de la perte de diversité des espèces en millieu terrestre?"], 
         ["bear_scared", "!"],
         ["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
-    ]
-    //potentiellement enlever 
-    const dia_fire = [
-        ["bear_scared", "Attention!! La barre d'incendie augmente vite!"],
-        ["bear_wink", "Savais-tu que 20% des causes de déforestation dans le monde sont dues aux incendies naturels?"],
-        ["bear_scared", "Clique sur le feu afin de faire descendre la barre d'incendie."],
-        ["bear", "Merci beaucoup d’avoir sauvé ma forêt ! Continue à rajouter le plus d'arbres possible!"],
     ]
     const dia_funfact = [
         ["bear_wink", "Ceci est un test !"],
