@@ -116,8 +116,6 @@ loadRoot('assets/');
         leafs.forEach((spr) => {
             loadSprite(spr, `game_elements/leafs/${spr}.png`);
         })
-        //flowers
-        loadSprite('flowers0', 'game_elements/vfx/flowers0.png');
         //others
         loadSprite('bee', 'game_elements/other/bee.png');
         loadSprite('trash', 'game_elements/other/trashcan_.png')
@@ -230,7 +228,7 @@ scene("game", () => {
         let cps_tree    = 0.1;
         let cps_bee     = 5;
      //number of elements
-        let nb_trees    = get('trees').length;
+        let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
         let nb_birds    = get('bird').length
         let nb_trash    = get('trash').length;
@@ -246,7 +244,7 @@ scene("game", () => {
         let defo_color  = rgb(89, 66, 53); //if change this need to change lower
      //others
         let diaL = get("dialog").length; //length to check if the dialogue is existent
-        //let health_tree = 20;
+        let health_tree = 20;
 
     //UI
     //cash
@@ -570,69 +568,25 @@ scene("game", () => {
         //adding starting tree
         let y_st = H/2 + 50; vec2(W/2,y_st)
         const start_tree = add([
-            sprite(`tree0`),
-            {spriteName : 'tree0'},
-            pos(vec2(W/2,y_st)),
-            scale(y_st * TREE_SCALE),
-            anchor("bot"),
-            area(),
-            z(y_st),
-            //health(health_tree),
-            "tree",
-            "trees",
-        ]);
+        sprite(`tree0`),
+        pos(vec2(W/2,y_st)),
+        scale(y_st * TREE_SCALE),
+        anchor("bot"),
+        area(),
+        z(y_st),
+        health(health_tree),
+        "tree",
+        "clickable",
+        "start_tree",
+    ]);
 
     //ADDING EVENT LISTENERS
     //Game elements (inside an if(get("dialog").lenght == 0) to make sure it is impossible to click things if dialogues are on)
         //click any tree
-        let nb_clicks = 0;
         onClick("tree", (t) => { 
             if (diaL == 0) {
                 plus(1);
-                //This following code lags the heck out of the game for some reason
-                /*for (let i = 0; i < 1; i++) { //try to fix a bug where multiple hurst happen at once
-                    t.hurt(1);
-                }
-                t.on("hurt", () => {
-                    console.log("touched")
-                });
-                t.on("death", () => {
-                    console.log("dead");
-                    const flowers = add([
-                        sprite("flowers0"),
-                        anchor("bot"),
-                        pos(t.pos),
-                        z(t.z+1),
-                        scale(t.scale),
-                        area(),
-                        "flowers",
-                    ])
-                });*/
-                nb_clicks++;
-                if (nb_clicks == 20) {
-                    const flowered_tree  = add([
-                        sprite(t.spriteName),
-                        pos(t.pos),
-                        scale(t.scale),
-                        anchor(t.anchor),
-                        area(),
-                        z(t.z),
-                        //health(health_tree),
-                        "trees",
-                        "flowered"
-                    ]);
-                    const flowers = add([
-                        sprite("flowers0"),
-                        anchor("bot"),
-                        pos(t.pos),
-                        z(t.z+1),
-                        scale(t.scale),
-                        area(),
-                        "flowers",
-                    ]);
-                    t.destroy();
-                    nb_clicks = 0;
-                };
+
                 //particles when clicked
                 for (let i = 0; i < rand(0,3); i++) {
                     const leaf_particle = add([
@@ -652,37 +606,6 @@ scene("game", () => {
                     ])
                     leaf_particle.jump(rand(100, 350))
                 }
-                zoomOut(t);
-            }
-        })
-        //clicking on flowered trees, copy-paste most of onClick trees, just so the flower spawning mechanisme still works.
-        onClick("flowered", (t) => { 
-            if (diaL == 0) {
-                plus(1);
-                //particles when clicked
-                for (let i = 0; i < rand(0,3); i++) {
-                    const leaf_particle = add([
-                        pos(mousePos()),
-                        z(t.pos.y),
-                        sprite(choose(leafs)),
-                        anchor("center"),
-                        scale(rand(0.8, 0.4)),
-                        area({ collisionIgnore:["leaf_particle"]}),
-                        body(),
-                        lifespan(0.5, {fade: 0.2}),
-                        opacity(1),
-                        move(choose([LEFT, RIGHT]), rand(30, 150)),
-                        rotate(rand(0, 360)),
-                        offscreen({destroy: true}),
-                        "leaf_particle",
-                    ])
-                    leaf_particle.jump(rand(100, 350))
-                }
-                zoomOut(t);
-            }
-        })
-        onClick("flowers", (t) => {
-            if (diaL == 0) {
                 zoomOut(t);
             }
         })
@@ -711,7 +634,7 @@ scene("game", () => {
                 zoomOut(t);
                 minusPollu();
                 if(pollu_over <= 0){
-                    let ran = rand(15);
+                    let ran = choose([0,1,1,1,1,1,1,1]);
                     if (ran == 0) {
                         destroy(t);
                     }
@@ -771,7 +694,7 @@ scene("game", () => {
                 trash_particle.jump(rand(100, 350))
             }
         })
-        onDestroy("trees", (t) => {
+        onDestroy("tree", (t) => {
             for (let i = 0; i < rand(10,20); i++) {
                 const leaf_particle = add([
                     pos(t.pos),
@@ -878,6 +801,7 @@ scene("game", () => {
             })
 
     //AUTOMATIC STUFF
+        let randTree = choose(get('tree'));
         loop(1, () => {
             if (diaL == 0) { //Pauses the game if dialogue is opened
                 //Timer
@@ -889,12 +813,12 @@ scene("game", () => {
                 plus(cps_final);
     
                 //Increase the events stats
-                let r_pollu = rand(10);
-                if (r_pollu != 0 && pollu_stat <= MAX_EVENT_STAT) {
+                let r_pollu = choose([0,0,0,0,0,0,0,0,0,1]);
+                if (r_pollu == 0 && pollu_stat <= MAX_EVENT_STAT) {
                     pollu_stat = pollu_stat + pollu_boost;
                 }
-                let r_defo = rand(3);
-                if (r_defo != 0 && defo_stat <= MAX_EVENT_STAT) {
+                let r_defo = choose([0,0,1]);
+                if (r_defo == 0 && defo_stat <= MAX_EVENT_STAT) {
                     defo_stat = defo_stat + defo_boost;
                 }
                 if (pollu_stat >= MAX_EVENT_STAT){
@@ -960,7 +884,7 @@ scene("game", () => {
         let p = 0; let d = 0; let f = 0;
         onUpdate(() => {    
         diaL        = get("dialog").length; //length to check if the dialogue is existent
-        nb_trees    = get('trees').length;
+        nb_trees    = get('tree').length;
         nb_bees     = get('bee').length;
         nb_birds    = get('bird').length;
         nb_trash    = get('trash').length;
@@ -1028,45 +952,67 @@ scene("game", () => {
          let ranYB = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
          const randX  = rand(0, W);
          const randY  = rand(ranYA, ranYB);
-         const sprite_name = choose(trees);
-         
-            const saturation = calculateSaturation(randY, ranYA, ranYB);
-            // CHATGPT Calculate RGB values based on saturation level
-            const color = calculateColor(saturation);
-        
+
+         const saturation = calculateSaturation(randY, ranYA, ranYB);
+
+        // CHATGPT Calculate RGB values based on saturation level
+        const color = calculateColor(saturation);
          //const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
          const tree  = add([
-             sprite(sprite_name),
-             {spriteName : sprite_name},
+             sprite(choose(trees)),
              pos(randX, randY),
              scale(randY * TREE_SCALE),
              anchor("bot"),
              area(),
              z(randY),
-             //health(health_tree),
+             health(health_tree),
              "tree",
-             "trees",
           ]);
           tree.color = rgb(color.red, color.green, color.blue);
             pay(pr_new_tree);
             //exp(pr_new_tree); //PK çA MARCHE PAS??????
             pr_new_tree = pr_new_tree * scaling;
        }
+       function calculateSaturation(yPos, minY, maxY) {
+            // Calculate the percentage of yPos within the range minY to maxY
+            const percentage = (yPos - minY) / (maxY - minY);
+        
+            // Calculate saturation based on the percentage
+            // For demonstration, we'll linearly interpolate from 100 to 0 as yPos increases
+            const saturation = 100 - (percentage * 100);
+        
+            return saturation;
+        }
+        
+        function calculateColor(saturation) {
+            // Calculate RGB values based on saturation
+            // For demonstration, we'll use a simple linear interpolation from gray to fully saturated color
+            //ICI POUR CHANGER SATURATION - trial and error
+            const grayValue = 600; // Middle gray value
+            const maxColorValue = 100; // Maximum color value
+            const colorValue = grayValue + ((maxColorValue - grayValue) * (saturation / 100));
+        
+            // Return an object containing RGB values
+            return {
+                red: colorValue,
+                green: colorValue,
+                blue: colorValue
+            };
+        }
         //Add custom new tree
        function addCustTree(x,y) {
-         const sprite_name = choose(trees);
+         let clicked = 0;
          const tree  = add([
-             sprite(sprite_name),
-             {spriteName : sprite_name},
+             sprite(choose(trees)),
              pos(x,y),
              scale(y * TREE_SCALE),
              anchor("bot"),
              area(),
              z(y),
-             //health(health_tree),
+             health(health_tree),
              "tree",
-             "trees",
           ])
+            //exp(pr_new_tree); //PK çA MARCHE PAS??????
        }
        //Add a new bee
        function addBee(){
@@ -1099,7 +1045,7 @@ scene("game", () => {
          }
         //Add a bulldozer
          function addBulldozer() {
-            let rT = choose(get('trees'));
+            let rT = choose(get('tree'));
             const bulldozer = add([
                 sprite('bulldozer'),
                 anchor("bot"),
@@ -1120,7 +1066,7 @@ scene("game", () => {
                             this.moveTo(rT.pos.x, rT.pos.y + 10, BULLDOZER_SPEED);
                             if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y + 10){
                                 destroy(rT);
-                                rT = choose(get('trees'));
+                                rT = choose(get('tree'));
                             }
                         }
                     },
@@ -1134,7 +1080,7 @@ scene("game", () => {
         //Add new bird
         function addBird() {
             let b = 0;
-            let rT = choose(get('trees'));
+            let rT = choose(get('tree'));
             let ranYA = H/2;
             let ranYB = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
             let randX  = rand(0, W);
@@ -1197,7 +1143,7 @@ scene("game", () => {
                                         b = 0;
                                         addCustTree(this.pos.x, this.pos.y);
                                         this.play("fly");
-                                        rT = choose(get('trees'));
+                                        rT = choose(get('tree'));
                                         randX  = rand(0, W);
                                         randY  = rand(ranYA, ranYB);
                                     }
@@ -1247,31 +1193,6 @@ scene("game", () => {
             icon_bear.use(sprite(array_with_number[0]));
             icon_bear.use(scale(BEAR_SCALE));
        }
-        function calculateSaturation(yPos, minY, maxY) {
-            // Calculate the percentage of yPos within the range minY to maxY
-            const percentage = (yPos - minY) / (maxY - minY);
-        
-            // Calculate saturation based on the percentage
-            // For demonstration, we'll linearly interpolate from 100 to 0 as yPos increases
-            const saturation = 100 - (percentage * 100);
-        
-            return saturation;
-        }
-        function calculateColor(saturation) {
-            // Calculate RGB values based on saturation
-            // For demonstration, we'll use a simple linear interpolation from gray to fully saturated color
-            //ICI POUR CHANGER SATURATION - trial and error
-            const grayValue = 600; // Middle gray value
-            const maxColorValue = 100; // Maximum color value
-            const colorValue = grayValue + ((maxColorValue - grayValue) * (saturation / 100));
-        
-            // Return an object containing RGB values
-            return {
-                red: colorValue,
-                green: colorValue,
-                blue: colorValue
-            };
-        }
 
        //General Functions
         //Add to score and cash
