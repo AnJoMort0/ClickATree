@@ -1,7 +1,6 @@
 //IDEAS TO ADD
     //Timed game mode for the Mystères de l'Unil specifically --> need to add the menu and change values depending on choosen game mode (add kid mode and adult mode as well)
-    //Add events
-    //Can have too many elements - need to be careful
+    //Add dialogue for when try to buy something whitout enough money or bees without enough flowers
     //Achievements
     //Darker colors at the beginning -> progress saturation the bigger the forest
     //Have all scales depend on screen size
@@ -190,6 +189,14 @@ loadRoot('assets/');
 //load music: by mayragandra https://mayragandra.itch.io/freeambientmusic 
     loadSound('default_music',"audio/music/music.wav");
 
+//load shaders
+    // Grayscale shader
+    loadShader("grayscale", null, `
+        vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
+        vec4 texColor = texture2D(tex, uv);
+        float gray = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
+        return vec4(vec3(gray), texColor.a);
+    }`)   
 //============================//
 
 //SCENES
@@ -232,8 +239,9 @@ scene("game", () => {
      //number of elements
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
-        let nb_birds    = get('bird').length
+        let nb_birds    = get('bird').length;
         let nb_trash    = get('trash').length;
+        let nb_flowered = get('flowered').length;
      //events
         const MAX_EVENT_STAT = 100;
         let pollu_stat  = 0;
@@ -246,7 +254,8 @@ scene("game", () => {
         let defo_color  = rgb(89, 66, 53); //if change this need to change lower
      //others
         let diaL = get("dialog").length; //length to check if the dialogue is existent
-        let flowered_clicks = 40;
+        let flowered_clicks     = 40;
+        let nb_bees_p_flowered  = 3;
         //let health_tree = 20;
 
     //UI
@@ -468,6 +477,17 @@ scene("game", () => {
     //adding a new bee button
      const new_bee = NEWBOX.add([
         sprite('new_bee'),
+        {
+            update(){
+                if(nb_bees >= nb_flowered * nb_bees_p_flowered){
+                    this.use(shader("grayscale"));
+                    this.use("not_available");
+                } else {
+                    this.use(shader(""));
+                    this.unuse("not_available");
+                }
+            }
+        },
         anchor("topright"),
         pos(new_bird.pos.x, new_bird.pos.y + BUTTON_SIZE + NEW_BT_DIST),
         scale(SPRITE_BUTTON_SCALE),
@@ -804,7 +824,7 @@ scene("game", () => {
     //UI elements
         //click any button
         onClick("button", (b) => {
-            if (diaL == 0) {
+            if (diaL == 0 && b.is("not_available") == false) {
                 zoomIn(b);
             }
         })
@@ -833,15 +853,17 @@ scene("game", () => {
                 }
             })
             //New bee
-            onClick("new_bee", (t) =>{
-                if (diaL == 0) {
+            onClick("new_bee", (b) =>{
+                if (diaL == 0 && b.is("not_available") == false){
                     if(cash < pr_new_bee){
                         warning(text_cash);
                         warning(text_new_bee_price);
                     } else {
                         addBee();
                     }
-                }
+                } else if(diaL == 0 && b.is("not_available")){
+                    warning(b);
+                };
             })
 
     //AUTOMATIC STUFF
@@ -924,13 +946,14 @@ scene("game", () => {
             }
         });
 
-        let p = 0; let d = 0; let f = 0;
+        let p = 0; let d = 0;
         onUpdate(() => {    
         diaL        = get("dialog").length; //length to check if the dialogue is existent
         nb_trees    = get('tree').length;
         nb_bees     = get('bee').length;
         nb_birds    = get('bird').length;
         nb_trash    = get('trash').length;
+        nb_flowered = get('flowered').length;
 
          cash_per_sec = (nb_trees * cps_tree) + (nb_bees * cps_bee);
          cps_final   = cash_per_sec / cps_penalty;
@@ -1212,6 +1235,7 @@ scene("game", () => {
             icon_bear.use(sprite(array_with_number[0]));
             icon_bear.use(scale(BEAR_SCALE));
        }
+
        function calculateSaturation(yPos, minY, maxY) {
             // Calculate the percentage of yPos within the range minY to maxY
             const percentage = (yPos - minY) / (maxY - minY);
