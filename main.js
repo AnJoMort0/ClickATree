@@ -233,15 +233,14 @@ scene("game", () => {
         let pr_new_tree = 20;
         let pr_new_bird = 200;
         let pr_new_bee  = 100;
-     //cash/second
-        let cps_tree    = 0.1;
-        let cps_bee     = 5;
      //number of elements
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
         let nb_birds    = get('bird').length;
         let nb_trash    = get('trash').length;
         let nb_flowered = get('flowered').length;
+     //cash/second
+        let cps_tree    = 0.1 * (nb_bees * nb_flowered + 1);
      //events
         const MAX_EVENT_STAT = 100;
         let pollu_stat  = 0;
@@ -841,7 +840,7 @@ scene("game", () => {
                     }
                 }
             })
-            //New bee
+            //New bird
             onClick("new_bird", (t) =>{
                 if (diaL == 0) {
                     if(cash < pr_new_bird){
@@ -955,7 +954,9 @@ scene("game", () => {
         nb_trash    = get('trash').length;
         nb_flowered = get('flowered').length;
 
-         cash_per_sec = (nb_trees * cps_tree) + (nb_bees * cps_bee);
+        cps_tree = 0.1 * (nb_bees * nb_flowered + 1);
+
+         cash_per_sec = (nb_trees * cps_tree);
          cps_final   = cash_per_sec / cps_penalty;
          if (nb_trash == 0) {
             cps_penalty = 1;
