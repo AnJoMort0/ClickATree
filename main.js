@@ -1,6 +1,10 @@
 //IDEAS TO ADD
     //Timed game mode for the Mystères de l'Unil specifically --> need to add the menu and change values depending on choosen game mode (add kid mode and adult mode as well)
+    //Add honey system
     //Add dialogue for when try to buy something whitout enough money or bees without enough flowers
+    //Minimal animations for the bees (for example move around when reach a tree)
+    //Start menu, pause menu (very simple just stops the loop being part of diaL) and end screen
+    //Use Localstorage for the high scores
     //Achievements
     //Darker colors at the beginning -> progress saturation the bigger the forest
     //Have all scales depend on screen size
