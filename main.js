@@ -65,10 +65,11 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
     const BULLDOZER_SCALE   = 1/80;
     const BIRD_SCALE        = 1/320;
     const BEE_SCALE         = 1/400;
+    const BEEHIVE_SCALE     = 1/300;
 //speed of moving elements
     const BULLDOZER_SPEED   = 50;
     const BIRD_SPEED        = 40;
-    const BEE_SPEED         = 30;
+    const BEE_SPEED         = 20;
 
 //load assets
 loadRoot('assets/');
@@ -142,6 +143,7 @@ loadRoot('assets/');
             },
         })
         loadSprite('honey', 'game_elements/other/honey.png');
+        loadSprite('beehive0', 'game_elements/other/beehive0.png')
         //bear
         loadSprite('bear', 'game_elements/bear/bear.png');
         loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
@@ -230,21 +232,24 @@ scene("game", () => {
     //DECLARING VARIABLES
      let cash            = 0;
      let score           = 0;
+     let honey           = 0;
      let cash_per_sec    = 0;
      let cps_penalty     = 1;
      let cps_final       = cash_per_sec / cps_penalty;
      let time            = 300;
      //prices
-        let scaling     = 1.4;
-        let pr_new_tree = 20;
-        let pr_new_bird = 200;
-        let pr_new_bee  = 100;
+        let scaling         = 1.4;
+        let pr_new_tree     = 20;
+        let pr_new_bird     = 200;
+        let pr_new_bee      = 100;
+        let pr_new_beehive  = 250;
      //number of elements
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
         let nb_birds    = get('bird').length;
         let nb_trash    = get('trash').length;
         let nb_flowered = get('flowered').length;
+        let nb_beehives = get('beehives').length;
      //cash/second
         let cps_tree    = 0.1 * (nb_bees * nb_flowered + 1);
      //events
@@ -261,6 +266,7 @@ scene("game", () => {
         let diaL = get("dialog").length; //length to check if the dialogue is existent
         let flowered_clicks     = 40;
         let nb_bees_p_flowered  = 3;
+        let nb_bees_p_behive    = 5;
         //let health_tree = 20;
 
     //UI
@@ -530,7 +536,57 @@ scene("game", () => {
             pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
             z(Z_UI_TOP),
         ])
-
+    //adding a new bee button
+    const new_beehive = NEWBOX.add([
+        sprite('new_bee'), //change to new_beehive
+        {
+            update(){
+                if(nb_bees <= nb_beehives * nb_bees_p_behive || get("hiveable").length == 0){
+                    this.use(shader("grayscale"));
+                    this.use("not_available");
+                } else {
+                    this.use(shader(""));
+                    this.unuse("not_available");
+                }
+            }
+        },
+        anchor("topright"),
+        pos(new_bee.pos.x, new_bee.pos.y + BUTTON_SIZE + NEW_BT_DIST),
+        scale(SPRITE_BUTTON_SCALE),
+        anchor("topright"),
+        area(),
+        z(Z_UI),
+        "ui",
+        "button",
+        "new_button",
+        "new_beehive",
+     ])
+        const text_new_beehive_price = new_beehive.add([
+            text(formatNumber(pr_new_beehive, {useOrderSuffix: true, decimals: 1}),{
+                size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
+            }),
+            {
+                update(){
+                this.text = formatNumber(pr_new_beehive, {useOrderSuffix: true, decimals: 1});
+                }
+            },
+            anchor("right"),
+            pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
+            z(Z_UI_TOP),
+        ])
+        const text_nb_beehives = new_beehive.add([
+            text(formatNumber(nb_beehives, {useOrderSuffix: true}),{
+                size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
+            }),
+            {
+                update(){
+                this.text = formatNumber(nb_beehives, {useOrderSuffix: true});
+                }
+            },
+            anchor("right"),
+            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
+            z(Z_UI_TOP),
+        ])
         //test: info button
         const information = NEWBOX.add([
             sprite('info'), 
@@ -604,6 +660,7 @@ scene("game", () => {
             z(y_st),
             //health(health_tree),
             "tree",
+            "hiveable",
             "clickable",
             "start_tree",
         ]);
@@ -632,7 +689,7 @@ scene("game", () => {
                     nb_clicks = 0;
                 }
                 //particles when clicked
-                for (let i = 0; i < rand(0,3); i++) {
+                for (let i = 0; i < randi(0,3); i++) {
                     const leaf_particle = add([
                         pos(mousePos()),
                         z(t.pos.y),
@@ -683,8 +740,8 @@ scene("game", () => {
                 zoomOut(t);
                 minusPollu();
                 if(pollu_over <= 0){
-                    let ran = rand(8);
-                    if (ran == 0) {
+                    let ran = randi(7);
+                    if (ran == 2) {
                         destroy(t);
                     }
                 }
@@ -697,7 +754,7 @@ scene("game", () => {
         onClick("bulldozer", (t) => { 
             if (diaL == 0) {
                 //particles when clicked
-                for (let i = 0; i < rand(5); i++) {
+                for (let i = 0; i < randi(5); i++) {
                     const smoke_particle = add([
                         pos(mousePos()),
                         z(t.z + 1),
@@ -724,7 +781,7 @@ scene("game", () => {
             }
         })
         onDestroy("trash", (t) =>{
-            for (let i = 0; i < rand(5); i++) {
+            for (let i = 0; i < randi(5); i++) {
                 const trash_particle = add([
                     pos(t.pos),
                     z(t.pos.y + 10),
@@ -744,7 +801,7 @@ scene("game", () => {
             }
         })
         onDestroy("tree", (t) => {
-            for (let i = 0; i < rand(10,20); i++) {
+            for (let i = 0; i < randi(10,20); i++) {
                 const leaf_particle = add([
                     pos(t.pos),
                     z(t.pos.y + 10),
@@ -764,7 +821,27 @@ scene("game", () => {
             }
         })
         onDestroy("flowers", (t) => {
-            for (let i = 0; i < rand(10,20); i++) {
+            for (let i = 0; i < randi(10,20); i++) {
+                const leaf_particle = add([
+                    pos(t.pos),
+                    z(t.pos.y + 10),
+                    sprite(choose(leafs)),
+                    anchor("center"),
+                    scale(rand(1, 0.6)),
+                    area({ collisionIgnore:["leaf_particle"]}),
+                    body(),
+                    lifespan(0.5, {fade: 0.2}),
+                    opacity(1),
+                    move(choose([LEFT, RIGHT]), rand(30, 150)),
+                    rotate(rand(0, 360)),
+                    offscreen({destroy: true}),
+                    "leaf_particle",
+                ])
+                leaf_particle.jump(rand(100, 350));
+            }
+        })
+        onDestroy("beehive", (t) => {
+            for (let i = 0; i < randi(10,20); i++) {
                 const leaf_particle = add([
                     pos(t.pos),
                     z(t.pos.y + 10),
@@ -784,7 +861,7 @@ scene("game", () => {
             }
         })
         onDestroy("bulldozer", (t) => {
-            for (let i = 0; i < rand(10,30); i++) {
+            for (let i = 0; i < randi(10,30); i++) {
                 const smoke_particle = add([
                     pos(mousePos()),
                     z(t.z + 1),
@@ -870,7 +947,19 @@ scene("game", () => {
                     warning(b);
                 };
             })
-
+            //New beehive
+            onClick("new_beehive", (b) =>{
+                if (diaL == 0 && b.is("not_available") == false){
+                    if(cash < pr_new_beehive){
+                        warning(text_cash);
+                        warning(text_new_beehive_price);
+                    } else {
+                        addBeehive();
+                    }
+                } else if(diaL == 0 && b.is("not_available")){
+                    warning(b);
+                };
+            });
     //AUTOMATIC STUFF
         loop(1, () => {
             if (diaL == 0) { //Pauses the game if dialogue is opened
@@ -883,12 +972,12 @@ scene("game", () => {
                 plus(cps_final);
     
                 //Increase the events stats
-                let r_pollu = rand(10);
-                if (r_pollu != 0 && pollu_stat <= MAX_EVENT_STAT) {
+                let r_pollu = randi(10);
+                if (r_pollu != 2 && pollu_stat <= MAX_EVENT_STAT) {
                     pollu_stat = pollu_stat + pollu_boost;
                 }
-                let r_defo = rand(3);
-                if (r_defo != 0 && defo_stat <= MAX_EVENT_STAT) {
+                let r_defo = randi(3);
+                if (r_defo != 2 && defo_stat <= MAX_EVENT_STAT) {
                     defo_stat = defo_stat + defo_boost;
                 }
                 if (pollu_stat >= MAX_EVENT_STAT){
@@ -959,6 +1048,7 @@ scene("game", () => {
         nb_birds    = get('bird').length;
         nb_trash    = get('trash').length;
         nb_flowered = get('flowered').length;
+        nb_beehives = get('beehive').length;
 
         cps_tree = 0.1 * (nb_bees * nb_flowered + 1);
 
@@ -1039,6 +1129,7 @@ scene("game", () => {
              z(randY),
              //health(health_tree),
              "tree",
+             "hiveable",
           ]);
           tree.color = rgb(color.red, color.green, color.blue);
             pay(pr_new_tree);
@@ -1047,7 +1138,6 @@ scene("game", () => {
        }
         //Add custom new tree
        function addCustTree(x,y) {
-         let clicked = 0;
          const tree  = add([
              sprite(choose(trees)),
              pos(x,y),
@@ -1057,35 +1147,69 @@ scene("game", () => {
              z(y),
              //health(health_tree),
              "tree",
+             "hiveable"
           ])
             //exp(pr_new_tree); //PK çA MARCHE PAS??????
        }
        //Add a new bee
        function addBee(){
         let rF = choose(get('flowered'));
+        let rB = choose(get('beehive'));
+        let b = 0;
         const bee = add([
             sprite('bee'),
-            pos(rand(0, W), rand(0, H)),
-            scale(BEE_SCALE),
+            pos(choose(-10, W + 10), H/2),
+            scale(H/2 * BEE_SCALE),
             anchor('center'),
             area(),
-            z(this.pos.y),
+            z(rF.z),
             {
                 update(){
-                    if (diaL == 0) {
+                    if (diaL === 0) {
                         this.z = this.pos.y + 100;
-                        //dynamically scale bee
-                        if (get('bee').length != 0) {
-                            get('bee')[0].scale = get('bee')[0].pos.y * BEE_SCALE;
+                        this.scale = this.pos.y * BEE_SCALE;
+                        if (b === 0 && nb_flowered != 0) {
+                            if (this.pos.x > rF.pos.x) {
+                                this.flipX = true;
+                            } else {
+                                this.flipX = false;
+                            }
+                            this.moveTo(rF.pos.x, rF.pos.y - 50, BEE_SPEED);
+                            if(this.pos.x == rF.pos.x && this.pos.y == rF.pos.y - 50){
+                                b++;
+                                this.z = rF.z + 1;
+                                rF = choose(get("flowered"));
+                                rB = choose(get("beehive"));
+                            };
+                        } else if (b === 0 && nb_flowered == 0){
+                            this.moveTo(rand(W), rand(H), BEE_SPEED);
                         }
-                        if (this.pos.x > rF.pos.x) {
-                            this.flipX = true;
-                        } else {
-                            this.flipX = false;
-                        }
-                        this.moveTo(rF.pos.x, rF.pos.y - 50, BEE_SPEED);
-                        if(this.pos.x == rF.pos.x && this.pos.y == rF.pos.y - 50){
-                            rF = choose(get('flowered'));
+                        if (b === 1 && nb_beehives != 0) {
+                            if (rB == undefined){
+                                rB = choose(get("beehive"));
+                            }
+                            if (this.pos.x > rB.pos.x) {
+                                this.flipX = true;
+                            } else {
+                                this.flipX = false;
+                            }
+                            this.moveTo(rB.pos.x, rB.pos.y, BEE_SPEED);
+                            if(this.pos.x == rB.pos.x && this.pos.y == rB.pos.y){
+                                b++;
+                                honey++;
+                                console.log(honey);
+                            };
+                        } else if ((b === 1 || b === 2) && nb_beehives == 0){
+                            this.moveTo(rand(W), rand(H), BEE_SPEED);
+                        };
+                        if(b === 2){
+                            zoomIn(rB)
+                                this.z = 0;
+                                wait(2, () =>{
+                                    zoomOut(rB);
+                                    this.z = this.pos.y + 100;
+                                    b = 0;
+                                });
                         }
                     }
                 },
@@ -1096,6 +1220,24 @@ scene("game", () => {
             //change with function
             pr_new_bee  = pr_new_bee * scaling;
        }
+        //Add a new bee
+         function addBeehive(){
+         let rT = choose(get('hiveable'));
+         const beehive = add([
+            sprite('beehive0'),
+            pos(rT.pos.x + 5, rT.pos.y - 20),
+            scale(rT.pos.y * BEEHIVE_SCALE),
+            anchor('center'),
+            area(),
+            z(rT.z + 2),
+            "beehive",
+         ]);
+            rT.unuse("hiveable");
+            rT.use("unhiveable");
+            pay(pr_new_beehive);
+            //change with function
+            pr_new_beehive  = pr_new_beehive * scaling;
+        }
         //Add a new trash
          function addTrash() {
          const randX  = rand(0, W - icon_bear.pos.x);
@@ -1135,8 +1277,18 @@ scene("game", () => {
                                 destroy(rT);
                                 rT = choose(get('tree'));
                             }
-                            this.onColliding("flowers", (f) => {
+                            this.onCollide("flowers", (f) => {
                                 f.destroy();
+                            })
+                            this.onCollide("flowered", (f) => {
+                                f.unuse("flowered");
+                            })
+                            this.onCollide("beehive", (b) => {
+                                b.destroy();
+                            })
+                            this.onCollide("unhiveable", (t) => {
+                                t.unuse("unhiveable");
+                                t.use("hiveable");
                             })
                         }
                     },
