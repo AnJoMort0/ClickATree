@@ -1712,8 +1712,18 @@ scene("gameOver", () => {
         ["bear_wink", "Ceci est un 2e test :)"],
     ]
     const dia_info = [
-        ["bear_wink", "Tu pourras acheter tes arbres ici."],
-        ["bear_wink", "hi."]
+        //peut-être une ligne ?
+        //tree
+        ["bear_wink", "Ici, tu peux acheter des arbres lorsque tu as accumulé assez de feuilles. Ces feuilles te servent de monnaie. Mais attention! Le prix des arbres augmente à chaque fois que tu achètes un arbre."],
+        //bird
+        ["bear_wink", "Ici, tu peux acheter des oiseaux. Ces oiseaux t'aident à planter des arbres en dispersant les graines des arbres."],
+        //bee
+        ["bear_wink", "Ce bouton pour les abeilles ce débloquera une fois que tes arbres auront des fleurs. Achète des abeilles pour récupérer le nectar des fleurs."],
+        //honeycomb
+        ["bear_wink", "Ce bouton pour le nid d'abeilles ce débloquera une fois que tu auras une abeille dans ta forêt. Tes abeilles pourront déposer leur nectar dans ces nids afin de créer du miel."],
+        //pollution
+        ["bear_wink", "Attention! Cette barre représente la pollution. Dès cette barre est remplie, tu auras des signes de pollution qui apparaîtront dans ta forêt. Clique dessus pour les enlever!"],
+        ["bear_wink", "Attention! Cette barre représente la déforestation. Dès cette barre est remplie, tu auras un signe de déforestation qui apparaîtra dans ta forêt. Clique dessus pour l'enlever!"]
     ]
 
 
