@@ -188,6 +188,8 @@ loadRoot('assets/');
         loadSprite('new_bee', "ui/new_buttons/new_bee_button.png");
         loadSprite('new_bird', "ui/new_buttons/new_bird_button.png");
         loadSprite('info', "ui/new_buttons/info_button.png");
+        loadSprite('new_beehive', "ui/new_buttons/new_beehive_button.png");
+
 //load ui sounds
     //loadSound('button_click',"audio/other/click.wav"): by Nathan Gibson https://nathangibson.myportfolio.com 
     loadSound('button_click', "audio/other/button/click.wav");
@@ -542,7 +544,7 @@ scene("game", () => {
         ])
     //adding a new bee button
     const new_beehive = NEWBOX.add([
-        sprite('new_bee'), //change to new_beehive
+        sprite('new_beehive'), //change to new_beehive
         {
             update(){
                 if(nb_bees <= nb_beehives * nb_bees_p_behive || get("hiveable").length == 0){
@@ -1721,9 +1723,9 @@ scene("gameOver", () => {
         //bee
         ["bear_wink", "Ce bouton pour les abeilles ce débloquera une fois que tes arbres auront des fleurs. Achète des abeilles pour récupérer le nectar des fleurs."],
     ]
-    const dia_intro_honeycomb = [
-        //honeycomb
-        ["bear_wink", "Ce bouton pour le nid d'abeilles ce débloquera une fois que tu auras une abeille dans ta forêt. Tes abeilles pourront déposer leur nectar dans ces nids afin de créer du miel."],
+    const dia_intro_beehive = [
+        //beehive
+        ["bear_wink", "Ce bouton pour la ruche ce débloquera une fois que tu auras au moins une abeille dans ta forêt. Tes abeilles pourront déposer leur nectar dans ces nids afin de créer du miel."],
     ]
     const dia_intro_pollution = [
         //pollution
