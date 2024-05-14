@@ -607,7 +607,7 @@ scene("game", () => {
          ])
         //test: get info
         onClick("info", (t) => {
-            diaBubble(choose(dia_info));
+            diaBubble(choose(dia_info_tree));
         })
 
     //BACKGROUND
@@ -906,6 +906,7 @@ scene("game", () => {
         onClick("bear", (t) => {
             diaBubble(choose(dia_funfact));
         })
+        
 
     //UI elements
         //click any button
@@ -1711,18 +1712,25 @@ scene("gameOver", () => {
         ["bear_wink", "Ceci est un test !"],
         ["bear_wink", "Ceci est un 2e test :)"],
     ]
-    const dia_info = [
-        //peut-être une ligne ?
+    //peut-être une seule ligne ?
+    const dia_info_tree = [
         //tree
         ["bear_wink", "Ici, tu peux acheter des arbres lorsque tu as accumulé assez de feuilles. Ces feuilles te servent de monnaie. Mais attention! Le prix des arbres augmente à chaque fois que tu achètes un arbre."],
-        //bird
-        ["bear_wink", "Ici, tu peux acheter des oiseaux. Ces oiseaux t'aident à planter des arbres en dispersant les graines des arbres."],
+    ]
+    const dia_intro_bee = [
         //bee
         ["bear_wink", "Ce bouton pour les abeilles ce débloquera une fois que tes arbres auront des fleurs. Achète des abeilles pour récupérer le nectar des fleurs."],
+    ]
+    const dia_intro_honeycomb = [
         //honeycomb
         ["bear_wink", "Ce bouton pour le nid d'abeilles ce débloquera une fois que tu auras une abeille dans ta forêt. Tes abeilles pourront déposer leur nectar dans ces nids afin de créer du miel."],
+    ]
+    const dia_intro_pollution = [
         //pollution
         ["bear_wink", "Attention! Cette barre représente la pollution. Dès cette barre est remplie, tu auras des signes de pollution qui apparaîtront dans ta forêt. Clique dessus pour les enlever!"],
+    ]
+    const dia_intro_deforestation = [
+        //deforestation
         ["bear_wink", "Attention! Cette barre représente la déforestation. Dès cette barre est remplie, tu auras un signe de déforestation qui apparaîtra dans ta forêt. Clique dessus pour l'enlever!"]
     ]
 
