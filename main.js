@@ -149,6 +149,7 @@ loadRoot('assets/');
         loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
         loadSprite('bear_wink', 'game_elements/bear/bear_wink.png');
         loadSprite('bear_happy', 'game_elements/bear/bear_happy.png');
+        loadSprite('bear_sad', 'game_elements/bear/bear_sad.png');
         //vfx
         loadSprite('smoke', 'game_elements/vfx/smoke.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
             sliceX: 3,
@@ -1678,7 +1679,7 @@ scene("gameOver", () => {
     //bear = normal bear, smiling slightly - bear_scared, bear_wink (fun facts), starry-eyed bear
     const dia_intro = [
         ["bear_happy", "Bienvenu au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
-        ["bear", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
+        ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
         ["bear", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
         ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres que tu peux voir en haut à droite."],
         ["bear", "Tu pourras également acheter des oiseaux qui t'aideront à planter de nouveaux arbres."],
