@@ -150,6 +150,9 @@ loadRoot('assets/');
         loadSprite('bear_wink', 'game_elements/bear/bear_wink.png');
         loadSprite('bear_happy', 'game_elements/bear/bear_happy.png');
         loadSprite('bear_sad', 'game_elements/bear/bear_sad.png');
+        loadSprite('bear_talking', 'game_elements/bear/bear_talking.png');
+        loadSprite('bear_info', 'game_elements/bear/bear_info.png');
+        loadSprite('bear_flower', 'game_elements/bear/bear_flower.png');
         //vfx
         loadSprite('smoke', 'game_elements/vfx/smoke.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
             sliceX: 3,
@@ -1680,16 +1683,17 @@ scene("gameOver", () => {
     const dia_intro = [
         ["bear_happy", "Bienvenu au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
-        ["bear", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
+        ["bear_talking", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
         ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres que tu peux voir en haut à droite."],
         ["bear", "Tu pourras également acheter des oiseaux qui t'aideront à planter de nouveaux arbres."],
-        ["bear", "Lorsque tu appuies assez de fois sur un arbre, tu verras que de belles fleurs apparaîtront."],
+        ["bear_flower", "Lorsque tu appuies assez de fois sur un arbre, tu verras que de belles fleurs apparaîtront."],
         ["bear", "Dans ce cas, tu pourras acheter des abeilles qui se poseront sur ces fleurs et qui récupéront leur nectar"],
         ["bear", "et enfin, si tu achètes un nid d'abeilles, tes abeilles pourront y déposer leur nectar afin de créer un bon miel sucré!"], 
-        ["bear", "Mais fais attention! Tu auras des obstacles qui renderont ta tâche beaucoup plus difficile."],
+        ["bear_scared", "Mais fais attention! Tu auras des obstacles qui renderont ta tâche beaucoup plus difficile."],
         ["bear", "Fais attention à la pollution dans ton environnement. Regarde bien les barres de pollution et le risque de déforestation en haut à gauche."],
-        ["bear", "À toi de jouer! Tu as 5 minutes pour m'aider à créer une belle forêt mais surtout à récupérer mon miel."],
-        ["bear", "Si des obstacles apparaissent dans ta forêt, détruis-les en cliquant dessus pour les faire disparaître et descendre le niveau de pollution et de déforestation! J'essaierai de t'aider le plus possible!"]
+        ["bear_info", "N'hésite pas à appuyer sur les cercles 'i' en rouge pour avoir plus d'informations utiles."],
+        ["bear_talking", "À toi de jouer! Tu as 5 minutes pour m'aider à créer une belle forêt mais surtout à récupérer mon miel."],
+        ["bear_wink", "Si des obstacles apparaissent dans ta forêt, détruis-les en cliquant dessus pour les faire disparaître et descendre le niveau de pollution et de déforestation! J'essaierai de t'aider le plus possible!"]
     ]
     const dia_pollution = [
         ["bear_scared", "Attention!! La barre de pollution augmente vite!"],
