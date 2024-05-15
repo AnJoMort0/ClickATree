@@ -67,9 +67,9 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
     const BEE_SCALE         = 1/400;
     const BEEHIVE_SCALE     = 1/300;
 //speed of moving elements
-    const BULLDOZER_SPEED   = 50;
-    const BIRD_SPEED        = 40;
-    const BEE_SPEED         = 20;
+    const BULLDOZER_SPEED   = 60;
+    const BIRD_SPEED        = 50;
+    const BEE_SPEED         = 40;
 
 //load assets
 loadRoot('assets/');
@@ -247,8 +247,8 @@ scene("game", () => {
         let scaling         = 1.4;
         let pr_new_tree     = 20;
         let pr_new_bird     = 200;
-        let pr_new_bee      = 100;
-        let pr_new_beehive  = 250;
+        let pr_new_bee      = 75;
+        let pr_new_beehive  = 150;
      //number of elements
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
@@ -257,7 +257,7 @@ scene("game", () => {
         let nb_flowered = get('flowered').length;
         let nb_beehives = get('beehives').length;
      //cash/second
-        let cps_tree    = 0.1 * (nb_bees * nb_flowered + 1);
+        let cps_tree    = 1 * (nb_bees * nb_flowered + 1);
      //events
         const MAX_EVENT_STAT = 100;
         let pollu_stat  = 0;
