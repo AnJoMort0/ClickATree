@@ -290,6 +290,12 @@ scene("game", () => {
         let nb_bees_p_behive    = 5;
         //let health_tree = 20;
 
+    //sound
+    const music = play('default_music');
+    
+    //const audio = new Audio('music.wav');
+    //audio.play();
+
     //UI
     //cash
      const text_cash = CASHBOX.add([
