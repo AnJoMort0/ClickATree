@@ -291,7 +291,7 @@ scene("game", () => {
         //let health_tree = 20;
 
     //sound
-    const music = play('default_music');
+    music = play('default_music');
     
     //const audio = new Audio('music.wav');
     //audio.play();
@@ -1033,12 +1033,12 @@ scene("game", () => {
         })*/
 
         //Pause menu
-        onKeyRelease("p", () => {
-            diaBubble(dia_others[0]);
-        })
-        onKeyRelease("escape", () => {
-            diaBubble(dia_others[0]);
-        })
+        //onKeyRelease("p", () => {
+        //    diaBubble(dia_others[0]);
+        //})
+        //onKeyRelease("escape", () => {
+        //    diaBubble(dia_others[0]);
+        //})
 
         //get a fun fact
         onClick("bear", (t) => {
