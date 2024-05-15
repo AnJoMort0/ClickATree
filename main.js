@@ -1026,6 +1026,14 @@ scene("game", () => {
 
         })*/
 
+        //Pause menu
+        onKeyRelease("p", () => {
+            diaBubble(dia_others[0]);
+        })
+        onKeyRelease("escape", () => {
+            diaBubble(dia_others[0]);
+        })
+
         //get a fun fact
         onClick("bear", (t) => {
             diaBubble(choose(dia_funfact));
@@ -1852,6 +1860,10 @@ scene("gameOver", () => {
         //deforestation
         ["bear_wink", "Attention! Cette barre représente la déforestation. Dès que cette barre est remplie, tu auras un signe de déforestation qui apparaîtra dans ta forêt. Clique dessus pour l'enlever!"],
     ]
-
+    //others
+    const dia_others = [
+        //pause
+        ["bear_talking", "Ne t'inquiète pas, le jeu est en pause. Clique sur espace pour reprendre !"]
+    ]
 
 go('game');
