@@ -258,11 +258,11 @@ scene("game", () => {
      let cps_final       = cash_per_sec / cps_penalty;
      let time            = 300;
      //prices
-        let scaling         = 1.4;
+        let scaling         = 1.6;
         let pr_new_tree     = 20;
         let pr_new_bird     = 200;
         let pr_new_bee      = 75;
-        let pr_new_beehive  = 150;
+        let pr_new_beehive  = 50;
      //number of elements
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
@@ -271,7 +271,8 @@ scene("game", () => {
         let nb_flowered = get('flowered').length;
         let nb_beehives = get('beehives').length;
      //cash/second
-        let cps_tree    = 1 * (nb_bees * nb_flowered + 1);
+        let cps_t_base  = 0.5
+        let cps_tree    = cps_t_base * (nb_bees * nb_flowered + 1);
      //events
         const MAX_EVENT_STAT = 100;
         let pollu_stat  = 0;
@@ -1099,7 +1100,7 @@ scene("game", () => {
         nb_flowered = get('flowered').length;
         nb_beehives = get('beehive').length;
 
-        cps_tree = 0.1 * (nb_bees * nb_flowered + 1);
+        cps_tree = cps_t_base * (nb_bees * nb_flowered + 1);
 
          cash_per_sec = (nb_trees * cps_tree);
          cps_final   = cash_per_sec / cps_penalty;
