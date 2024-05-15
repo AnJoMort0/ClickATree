@@ -40,33 +40,40 @@ setGravity(800);
 const CLICK_JUMP                = 1.05;
 
 const SPRITE_PIXEL_SIZE         = 25;
-const SPRITE_ICON_SCALE         = 1.4;
+const SPRITE_ICON_SCALE         = H/530;
 const ICON_SIZE                 = SPRITE_PIXEL_SIZE * SPRITE_ICON_SCALE;
 const SPRITE_BG_PIXEL_SIZE      = 250;
-const SPRITE_BG_SCALE           = 3;
+const SPRITE_BG_SCALE           = H/210;
 const BG_TILE_SIZE              = SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE;
 const SPRITE_BUTTON_PIXEL_SIZE  = 400;
-const SPRITE_BUTTON_SCALE       = 0.2;
+const SPRITE_BUTTON_SCALE       = H/3725;
 const BUTTON_SIZE               = SPRITE_BUTTON_PIXEL_SIZE * SPRITE_BUTTON_SCALE;
-const BUTTON_PRICE_TXT_SCALE    = 1.5;
-const BUTTON_NB_TXT_SCALE       = 1.3;
+const BUTTON_PRICE_TXT_SCALE    = H/500;
+const BUTTON_NB_TXT_SCALE       = H/575;
 const BG_Y                      = H/2;
 const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
-const BEAR_SCALE                = 6;
+const BEAR_SCALE                = H/125;
 const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
+const INFO_ICON_SCALE           = H/750;
+//text sizes
+const TXT_SIZE_S    = H/30;
+const TXT_SIZE_M    = H/25;
+const TXT_SIZE_L    = H/20;
+const TXT_SIZE_XL   = H/15;
+const TXT_SIZE_DIA  = H/35;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI        = H    + 125;
     const Z_UI_TOP    = Z_UI + 1;
     const Z_UI_BOTTOM = Z_UI - 1;
 //relative scale of objects to screen height
-    const TREE_SCALE        = 1/100; 
-    const TRASH_SCALE       = 1/150;
-    const BULLDOZER_SCALE   = 1/90;
-    const BIRD_SCALE        = 1/320;
-    const BEE_SCALE         = 1/400;
-    const BEEHIVE_SCALE     = 1/300;
+    const TREE_SCALE        = H/74500; 
+    const TRASH_SCALE       = H/111750;
+    const BULLDOZER_SCALE   = H/67050;
+    const BIRD_SCALE        = H/238400;
+    const BEE_SCALE         = H/298000;
+    const BEEHIVE_SCALE     = H/223500;
 //speed of moving elements
     const BULLDOZER_SPEED   = 60;
     const BIRD_SPEED        = 50;
@@ -301,6 +308,7 @@ scene("game", () => {
     //cash
      const text_cash = CASHBOX.add([
         text(formatNumber(cash, {useOrderSuffix: true, decimals: 1}),{
+            size : TXT_SIZE_L,
             width : W,
         }),
         anchor("left"),
@@ -323,7 +331,7 @@ scene("game", () => {
      ]);
      const text_cash_per_sec = CASHBOX.add([
         text(formatNumber(cps_final, {useOrderSuffix: true, decimals: 1}) + "/s",{
-            size    : 24,   
+            size    : TXT_SIZE_M,   
             width   : W,
         }),
         anchor("left"),
@@ -342,15 +350,16 @@ scene("game", () => {
         anchor("left"),
         pos(0, 0),
         z(Z_UI),
-        scale(SPRITE_ICON_SCALE),
+        scale(SPRITE_ICON_SCALE * 1.5),
         "ui",
      ]);
      const text_honey = SCOREBOX.add([
         text(`${Math.floor(honey)}`,{
+            size : TXT_SIZE_XL,
            width : W,
         }),
         anchor("left"),
-        pos(icon_honey.pos.x + 50, 0),
+        pos(icon_honey.pos.x + 65, 0),
         z(Z_UI),
         {
            update(){
@@ -362,8 +371,8 @@ scene("game", () => {
     //timer
     const text_time = TOPLBOX.add([
         text(`Temps restant : ` + fancyTimeFormat(time),{
-           width : W,
-           size : 30,
+            size : TXT_SIZE_L,
+            width : W,
         }),
         anchor("left"),
         pos(0,0),
@@ -380,7 +389,7 @@ scene("game", () => {
     const EVENTS = add([anchor("left"),pos(10,text_time.pos.y + 65),z(Z_UI_BOTTOM),"ui"])
     function emptyBar(){
         drawRect({
-            pos: vec2(30, 0),
+            pos: vec2(ICON_SIZE - 5,0),
             width: MAX_EVENT_STAT + 2,
             height: 13,
             anchor: "left",
@@ -649,7 +658,7 @@ scene("game", () => {
             sprite('info'), 
             anchor("topright"),
             pos(new_tree.pos.x - 165, new_tree.pos.y),
-            scale(1),
+            scale(INFO_ICON_SCALE),
             area(),
             z(Z_UI),
             {dia : 0},
@@ -668,7 +677,7 @@ scene("game", () => {
             sprite('info'), 
             anchor("topright"),
             pos(new_bird.pos.x - 165, new_bird.pos.y),
-            scale(1),
+            scale(INFO_ICON_SCALE),
             area(),
             z(Z_UI),
             {dia : 1},
@@ -683,7 +692,7 @@ scene("game", () => {
             sprite('info'), 
             anchor("topright"),
             pos(new_bee.pos.x - 165, new_bee.pos.y),
-            scale(1),
+            scale(INFO_ICON_SCALE),
             anchor("topright"),
             area(),
             z(Z_UI),
@@ -698,7 +707,7 @@ scene("game", () => {
             sprite('info'), 
             anchor("topright"),
             pos(new_beehive.pos.x - 165, new_beehive.pos.y),
-            scale(1),
+            scale(INFO_ICON_SCALE),
             anchor("topright"),
             area(),
             z(Z_UI),
@@ -713,9 +722,9 @@ scene("game", () => {
         //pollution
          const information_4 = EVENTS.add([
             sprite('info'), 
-            anchor("topleft"),
-            pos(icon_pollution.pos.x + 200, icon_pollution.pos.y - 12),
-            scale(1),
+            anchor("left"),
+            pos(icon_pollution.pos.x + MAX_EVENT_STAT + 100, icon_pollution.pos.y),
+            scale(INFO_ICON_SCALE),
             area(),
             z(Z_UI),
             {dia : 4},
@@ -727,9 +736,9 @@ scene("game", () => {
         //deforestation
          const information_5 = EVENTS.add([
             sprite('info'), 
-            anchor("topleft"),
-            pos(icon_defo.pos.x + 200, icon_defo.pos.y - 12),
-            scale(1),
+            anchor("left"),
+            pos(icon_defo.pos.x + MAX_EVENT_STAT + 100, icon_defo.pos.y),
+            scale(INFO_ICON_SCALE),
             area(),
             z(Z_UI),
             {dia : 5},
@@ -1549,7 +1558,7 @@ scene("game", () => {
                 "dialog",
             ])
             const txt_bubble = add([
-                text(array_with_number[1], { size: 20, width: width - 15, align: "center" }),
+                text(array_with_number[1], { size: TXT_SIZE_DIA, width: width - 15, align: "center" }),
                 pos(bubble.pos),
                 anchor("center"),
                 color(0, 0, 0),
