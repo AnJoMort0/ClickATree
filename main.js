@@ -329,16 +329,24 @@ scene("game", () => {
         "ui",
      ])
     //score
-     const text_score = SCOREBOX.add([
-        text(`Score : ${Math.floor(score)}`,{
-           width : W,
-        }),
+     const icon_honey = SCOREBOX.add([
+        sprite('honey'),
         anchor("left"),
         pos(0, 0),
         z(Z_UI),
+        scale(SPRITE_ICON_SCALE),
+        "ui",
+     ]);
+     const text_honey = SCOREBOX.add([
+        text(`${Math.floor(honey)}`,{
+           width : W,
+        }),
+        anchor("left"),
+        pos(icon_honey.pos.x + 50, 0),
+        z(Z_UI),
         {
            update(){
-              this.text = `Score : ${Math.floor(score)}`;
+              this.text = `${Math.floor(honey)}`;
            }
         },
        "ui"
