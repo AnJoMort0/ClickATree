@@ -203,7 +203,7 @@ loadRoot('assets/');
 //load music: by mayragandra https://mayragandra.itch.io/freeambientmusic 
     loadSound('default_music',"audio/music/music.wav");
 
-//load shaders
+//load shaders (ChatGPT generated)
     // Grayscale shader
     loadShader("grayscale", null, `
         vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
@@ -211,6 +211,20 @@ loadRoot('assets/');
         float gray = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
         return vec4(vec3(gray), texColor.a);
     }`)   
+    //Red Tint
+    loadShader("redTint", null, `
+        vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
+        vec4 texColor = texture2D(tex, uv);
+        // Apply red tint
+        vec4 redTint = vec4(1.0, 0.0, 0.0, 1.0);
+        vec4 tintedColor = mix(texColor, redTint, 0.2);
+        // Convert to grayscale
+        float gray = dot(tintedColor.rgb, vec3(0.299, 0.587, 0.114));
+        // Mix the grayscale color with the tinted color to reduce saturation
+        vec4 desaturatedColor = mix(vec4(vec3(gray), tintedColor.a), tintedColor, 0.7);
+        return desaturatedColor;
+    }`)
+
 //============================//
 
 //SCENES
@@ -431,7 +445,12 @@ scene("game", () => {
             }),
             {
                 update(){
-                this.text = formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1});
+                    this.text = formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1});
+                    if(cash < pr_new_tree){
+                        this.color = RED;
+                    } else {
+                        this.color = "";
+                    }
                 }
             },
             anchor("right"),
@@ -471,7 +490,12 @@ scene("game", () => {
                 }),
                 {
                     update(){
-                    this.text = formatNumber(pr_new_bird, {useOrderSuffix: true, decimals: 1});
+                        this.text = formatNumber(pr_new_bird, {useOrderSuffix: true, decimals: 1});
+                        if(cash < pr_new_bird){
+                            this.color = RED;
+                        } else {
+                            this.color = "";
+                        }
                     }
                 },
                 anchor("right"),
@@ -522,7 +546,12 @@ scene("game", () => {
             }),
             {
                 update(){
-                this.text = formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1});
+                    this.text = formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1});
+                    if(cash < pr_new_bee && new_bee.is("not_available") == false){
+                        this.color = RED;
+                    } else {
+                        this.color = "";
+                    }
                 }
             },
             anchor("right"),
@@ -573,7 +602,12 @@ scene("game", () => {
             }),
             {
                 update(){
-                this.text = formatNumber(pr_new_beehive, {useOrderSuffix: true, decimals: 1});
+                    this.text = formatNumber(pr_new_beehive, {useOrderSuffix: true, decimals: 1});
+                    if(cash < pr_new_beehive && new_beehive.is("not_available") == false){
+                        this.color = RED;
+                    } else {
+                        this.color = "";
+                    }
                 }
             },
             anchor("right"),
