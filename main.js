@@ -262,7 +262,7 @@ scene("game", () => {
         let pr_new_tree     = 20;
         let pr_new_bird     = 200;
         let pr_new_bee      = 75;
-        let pr_new_beehive  = 50;
+        let pr_new_beehive  = 30;
      //number of elements
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
@@ -1007,6 +1007,7 @@ scene("game", () => {
                 ])
                 smoke_particle.jump(rand(400, 500));
             }
+            icon_bear.use(sprite("bear"));
         })
 
         //skip dialogs
@@ -1115,6 +1116,7 @@ scene("game", () => {
                     defo_over++;
                     if(get("bulldozer").length == 0){
                         addBulldozer();
+                        icon_bear.use(sprite("bear_scared"));
                     }
                 }
 
