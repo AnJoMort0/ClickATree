@@ -1,7 +1,8 @@
 //IDEAS TO ADD
     //Timed game mode for the Mystères de l'Unil specifically --> need to add the menu and change values depending on choosen game mode (add kid mode and adult mode as well)
-    //Add honey system
     //Add dialogue for when try to buy something whitout enough money or bees without enough flowers
+    //Move dialogues to more dynamic parts to not have overload of informations
+    //Hide elements before they are needed (info_buttons, unavailable bees, beehives, etc)
     //Minimal animations for the bees (for example move around when reach a tree)
     //Start menu, pause menu (very simple just stops the loop being part of diaL) and end screen
     //Use Localstorage for the high scores
@@ -61,8 +62,8 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
     const Z_UI_BOTTOM = Z_UI - 1;
 //relative scale of objects to screen height
     const TREE_SCALE        = 1/100; 
-    const TRASH_SCALE       = 3;
-    const BULLDOZER_SCALE   = 1/80;
+    const TRASH_SCALE       = 1/150;
+    const BULLDOZER_SCALE   = 1/90;
     const BIRD_SCALE        = 1/320;
     const BEE_SCALE         = 1/400;
     const BEEHIVE_SCALE     = 1/300;
