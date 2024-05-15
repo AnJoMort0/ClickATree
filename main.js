@@ -636,24 +636,102 @@ scene("game", () => {
             pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
             z(Z_UI_TOP),
         ])
-        //test: info button
-        const information = NEWBOX.add([
+
+        //test: info button = tree
+        const information_0 = NEWBOX.add([
             sprite('info'), 
             anchor("topright"),
             pos(new_tree.pos.x - 165, new_tree.pos.y),
             scale(1),
-            anchor("topright"),
             area(),
             z(Z_UI),
+            {dia : 0},
             "ui",
             "button",
             "new_button",
             "info",
          ])
-        //test: get info
+         //test: get info
         onClick("info", (t) => {
-            diaBubble(choose(dia_info_tree));
+            console.log("clicked")
+            diaBubble(dia_info[t.dia]);
         })
+        //bird
+         const information_1 = NEWBOX.add([
+            sprite('info'), 
+            anchor("topright"),
+            pos(new_bird.pos.x - 165, new_bird.pos.y),
+            scale(1),
+            area(),
+            z(Z_UI),
+            {dia : 1},
+            "ui",
+            "button",
+            "new_button",
+            "info",
+         ])
+
+        //bee
+         const information_2 = NEWBOX.add([
+            sprite('info'), 
+            anchor("topright"),
+            pos(new_bee.pos.x - 165, new_bee.pos.y),
+            scale(1),
+            anchor("topright"),
+            area(),
+            z(Z_UI),
+            {dia : 2},
+            "ui",
+            "button",
+            "new_button",
+            "info",
+         ])
+        //beehive
+         const information_3 = NEWBOX.add([
+            sprite('info'), 
+            anchor("topright"),
+            pos(new_beehive.pos.x - 165, new_beehive.pos.y),
+            scale(1),
+            anchor("topright"),
+            area(),
+            z(Z_UI),
+            {dia : 3},
+            "ui",
+            "button",
+            "new_button",
+            "info",
+         ])
+
+        //Left side
+        //pollution
+         const information_4 = EVENTS.add([
+            sprite('info'), 
+            anchor("topleft"),
+            pos(icon_pollution.pos.x + 200, icon_pollution.pos.y - 12),
+            scale(1),
+            area(),
+            z(Z_UI),
+            {dia : 4},
+            "ui",
+            "button",
+            "new_button",
+            "info",
+         ])
+        //deforestation
+         const information_5 = EVENTS.add([
+            sprite('info'), 
+            anchor("topleft"),
+            pos(icon_defo.pos.x + 200, icon_defo.pos.y - 12),
+            scale(1),
+            area(),
+            z(Z_UI),
+            {dia : 5},
+            "ui",
+            "button",
+            "new_button",
+            "info",
+         ])
+        
 
     //BACKGROUND
      //adding the background dynamically to the screen size
@@ -1727,14 +1805,14 @@ scene("gameOver", () => {
 //DIALOGS
     //bear = normal bear, smiling slightly - bear_scared, bear_wink (fun facts), starry-eyed bear
     const dia_intro = [
-        ["bear_happy", "Bienvenu au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
+        ["bear_happy", "Bienvenu.e au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
         ["bear_talking", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
         ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres que tu peux voir en haut à droite."],
         ["bear", "Tu pourras également acheter des oiseaux qui t'aideront à planter de nouveaux arbres."],
         ["bear_flower", "Lorsque tu appuies assez de fois sur un arbre, tu verras que de belles fleurs apparaîtront."],
         ["bear", "Dans ce cas, tu pourras acheter des abeilles qui se poseront sur ces fleurs et qui récupéront leur nectar"],
-        ["bear", "et enfin, si tu achètes un nid d'abeilles, tes abeilles pourront y déposer leur nectar afin de créer un bon miel sucré!"], 
+        ["bear", "et enfin, si tu achètes une ruche, tes abeilles pourront y déposer leur nectar afin de créer un bon miel sucré!"], 
         ["bear_scared", "Mais fais attention! Tu auras des obstacles qui renderont ta tâche beaucoup plus difficile."],
         ["bear", "Fais attention à la pollution dans ton environnement. Regarde bien les barres de pollution et le risque de déforestation en haut à gauche."],
         ["bear_info", "N'hésite pas à appuyer sur les cercles 'i' en rouge pour avoir plus d'informations utiles."],
@@ -1758,25 +1836,19 @@ scene("gameOver", () => {
         ["bear_wink", "Ceci est un 2e test :)"],
     ]
     //peut-être une seule ligne ?
-    const dia_info_tree = [
+    const dia_info = [
         //tree
         ["bear_wink", "Ici, tu peux acheter des arbres lorsque tu as accumulé assez de feuilles. Ces feuilles te servent de monnaie. Mais attention! Le prix des arbres augmente à chaque fois que tu achètes un arbre."],
-    ]
-    const dia_intro_bee = [
+        //bird 
+        ["bear_wink", "Ici, tu peux acheter des oiseaux. Ils se déplacent sur tes arbres et déplacent les graines pour t'aider à créer ta forêt."],
         //bee
         ["bear_wink", "Ce bouton pour les abeilles ce débloquera une fois que tes arbres auront des fleurs. Achète des abeilles pour récupérer le nectar des fleurs."],
-    ]
-    const dia_intro_beehive = [
         //beehive
-        ["bear_wink", "Ce bouton pour la ruche ce débloquera une fois que tu auras au moins une abeille dans ta forêt. Tes abeilles pourront déposer leur nectar dans ces nids afin de créer du miel."],
-    ]
-    const dia_intro_pollution = [
+        ["bear_wink", "Ce bouton pour la ruche ce débloquera une fois que tu auras au moins une abeille dans ta forêt. Tes abeilles pourront déposer leur nectar dans les ruches afin de créer du miel."],
         //pollution
-        ["bear_wink", "Attention! Cette barre représente la pollution. Dès cette barre est remplie, tu auras des signes de pollution qui apparaîtront dans ta forêt. Clique dessus pour les enlever!"],
-    ]
-    const dia_intro_deforestation = [
+        ["bear_wink", "Attention! Cette barre représente la pollution. Dès que cette barre est remplie, tu auras des signes de pollution qui apparaîtront dans ta forêt. Clique dessus pour les enlever!"],
         //deforestation
-        ["bear_wink", "Attention! Cette barre représente la déforestation. Dès cette barre est remplie, tu auras un signe de déforestation qui apparaîtra dans ta forêt. Clique dessus pour l'enlever!"]
+        ["bear_wink", "Attention! Cette barre représente la déforestation. Dès que cette barre est remplie, tu auras un signe de déforestation qui apparaîtra dans ta forêt. Clique dessus pour l'enlever!"],
     ]
 
 
