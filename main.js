@@ -293,6 +293,7 @@ scene("game", () => {
 
     //sound
     music = play('default_music');
+    //music2 = play('button_click'); //to put into button click
     
     //const audio = new Audio('music.wav');
     //audio.play();
@@ -1822,7 +1823,7 @@ scene("gameOver", () => {
 //DIALOGS
     //bear = normal bear, smiling slightly - bear_scared, bear_wink (fun facts), starry-eyed bear
     const dia_intro = [
-        ["bear_happy", "Bienvenu.e au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
+        ["bear_happy", "Bienvenue au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
         ["bear_talking", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
         ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres que tu peux voir en haut à droite."],
