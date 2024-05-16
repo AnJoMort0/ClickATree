@@ -196,8 +196,6 @@ loadRoot('assets/');
     loadSound('button_click', "audio/other/button/click.wav");
     //by FilmCow https://filmcow.itch.io/filmcow-sfx
     loadSound('tree_fall',"audio/other/deforestation/tree_fall.wav");
-    //by Diablo Luna https://pudretediablo.itch.io/butterfly
-    loadSound('fire',"audio/other/fire/fire.wav");
 //load sfx
     //by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('birds_bg',"audio/sfx/birds/bird.wav");
@@ -292,7 +290,7 @@ scene("game", () => {
         //let health_tree = 20;
 
     //sound
-    music = play('default_music');
+   // var music = play('default_music');
     //music2 = play('button_click'); //to put into button click
     
     //const audio = new Audio('music.wav');
@@ -663,6 +661,7 @@ scene("game", () => {
         onClick("info", (t) => {
             console.log("clicked")
             diaBubble(dia_info[t.dia]);
+            music = play('button_click'); //it works with onclick
         })
         //bird
          const information_1 = NEWBOX.add([
