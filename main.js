@@ -671,13 +671,12 @@ scene("game", () => {
             scale(1),
             area(),
             z(Z_UI),
-            {dia : 1},
+            {dia: 1},
             "ui",
             "button",
             "new_button",
             "info",
          ])
-
         //bee
          const information_2 = NEWBOX.add([
             sprite('info'), 
@@ -804,6 +803,9 @@ scene("game", () => {
         //click any tree
         let nb_clicks = 0;
         onClick("tree", (t) => { 
+             //test: click tree
+            music = play('button_click'); //it works with onclick
+        
             if (diaL == 0) {
                 plus(1);
                 nb_clicks++;
@@ -1826,28 +1828,23 @@ scene("gameOver", () => {
         ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
         ["bear_talking", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
         ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres que tu peux voir en haut à droite."],
-        ["bear", "Tu pourras également acheter des oiseaux qui t'aideront à planter de nouveaux arbres."],
-        ["bear_flower", "Lorsque tu appuies assez de fois sur un arbre, tu verras que de belles fleurs apparaîtront."],
-        ["bear", "Dans ce cas, tu pourras acheter des abeilles qui se poseront sur ces fleurs et qui récupéront leur nectar"],
-        ["bear", "et enfin, si tu achètes une ruche, tes abeilles pourront y déposer leur nectar afin de créer un bon miel sucré!"], 
-        ["bear_scared", "Mais fais attention! Tu auras des obstacles qui renderont ta tâche beaucoup plus difficile."],
-        ["bear", "Fais attention à la pollution dans ton environnement. Regarde bien les barres de pollution et le risque de déforestation en haut à gauche."],
-        ["bear_info", "N'hésite pas à appuyer sur les cercles 'i' en rouge pour avoir plus d'informations utiles."],
+        ["bear_wink", "Je te laisse découvrir la suite!"],
+        ["bear_info", "N'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
         ["bear_talking", "À toi de jouer! Tu as 5 minutes pour m'aider à créer une belle forêt mais surtout à récupérer mon miel."],
-        ["bear_wink", "Si des obstacles apparaissent dans ta forêt, détruis-les en cliquant dessus pour les faire disparaître et descendre le niveau de pollution et de déforestation! J'essaierai de t'aider le plus possible!"]
     ]
     const dia_pollution = [
-        ["bear_scared", "Attention!! La barre de pollution augmente vite!"],
+        //["bear_scared", "Attention!! La barre de pollution augmente vite!"],
         ["bear_wink", "Savais-tu qu'un milieu pollué a de graves conséquences comme l'accumulation de toxines dans la chaîne alimentaire et l'ingestion de plastique?"], 
         ["bear_scared", "Clique sur les déchets afin de faire descendre la barre de pollution."],
         ["bear", "Merci beaucoup d'avoir enlevé tous les déchets! Continue à rajouter le plus d'arbres possible!"],
     ]
     const dia_deforestation = [
-        ["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
+        //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
         ["bear_wink", "Savais-tu que la destruction des habitats est la principale cause de la perte de diversité des espèces en millieu terrestre?"], 
         ["bear_scared", "!"],
         ["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
     ]
+    //on garde ou non?
     const dia_funfact = [
         ["bear_wink", "Ceci est un test !"],
         ["bear_wink", "Ceci est un 2e test :)"],
@@ -1855,17 +1852,17 @@ scene("gameOver", () => {
     //peut-être une seule ligne ?
     const dia_info = [
         //tree
-        ["bear_wink", "Ici, tu peux acheter des arbres lorsque tu as accumulé assez de feuilles. Ces feuilles te servent de monnaie. Mais attention! Le prix des arbres augmente à chaque fois que tu achètes un arbre."],
+        ["bear_wink", "Après avoir accumulé assez de feuilles, tu pourras acheter des arbres. Le prix des arbres augmente à chaque fois que tu achètes un arbre."],
         //bird 
-        ["bear_wink", "Ici, tu peux acheter des oiseaux. Ils se déplacent sur tes arbres et déplacent les graines pour t'aider à créer ta forêt."],
+        ["bear_wink", "Après avoir accumulé assez de feuilles, tu pourras acheter des oiseaux qui disperseront les graines pour t'aider à créer ta forêt."],
         //bee
-        ["bear_wink", "Ce bouton pour les abeilles ce débloquera une fois que tes arbres auront des fleurs. Achète des abeilles pour récupérer le nectar des fleurs."],
+        ["bear_flower", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seuls trois abeilles par arbre sont autorisés."],
         //beehive
-        ["bear_wink", "Ce bouton pour la ruche ce débloquera une fois que tu auras au moins une abeille dans ta forêt. Tes abeilles pourront déposer leur nectar dans les ruches afin de créer du miel."],
+        ["bear_wink", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré!"],
         //pollution
-        ["bear_wink", "Attention! Cette barre représente la pollution. Dès que cette barre est remplie, tu auras des signes de pollution qui apparaîtront dans ta forêt. Clique dessus pour les enlever!"],
+        ["bear_wink", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront dans ta forêt. Clique dessus pour les enlever!"],
         //deforestation
-        ["bear_wink", "Attention! Cette barre représente la déforestation. Dès que cette barre est remplie, tu auras un signe de déforestation qui apparaîtra dans ta forêt. Clique dessus pour l'enlever!"],
+        ["bear_wink", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra dans ta forêt et qui enlevera toutes tes arbres. Clique dessus pour l'enlever!"],
     ]
     //others
     const dia_others = [
