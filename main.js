@@ -229,6 +229,12 @@ loadRoot('assets/');
 //SCENES
 
 scene("startMenu", () => {
+    //music = play('default_music'); --> pourrait mettre musique ici
+    onKeyRelease("space", (t) => {
+        music = play('default_music'); 
+        go("game");
+    })
+    setBackground(rgb(79, 146, 240));
 })
 
 
@@ -290,11 +296,9 @@ scene("game", () => {
         //let health_tree = 20;
 
     //sound
-   // var music = play('default_music');
-    //music2 = play('button_click'); //to put into button click
-    
-    //const audio = new Audio('music.wav');
-    //audio.play();
+    //onKeyRelease("space", (t) => {
+    //    music = play('default_music'); //goes faster the more dialogs you click
+    //})
 
     //UI
     //cash
@@ -1026,6 +1030,7 @@ scene("game", () => {
             icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
             q++;
+            //music = play('default_music'); goes faster the more dialogs you click
         })
         /*onClick("dialog", (t) => {
             destroyAll("dialog");
@@ -1835,14 +1840,14 @@ scene("gameOver", () => {
     const dia_pollution = [
         //["bear_scared", "Attention!! La barre de pollution augmente vite!"],
         ["bear_wink", "Savais-tu qu'un milieu pollué a de graves conséquences comme l'accumulation de toxines dans la chaîne alimentaire et l'ingestion de plastique?"], 
-        ["bear_scared", "Clique sur les déchets afin de faire descendre la barre de pollution."],
-        ["bear", "Merci beaucoup d'avoir enlevé tous les déchets! Continue à rajouter le plus d'arbres possible!"],
+        //["bear_scared", "Clique sur les déchets afin de faire descendre la barre de pollution."],
+        //["bear", "Merci beaucoup d'avoir enlevé tous les déchets! Continue à rajouter le plus d'arbres possible!"],
     ]
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
         ["bear_wink", "Savais-tu que la destruction des habitats est la principale cause de la perte de diversité des espèces en millieu terrestre?"], 
-        ["bear_scared", "!"],
-        ["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
+        //["bear_scared", "!"],
+        //["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
     ]
     //on garde ou non?
     const dia_funfact = [
