@@ -229,13 +229,15 @@ loadRoot('assets/');
 //SCENES
 
 scene("startMenu", () => {
+    setBackground(rgb(79, 146, 240));
     //music = play('default_music'); --> pourrait mettre musique ici
     onKeyRelease("space", (t) => {
         music = play('default_music'); 
         go("game");
-    })
-    setBackground(rgb(79, 146, 240));
-})
+    });
+});
+go("startMenu");
+// startMenu appears behind game scene 
 
 
 scene("game", () => {
@@ -1865,9 +1867,9 @@ scene("gameOver", () => {
         //beehive
         ["bear_wink", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré!"],
         //pollution
-        ["bear_wink", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront dans ta forêt. Clique dessus pour les enlever!"],
+        ["bear_wink", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront. Clique dessus pour les enlever!"],
         //deforestation
-        ["bear_wink", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra dans ta forêt et qui enlevera toutes tes arbres. Clique dessus pour l'enlever!"],
+        ["bear_wink", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra. Clique dessus pour l'enlever!"],
     ]
     //others
     const dia_others = [
