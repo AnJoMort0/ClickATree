@@ -236,6 +236,7 @@ scene("startMenu", () => {
     onKeyPress("enter", () => {
         music = play('default_music', {
             loop: true,
+            volume: 0.5,
         });
         go("game");
     });
