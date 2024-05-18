@@ -1109,6 +1109,9 @@ scene("game", () => {
                         warning(text_new_bird_price);
                     } else {
                         addBird();
+                        music = play('birds_bg', {
+                            volume: 2,
+                        });
                     }
                 }
             })
