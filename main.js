@@ -230,7 +230,7 @@ loadRoot('assets/');
 
 scene("startMenu", () => {
     const STARTBOX  = add([anchor("center"), pos(100,150)  ,z(Z_UI_BOTTOM),"ui"]);
-    setBackground(rgb(79, 146, 240));
+    setBackground(rgb(0, 191, 255));
 
     let music;
      //--> pourrait mettre musique ici
@@ -1889,7 +1889,7 @@ scene("gameOver", () => {
         //bird 
         ["bear_wink", "Après avoir accumulé assez de feuilles, tu pourras acheter des oiseaux qui disperseront les graines pour t'aider à créer ta forêt."],
         //bee
-        ["bear_flower", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seuls trois abeilles par arbre sont autorisés."],
+        ["bear_flower", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seules trois abeilles par arbre sont autorisées."],
         //beehive
         ["bear_wink", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré!"],
         //pollution
