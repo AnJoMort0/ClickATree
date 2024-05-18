@@ -233,7 +233,6 @@ scene("startMenu", () => {
     setBackground(rgb(0, 191, 255));
 
     let music;
-     //--> pourrait mettre musique ici
     onKeyPress("enter", () => {
         music = play('default_music', {
             loop: true,
@@ -1454,6 +1453,7 @@ scene("game", () => {
                             }
                             this.moveTo(rT.pos.x, rT.pos.y + 10, BULLDOZER_SPEED);
                             if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y + 10){
+                                music = play('tree_fall');
                                 destroy(rT);
                                 rT = choose(get('tree'));
                             }
@@ -1905,7 +1905,7 @@ scene("gameOver", () => {
 
 
 // we finally have a start scene, yay!
-function starGame() {
+function startGame() {
     go("startMenu");
 }
 startGame(); 
