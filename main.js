@@ -231,11 +231,21 @@ loadRoot('assets/');
 scene("startMenu", () => {
     const STARTBOX  = add([anchor("center"), pos(100,150)  ,z(Z_UI_BOTTOM),"ui"]);
     setBackground(rgb(79, 146, 240));
-    music = play('default_music', {
-        loop: true,
-    }); //--> pourrait mettre musique ici
-    onKeyPress("enter", () => go("game"))
-	onClick(() => go("game"))
+
+    let music;
+     //--> pourrait mettre musique ici
+    onKeyPress("enter", () => {
+        music = play('default_music', {
+            loop: true,
+        });
+        go("game");
+    });
+	onClick(() => {
+        music = play('default_music', {
+            loop: true,
+        });
+        go("game");
+    });
 
     const text_time = STARTBOX.add([
         text(`Appuie sur la touche Entrée sur ton clavier pour commencer le jeu`,{
