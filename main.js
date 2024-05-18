@@ -229,15 +229,31 @@ loadRoot('assets/');
 //SCENES
 
 scene("startMenu", () => {
+    const STARTBOX  = add([anchor("center"), pos(100,150)  ,z(Z_UI_BOTTOM),"ui"]);
     setBackground(rgb(79, 146, 240));
-    //music = play('default_music'); --> pourrait mettre musique ici
-    onKeyRelease("space", (t) => {
-        music = play('default_music'); 
-        go("game");
-    });
+    music = play('default_music', {
+        loop: true,
+    }); //--> pourrait mettre musique ici
+    onKeyPress("enter", () => go("game"))
+	onClick(() => go("game"))
+
+    const text_time = STARTBOX.add([
+        text(`Appuie sur la touche Entrée sur ton clavier pour commencer le jeu`,{
+           width : W,
+           size : 30,
+        }),
+        anchor("left"),
+        pos(0,0),
+        z(Z_UI),
+        {
+            update(){
+                this.text = `Appuie sur la touche Entrée sur ton clavier pour commencer le jeu`;
+            }
+         },
+       "ui",
+    ]);
 });
 go("startMenu");
-// startMenu appears behind game scene 
 
 
 scene("game", () => {
@@ -1877,4 +1893,9 @@ scene("gameOver", () => {
         ["bear_talking", "Ne t'inquiète pas, le jeu est en pause. Clique sur espace pour reprendre !"]
     ]
 
-go('game');
+
+// we finally have a start scene, yay!
+function starGame() {
+    go("startMenu");
+}
+startGame(); 
