@@ -233,33 +233,22 @@ scene("startMenu", () => {
     setBackground(rgb(0, 191, 255));
 
     let music;
-    onKeyPress("enter", () => {
+    onClick(() => {
         music = play('default_music', {
             loop: true,
             volume: 0.5,
         });
         go("game");
     });
-	onClick(() => {
-        music = play('default_music', {
-            loop: true,
-        });
-        go("game");
-    });
 
     const text_time = STARTBOX.add([
-        text(`Appuie sur la touche Entrée sur ton clavier pour commencer le jeu`,{
+        text(`Clique sur l'écran pour commencer le jeu`,{
            width : W,
            size : 30,
         }),
         anchor("left"),
         pos(0,0),
         z(Z_UI),
-        {
-            update(){
-                this.text = `Appuie sur la touche Entrée sur ton clavier pour commencer le jeu`;
-            }
-         },
        "ui",
     ]);
 });
