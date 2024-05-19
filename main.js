@@ -1696,7 +1696,6 @@ scene("gameOver", () => {
         scale(1),
         anchor("center"),
     ]);
-    onKeyPress("space", () => go("game"))
 	onClick(() => go("game"))
 })
 
@@ -1861,14 +1860,15 @@ scene("gameOver", () => {
     const dia_pollution = [
         //["bear_scared", "Attention!! La barre de pollution augmente vite!"],
         ["bear_wink", "Savais-tu qu'un milieu pollué a de graves conséquences comme l'accumulation de toxines dans la chaîne alimentaire et l'ingestion de plastique?"], 
-        //["bear_scared", "Clique sur les déchets afin de faire descendre la barre de pollution."],
-        //["bear", "Merci beaucoup d'avoir enlevé tous les déchets! Continue à rajouter le plus d'arbres possible!"],
+        ["bear_scared", "Clique sur les déchets afin de faire descendre la barre de pollution."],
+        //1580 - text to change later
+        ["bear", "Merci beaucoup d'avoir enlevé tous les déchets! Continue à rajouter le plus d'arbres possible!"],
     ]
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
         ["bear_wink", "Savais-tu que la destruction des habitats est la principale cause de la perte de diversité des espèces en millieu terrestre?"], 
-        //["bear_scared", "!"],
-        //["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
+        ["bear_scared", "!"],
+        ["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
     ]
     //on garde ou non?
     const dia_funfact = [
