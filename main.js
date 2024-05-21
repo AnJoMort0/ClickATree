@@ -38,6 +38,7 @@ const W = width();
 const H = height();
 setGravity(800);
 const CLICK_JUMP                = 1.05;
+let time                        = -10;
 
 const SPRITE_PIXEL_SIZE         = 25;
 const SPRITE_ICON_SCALE         = 1.4;
@@ -184,6 +185,7 @@ loadRoot('assets/');
                 height: 25,
             }
         })
+        loadSprite('logo', 'icon/logo.png')
         //new buttons
         loadSprite('new_tree', "ui/new_buttons/new_tree_button.png");
         loadSprite('new_bee', "ui/new_buttons/new_bee_button.png");
@@ -202,7 +204,7 @@ loadRoot('assets/');
 //load music: by mayragandra https://mayragandra.itch.io/freeambientmusic 
     loadSound('default_music',"audio/music/music.wav");
 
-//load shaders (ChatGPT generated)
+//load shaders (All ChatGPT generated)
     // Grayscale shader
     loadShader("grayscale", null, `
         vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
@@ -223,37 +225,118 @@ loadRoot('assets/');
         vec4 desaturatedColor = mix(vec4(vec3(gray), tintedColor.a), tintedColor, 0.7);
         return desaturatedColor;
     }`)
-
+    loadShader("lighten", null, `
+    vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
+        vec4 texColor = texture2D(tex, uv);
+        // Define the amount to lighten
+        float lightenAmount = 0.3;
+        // Lighten the color by mixing with white
+        vec4 lightenedColor = mix(texColor, vec4(1.0, 1.0, 1.0, 1.0), lightenAmount);
+        return lightenedColor;
+    }
+    `)    
 //============================//
 
 //SCENES
-
 scene("startMenu", () => {
-    const STARTBOX  = add([anchor("center"), pos(100,150)  ,z(Z_UI_BOTTOM),"ui"]);
+    const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]);
     setBackground(rgb(0, 191, 255));
 
     let music;
-    onClick(() => {
+    onClick("timedStartButton", (b) => {
+        time = 300;
         music = play('default_music', {
             loop: true,
             volume: 0.5,
         });
+        zoomOut(b);
         go("game");
     });
-
-    const text_time = STARTBOX.add([
-        text(`Clique sur l'écran pour commencer le jeu`,{
-           width : W,
-           size : 30,
-        }),
-        anchor("left"),
-        pos(0,0),
+    onClick("infStartButton", (b) => {
+        time = -10;
+        music = play('default_music', {
+            loop: true,
+            volume: 0.5,
+        });
+        zoomOut(b);
+        go("game");
+    });
+    const logo = STARTBOX.add([
+        sprite('logo'),
+        anchor('center'),
+        scale(0.3),
+        pos(0, -W/8),
         z(Z_UI),
-       "ui",
-    ]);
+        area(),
+        "logo",
+    ])
+    onClick("logo", (t) => { 
+            //particles when clicked
+            for (let i = 0; i < 5; i++) {
+                const leaf_particle = add([
+                    pos(mousePos()),
+                    z(t.z + 10),
+                    sprite(choose(leafs)),
+                    anchor("center"),
+                    scale(rand(1, 0.6)),
+                    area({ collisionIgnore:["leaf_particle"]}),
+                    body(),
+                    lifespan(0.5, {fade: 0.2}),
+                    opacity(1),
+                    move(choose([LEFT, RIGHT]), rand(30, 150)),
+                    rotate(rand(0, 360)),
+                    offscreen({destroy: true}),
+                    "leaf_particle",
+                ])
+                leaf_particle.jump(rand(100, 350))
+            }
+            zoomOut(t);
+            music = play('button_click'); //it works with onclick
+        });
+        const timedStartButton = add([
+            rect(350, H/8, { radius: 15 }),
+            anchor("center"),
+            pos(STARTBOX.pos.x, STARTBOX.pos.y + 50),
+            z(Z_UI_BOTTOM),
+            outline(4),
+            area(),
+            "timedStartButton",
+            "button,"
+        ])
+        const timedStartText = add([
+            text("Mode 5 minutes"),
+            pos(timedStartButton.pos),
+            anchor("center"),
+            color(0, 0, 0),
+            z(Z_UI),
+            area(),
+            "timedStartButton",
+            "button,"
+        ])
+        const infStartButton = add([
+            rect(300, H/8, { radius: 15 }),
+            anchor("center"),
+            pos(STARTBOX.pos.x, STARTBOX.pos.y + 150),
+            z(Z_UI_BOTTOM),
+            outline(4),
+            area(),
+            "infStartButton",
+            "button,"
+        ])
+        const infStartText = add([
+            text("Mode infini"),
+            pos(infStartButton.pos),
+            anchor("center"),
+            color(0, 0, 0),
+            z(Z_UI),
+            area(),
+            "infStartButton",
+            "button,"
+        ])
+
+
 });
 go("startMenu");
-
 
 scene("game", () => {
     //DECLARING CONSTANTS
@@ -278,7 +361,6 @@ scene("game", () => {
      let cash_per_sec    = 0;
      let cps_penalty     = 1;
      let cps_final       = cash_per_sec / cps_penalty;
-     let time            = 300;
      //prices
         let scaling         = 1.6;
         let pr_new_tree     = 20;
@@ -380,20 +462,24 @@ scene("game", () => {
        "ui"
     ]);
     //timer
-    const text_time = TOPLBOX.add([
+     const text_time = TOPLBOX.add([
         text(`Temps restant : ` + fancyTimeFormat(time),{
-           width : W,
-           size : 30,
+            width : W,
+            size : 30,
         }),
         anchor("left"),
         pos(0,0),
         z(Z_UI),
         {
             update(){
-                this.text = `Temps restant : ` + fancyTimeFormat(time);
+                if (time >= 0) {
+                    this.text = `Temps restant : ` + fancyTimeFormat(time);
+                }else{
+                    this.text="";
+                }
             }
-         },
-       "ui",
+        },
+        "ui",
     ]);
 
     //EVENTS UI
@@ -1732,6 +1818,19 @@ scene("gameOver", () => {
             t.color = '';
         })
     }
+
+    onClick("button", (t) => {
+        music = play('button_click'); //it works with onclick
+    })
+    //THESE DON'T WORK FOR SOME REASON
+    onHover("button", (b) => {
+        console.log("HOVERING")
+        b.use(shader("lighten"));
+    })
+    onHoverEnd("button", (b) => {
+        console.log("H-over")
+        b.use(shader(""));
+    })
 
     //NEED TO REF IN READ.ME: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148 (answered Jul 4, 2019 at 20:48 by MarredCheese)
     /*
