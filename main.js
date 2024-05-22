@@ -36,25 +36,26 @@ kaboom({
 //static values
 const W = width();
 const H = height();
+const rs = H/593;
 setGravity(800);
 const CLICK_JUMP                = 1.05;
 let time                        = -10;
 
 const SPRITE_PIXEL_SIZE         = 25;
-const SPRITE_ICON_SCALE         = 1.4;
+const SPRITE_ICON_SCALE         = 1.4 * rs;
 const ICON_SIZE                 = SPRITE_PIXEL_SIZE * SPRITE_ICON_SCALE;
 const SPRITE_BG_PIXEL_SIZE      = 250;
-const SPRITE_BG_SCALE           = 3;
+const SPRITE_BG_SCALE           = 3 * rs;
 const BG_TILE_SIZE              = SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE;
 const SPRITE_BUTTON_PIXEL_SIZE  = 400;
-const SPRITE_BUTTON_SCALE       = 0.2;
+const SPRITE_BUTTON_SCALE       = 0.2 * rs;
 const BUTTON_SIZE               = SPRITE_BUTTON_PIXEL_SIZE * SPRITE_BUTTON_SCALE;
-const BUTTON_PRICE_TXT_SCALE    = 1.5;
-const BUTTON_NB_TXT_SCALE       = 1.3;
+const BUTTON_PRICE_TXT_SCALE    = 1.5 * rs;
+const BUTTON_NB_TXT_SCALE       = 1.3 * rs;
 const BG_Y                      = H/2;
 const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
-const BEAR_SCALE                = 6;
+const BEAR_SCALE                = 6 * rs;
 const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
@@ -62,12 +63,12 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
     const Z_UI_TOP    = Z_UI + 1;
     const Z_UI_BOTTOM = Z_UI - 1;
 //relative scale of objects to screen height
-    const TREE_SCALE        = 1/100; 
-    const TRASH_SCALE       = 3;
-    const BULLDOZER_SCALE   = 1/90;
-    const BIRD_SCALE        = 1/320;
-    const BEE_SCALE         = 1/400;
-    const BEEHIVE_SCALE     = 1/300;
+    const TREE_SCALE        = 1/100 * rs; 
+    const TRASH_SCALE       = 3 * rs;
+    const BULLDOZER_SCALE   = 1/90 * rs;
+    const BIRD_SCALE        = 1/320 * rs;
+    const BEE_SCALE         = 1/400 * rs;
+    const BEEHIVE_SCALE     = 1/300 * rs;
 //speed of moving elements
     const BULLDOZER_SPEED   = 60;
     const BIRD_SPEED        = 50;
