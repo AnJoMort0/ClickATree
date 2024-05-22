@@ -1963,19 +1963,19 @@ scene("gameOver", () => {
         ["bear_wink", "Savais-tu qu'un milieu pollué a de graves conséquences comme l'accumulation de toxines dans la chaîne alimentaire et l'ingestion de plastique?"], 
         ["bear_wink", "Savais-tu que les zones protégées sont crées principalement pour protéger les espèces et paysages naturels spectaculaires?"],
         //1580 - text to change later
-        ["bea_wink", "Savais-tu que dans les années 70 il y a eu une grande expansion des aires terrestres protégées?"],
+        ["bear_wink", "Savais-tu que dans les années 70 il y a eu une grande expansion des aires terrestres protégées?"],
     ]
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
         ["bear_wink", "Savais-tu que la destruction des habitats est la principale cause de la perte de diversité des espèces en millieu terrestre?"], 
-        ["bear_wink", "Savais-tz"],
-        ["bear_wink", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
+        ["bear_wink", "Savais-tu que la Terre s'est réchaufée d'environ 1,1°C depuis la période 1850-1900?"],
+        ["bear_wink", "Savais-tu que si on conserve l'habitat d'une espèce, on conserve un cortège d'espèces associées?"],
     ]
     //on garde ou non?
-    const dia_funfact = [
-        ["bear_wink", "Ceci est un test !"],
-        ["bear_wink", "Ceci est un 2e test :)"],
-    ]
+    //const dia_funfact = [
+    //    ["bear_wink", "Ceci est un test !"],
+    //    ["bear_wink", "Ceci est un 2e test :)"],
+    //]
     //peut-être une seule ligne ?
     const dia_info = [
         //tree
