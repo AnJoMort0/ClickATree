@@ -66,7 +66,7 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
     const TRASH_SCALE       = 3;
     const BULLDOZER_SCALE   = 1/90;
     const BIRD_SCALE        = 1/320;
-    const BEE_SCALE         = 1/400;
+    const BEE_SCALE         = 1/350;
     const BEEHIVE_SCALE     = 1/300;
 //speed of moving elements
     const BULLDOZER_SPEED   = 60;
@@ -345,11 +345,11 @@ scene("game", () => {
          const X_BUTTONS         = W - 10;
          const Y_FIRST_BUTTON    = 65;
         //cash
-         const CASHBOX  = add([anchor("center"),pos(W/2 ,30)  ,z(Z_UI_BOTTOM),"ui"]);
-         const SCOREBOX = add([anchor("left")  ,pos(15  ,H-30),z(Z_UI_BOTTOM),"ui"]);
-         const TOPLBOX  = add([anchor("left")  ,pos(15  ,30)  ,z(Z_UI_BOTTOM),"ui"]);
-         const NEWBOX   = add([anchor("right") ,pos(W-15,15)  ,z(Z_UI_BOTTOM),"ui"]);
-         const BEARBOX  = add([anchor("bot")   ,pos(W/2 ,H)   ,z(Z_UI_BOTTOM),"ui"]);
+         const CASHBOX  = add([anchor("center"),pos(W/2 ,30)   ,z(Z_UI_BOTTOM),"ui"]);
+         const SCOREBOX = add([anchor("left")  ,pos(15  ,H-60) ,z(Z_UI_BOTTOM),"ui"]);
+         const TOPLBOX  = add([anchor("left")  ,pos(15  ,30)   ,z(Z_UI_BOTTOM),"ui"]);
+         const NEWBOX   = add([anchor("right") ,pos(W-15,15)   ,z(Z_UI_BOTTOM),"ui"]);
+         const BEARBOX  = add([anchor("bot")   ,pos(W/2 ,H)    ,z(Z_UI_BOTTOM),"ui"]);
      //UI
         const ICON_DIST     = 40;
         const NEW_BT_DIST   = 5;
@@ -444,15 +444,16 @@ scene("game", () => {
         anchor("left"),
         pos(0, 0),
         z(Z_UI),
-        scale(SPRITE_ICON_SCALE),
+        scale(SPRITE_ICON_SCALE * 2),
         "ui",
      ]);
      const text_honey = SCOREBOX.add([
         text(`${Math.floor(honey)}`,{
            width : W,
+           size : 60,
         }),
         anchor("left"),
-        pos(icon_honey.pos.x + 50, 0),
+        pos(icon_honey.pos.x + 85, 0),
         z(Z_UI),
         {
            update(){
@@ -1556,7 +1557,7 @@ scene("game", () => {
                 },
                 z(1),
                 scale(H/2 * BULLDOZER_SCALE),
-                area(),
+                area(0.5),
                 "bulldozer",
             ])
          }
