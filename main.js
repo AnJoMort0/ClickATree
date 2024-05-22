@@ -63,7 +63,7 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
     const Z_UI_BOTTOM = Z_UI - 1;
 //relative scale of objects to screen height
     const TREE_SCALE        = 1/100; 
-    const TRASH_SCALE       = 1/150;
+    const TRASH_SCALE       = 3;
     const BULLDOZER_SCALE   = 1/90;
     const BIRD_SCALE        = 1/320;
     const BEE_SCALE         = 1/400;
@@ -1022,6 +1022,7 @@ scene("game", () => {
                     destroy(t);
                 }
             }
+            music = play('button_click'); // bulldozer click works too
         })
         onDestroy("trash", (t) =>{
             for (let i = 0; i < randi(5); i++) {
@@ -1503,12 +1504,13 @@ scene("game", () => {
          const trash  = add([
              sprite('trash'),
              pos(randX, randY),
-             scale(TRASH_SCALE),
+             scale(TRASH_SCALE ),
              anchor("bot"),
              area(),
              z(randY),
              "trash",
-          ])
+          ]);
+          console.log('Trash added at (${randX}, ${randY})');
          }
         //Add a bulldozer
          function addBulldozer() {
@@ -1959,15 +1961,15 @@ scene("gameOver", () => {
     const dia_pollution = [
         //["bear_scared", "Attention!! La barre de pollution augmente vite!"],
         ["bear_wink", "Savais-tu qu'un milieu pollué a de graves conséquences comme l'accumulation de toxines dans la chaîne alimentaire et l'ingestion de plastique?"], 
-        ["bear_scared", "Clique sur les déchets afin de faire descendre la barre de pollution."],
+        ["bear_wink", "Savais-tu que les zones protégées sont crées principalement pour protéger les espèces et paysages naturels spectaculaires?"],
         //1580 - text to change later
-        ["bear", "Merci beaucoup d'avoir enlevé tous les déchets! Continue à rajouter le plus d'arbres possible!"],
+        ["bea_wink", "Savais-tu que dans les années 70 il y a eu une grande expansion des aires terrestres protégées?"],
     ]
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
         ["bear_wink", "Savais-tu que la destruction des habitats est la principale cause de la perte de diversité des espèces en millieu terrestre?"], 
-        ["bear_scared", "!"],
-        ["bear", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
+        ["bear_wink", "Savais-tz"],
+        ["bear_wink", "Merci beaucoup d'avoir sauvé mes beaux arbres! Continue à rajouter le plus d'arbres possible!"],
     ]
     //on garde ou non?
     const dia_funfact = [
