@@ -54,7 +54,7 @@ const BUTTON_NB_TXT_SCALE       = 1.3;
 const BG_Y                      = H/2;
 const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
-const BEAR_SCALE                = 6;
+const BEAR_SCALE                = 8;
 const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
@@ -540,7 +540,7 @@ scene("game", () => {
      const icon_bear = BEARBOX.add([
          sprite('bear'),
          anchor('bot'),
-         pos(W/2 - 100,0),
+         pos(W/2 - 120,0),
          z(Z_UI_TOP),
          scale(BEAR_SMALL_SCALE),
          area(),
