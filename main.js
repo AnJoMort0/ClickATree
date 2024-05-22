@@ -296,7 +296,7 @@ scene("startMenu", () => {
         const timedStartButton = add([
             rect(350, H/8, { radius: 15 }),
             anchor("center"),
-            pos(STARTBOX.pos.x, STARTBOX.pos.y + 50),
+            pos(STARTBOX.pos.x, STARTBOX.pos.y + 80),
             z(Z_UI_BOTTOM),
             outline(4),
             area(),
@@ -316,7 +316,7 @@ scene("startMenu", () => {
         const infStartButton = add([
             rect(300, H/8, { radius: 15 }),
             anchor("center"),
-            pos(STARTBOX.pos.x, STARTBOX.pos.y + 150),
+            pos(STARTBOX.pos.x, STARTBOX.pos.y + 200),
             z(Z_UI_BOTTOM),
             outline(4),
             area(),
@@ -1954,23 +1954,23 @@ scene("gameOver", () => {
         ["bear_happy", "Bienvenue au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
         ["bear_talking", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
-        ["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres que tu peux voir en haut à droite."],
-        ["bear_wink", "Je te laisse découvrir la suite!"],
-        ["bear_info", "N'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
-        ["bear_talking", "À toi de jouer! Tu as 5 minutes pour m'aider à créer une belle forêt mais surtout à récupérer mon miel."],
+        //["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres que tu peux voir en haut à droite."],
+        //["bear_wink", "Je te laisse découvrir la suite!"],
+        ["bear_info", "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
+        ["bear_talking", "Je te laisse découvrir la suite! Tu as 5 minutes pour m'aider à créer une belle forêt mais surtout à récupérer mon miel."],
     ]
     const dia_pollution = [
         //["bear_scared", "Attention!! La barre de pollution augmente vite!"],
-        ["bear_wink", "Savais-tu qu'un milieu pollué a de graves conséquences comme l'accumulation de toxines dans la chaîne alimentaire et l'ingestion de plastique?"], 
-        ["bear_wink", "Savais-tu que les zones protégées sont crées principalement pour protéger les espèces et paysages naturels spectaculaires?"],
+        ["bear_wink", "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?"], 
+        ["bear_wink", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques?"],
         //1580 - text to change later
-        ["bear_wink", "Savais-tu que dans les années 70 il y a eu une grande expansion des aires terrestres protégées?"],
+        ["bear_wink", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution?"],
     ]
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
-        ["bear_wink", "Savais-tu que la destruction des habitats est la principale cause de la perte de diversité des espèces en millieu terrestre?"], 
-        ["bear_wink", "Savais-tu que la Terre s'est réchaufée d'environ 1,1°C depuis la période 1850-1900?"],
-        ["bear_wink", "Savais-tu que si on conserve l'habitat d'une espèce, on conserve un cortège d'espèces associées?"],
+        ["bear_wink", "Savais-tu que les abeilles sont très importantes pour polliniser les plantes et produire des aliments?"], 
+        ["bear_wink", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux?"],
+        ["bear_wink", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin?"],
     ]
     //on garde ou non?
     //const dia_funfact = [
