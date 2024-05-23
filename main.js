@@ -56,6 +56,7 @@ const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
 const BEAR_SCALE                = 8;
 const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
+let honey = 0;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI        = H    + 125;
@@ -339,6 +340,7 @@ scene("startMenu", () => {
 go("startMenu");
 
 scene("game", () => {
+    honey = 0;
     //DECLARING CONSTANTS
      //Areas
         //new buttons
@@ -357,7 +359,6 @@ scene("game", () => {
     //DECLARING VARIABLES
      let cash            = 0;
      let score           = 0;
-     let honey           = 0;
      let cash_per_sec    = 0;
      let cps_penalty     = 1;
      let cps_final       = cash_per_sec / cps_penalty;
@@ -1762,31 +1763,64 @@ scene("game", () => {
 
 scene("gameOver", () => {
     setBackground(rgb(79, 146, 240));
-     let y_st = H/1; 
-     const icon_bear = add([
+
+    // Retrieve high scores from local storage
+    let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+
+    // Get the current honey quantity
+    let currentScore = honey;
+
+    // Add the current score to the high scores list
+    highScores.push(currentScore);
+
+    // Sort the high scores list in descending order and keep the top 5
+    highScores = highScores.sort((a, b) => b - a).slice(0, 5);
+
+    // Save the updated high scores list to local storage
+    localStorage.setItem('highScores', JSON.stringify(highScores));
+
+    // Display the high scores
+    add([
+        text("High Scores", { size: 40 }),
+        pos(width() / 2, height() / 4),
+        anchor("center"),
+    ]);
+
+    highScores.forEach((score, index) => {
+        add([
+            text(`${index + 1}. ${score} honey`, { size: 30 }),
+            pos(width() / 2, height() / 4 + 50 + index * 40),
+            anchor("center"),
+        ]);
+    });
+
+    let y_st = H / 1;
+    const icon_bear = add([
         sprite('bear_happy'),
         anchor('bot'),
-        pos(vec2(W/2,y_st)),
+        pos(vec2(W / 2, y_st)),
         z(Z_UI_TOP),
         scale(8),
         area(),
         "bear_happy",
         "game_elements",
     ]);
+
     add([
-		sprite('honey'),
-		pos(width() / 2, height() / 3),
-		scale(15),
-		anchor("center"),
-	]);
+        sprite('honey'),
+        pos(width() / 2, height() / 3),
+        scale(8),
+        anchor("center"),
+    ]);
+
     add([
         text("Record"),
         pos(width() / 2, height() / 1.5),
         scale(1),
         anchor("center"),
     ]);
-	onClick(() => go("game"))
-})
+});
+
 
 //GENERAL FUNCTIONS
     //Zoom out
