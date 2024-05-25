@@ -246,7 +246,7 @@ scene("startMenu", () => {
 
     let music;
     onClick("timedStartButton", (b) => {
-        time = 2;
+        time = 300;
         music = play('default_music', {
             loop: true,
             volume: 0.5,
