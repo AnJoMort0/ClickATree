@@ -214,6 +214,8 @@ loadRoot('assets/');
     loadSound('button_click', "audio/other/button/click.wav");
     //by FilmCow https://filmcow.itch.io/filmcow-sfx
     loadSound('tree_fall',"audio/other/deforestation/tree_fall.wav");
+    //by Nathan Gibson https://nathangibson.myportfolio.com 
+    loadSound('bee_in_hive', "audio/other/beehive/Retro7.wav");
 //load sfx
     //by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('birds_bg',"audio/sfx/birds/bird.wav");
@@ -1500,6 +1502,8 @@ scene("game", () => {
                             }
                             this.moveTo(rB.pos.x, rB.pos.y, BEE_SPEED);
                             if(this.pos.x == rB.pos.x && this.pos.y == rB.pos.y){
+                                //bee pop sound when bee enters hive
+                                music = play('bee_in_hive');
                                 b++;
                                 honey++;
                             };
