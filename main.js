@@ -1,11 +1,12 @@
 //IDEAS TO ADD
-    //Timed game mode for the Mystères de l'Unil specifically --> need to add the menu and change values depending on choosen game mode (add kid mode and adult mode as well)
+ //Priority
+    //Change font
+    //Honey bottle in end screen and align it with the score results
     //Add dialogue for when try to buy something whitout enough money or bees without enough flowers
     //Move dialogues to more dynamic parts to not have overload of informations
     //Hide elements before they are needed (info_buttons, unavailable bees, beehives, etc)
+ //If time
     //Minimal animations for the bees (for example move around when reach a tree)
-    //Start menu, pause menu (very simple just stops the loop being part of diaL) and end screen
-    //Use Localstorage for the high scores
     //Achievements
     //Darker colors at the beginning -> progress saturation the bigger the forest
     //Have all scales depend on screen size
@@ -245,12 +246,11 @@ scene("startMenu", () => {
 
     let music;
     onClick("timedStartButton", (b) => {
-        time = 300;
+        time = 2;
         music = play('default_music', {
             loop: true,
             volume: 0.5,
         });
-        zoomOut(b);
         go("game");
     });
     onClick("infStartButton", (b) => {
@@ -259,8 +259,10 @@ scene("startMenu", () => {
             loop: true,
             volume: 0.5,
         });
-        zoomOut(b);
         go("game");
+    });
+    onClick("scoreBoardButton", (b) => {
+        go("scoreboard");
     });
     const logo = STARTBOX.add([
         sprite('logo'),
@@ -295,7 +297,7 @@ scene("startMenu", () => {
             music = play('button_click'); //it works with onclick
         });
         const timedStartButton = add([
-            rect(350, H/8, { radius: 15 }),
+            rect(350, 75, { radius: 15 }),
             anchor("center"),
             pos(STARTBOX.pos.x, STARTBOX.pos.y + 80),
             z(Z_UI_BOTTOM),
@@ -315,7 +317,7 @@ scene("startMenu", () => {
             "button,"
         ])
         const infStartButton = add([
-            rect(300, H/8, { radius: 15 }),
+            rect(350, 75, { radius: 15 }),
             anchor("center"),
             pos(STARTBOX.pos.x, STARTBOX.pos.y + 200),
             z(Z_UI_BOTTOM),
@@ -334,8 +336,26 @@ scene("startMenu", () => {
             "infStartButton",
             "button,"
         ])
-
-
+        const scoreBoardButton = add([
+            rect(350, 30, { radius: 15 }),
+            anchor("center"),
+            pos(STARTBOX.pos.x, STARTBOX.pos.y + 300),
+            z(Z_UI_BOTTOM),
+            outline(4),
+            area(),
+            "scoreBoardButton",
+            "button,"
+        ])
+        const scoreBoardText = add([
+            text("Scoreboard", { size: 20 }),
+            pos(scoreBoardButton.pos),
+            anchor("center"),
+            color(0, 0, 0),
+            z(Z_UI),
+            area(),
+            "scoreBoardButton",
+            "button,"
+        ])
 });
 go("startMenu");
 
@@ -1760,67 +1780,349 @@ scene("game", () => {
         })
 })
 
-
 scene("gameOver", () => {
     setBackground(rgb(79, 146, 240));
 
-    // Retrieve high scores from local storage
-    let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+    let playerName = "";
+    let playerScore = honey;
+    let colors = [RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN, WHITE, BLACK];
+    let currentColorIndex = 6; // Default to WHITE
 
-    // Get the current honey quantity
-    let currentScore = honey;
+    // Custom color adjustment values
+    let customColor = { r: 255, g: 255, b: 255 };
 
-    // Add the current score to the high scores list
-    highScores.push(currentScore);
+    const inputBox = add([
+        text("Tappe ton nom !", { size: 30 }),
+        color(0, 0, 0),
+        pos(width() / 2, height() / 3 - 50),
+        anchor("center"),
+    ]);
 
-    // Sort the high scores list in descending order and keep the top 5
-    highScores = highScores.sort((a, b) => b - a).slice(0, 5);
+    const input = add([
+        text("", { size: 40 }),
+        pos(width() / 2, height() / 3 + 40),
+        anchor("center"),
+        {
+            update() {
+                this.text = playerName;
+                this.color = rgb(customColor.r, customColor.g, customColor.b);
+            },
+        },
+    ]);
 
-    // Save the updated high scores list to local storage
-    localStorage.setItem('highScores', JSON.stringify(highScores));
+    onCharInput((ch) => {
+        if (playerName.length < 10) {
+            playerName += ch;
+        }
+    });
 
-    // Display the high scores
+    onKeyPress("backspace", () => {
+        playerName = playerName.substring(0, playerName.length - 1);
+    });
+
+    onKeyPress("up", () => {
+        currentColorIndex = (currentColorIndex + 1) % colors.length;
+        customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
+    });
+
+    onKeyPress("down", () => {
+        currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
+        customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
+    });
+
+    onKeyDown("left", () => {
+        console.log(customColor.r+","+customColor.g+","+customColor.b)
+        customColor.r = Math.max(0, customColor.r - 1);
+        customColor.g = Math.max(0, customColor.g - 2);
+        customColor.b = Math.max(0, customColor.b - 3);
+    });
+
+    onKeyDown("right", () => {
+        console.log(customColor.r+","+customColor.g+","+customColor.b)
+        customColor.r = Math.min(255, customColor.r + 1);
+        customColor.g = Math.min(255, customColor.g + 2);
+        customColor.b = Math.min(255, customColor.b + 3);
+    });
+
+    const confirmButton = add([
+        rect(200, 50, { radius: 15 }),
+        pos(width() / 2, height() / 2),
+        anchor("center"),
+        outline(4),
+        area(),
+        "confirmButton",
+        "button",
+    ]);
+
+    const confirmButtonText = add([
+        text("Confirmer", { size: 20 }),
+        color(0, 0, 0),
+        pos(width() / 2, height() / 2),
+        anchor("center"),
+        area(),
+        "confirmButton",
+        "button",
+    ]);
+
+    function saveScore() {
+        if (playerName !== "") {
+            let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+            let newEntry = {
+                name: playerName,
+                score: playerScore,
+                color: customColor
+            };
+
+            if (!highScores.some(entry => entry.name === newEntry.name && entry.score === newEntry.score && entry.color.r === newEntry.color.r && entry.color.g === newEntry.color.g && entry.color.b === newEntry.color.b)) {
+                highScores.push(newEntry);
+            }
+
+            highScores = highScores.sort((a, b) => b.score - a.score);
+
+            localStorage.setItem('highScores', JSON.stringify(highScores));
+
+            go("highScoreDisplay", { playerName, playerScore, playerColor: newEntry.color });
+        }
+    }
+
+    onClick("confirmButton", saveScore);
+    onKeyRelease("enter", saveScore);
+});
+
+scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
+    setBackground(rgb(79, 146, 240));
+
     add([
-        text("High Scores", { size: 40 }),
+        text("Ton score :", { size: 30 }),
+        pos(width() / 2, height() / 4 - 50),
+        anchor("center"),
+    ]);
+
+    add([
+        text(`${playerScore}`, { size: 40 }),
         pos(width() / 2, height() / 4),
         anchor("center"),
     ]);
 
-    highScores.forEach((score, index) => {
+    add([
+        text("Meilleurs joueurs :", { size: 30 }),
+        pos(width() / 2, height() / 2),
+        anchor("center"),
+    ]);
+
+    let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+
+    highScores.slice(0, 3).forEach((entry, index) => {
         add([
-            text(`${index + 1}. ${score} honey`, { size: 30 }),
-            pos(width() / 2, height() / 4 + 50 + index * 40),
+            text(`${index + 1}. ${entry.name} : ${entry.score}`, { size: 25 }),
+            pos(width() / 2, height() / 2 + 50 + index * 30),
             anchor("center"),
+            color(rgb(entry.color.r, entry.color.g, entry.color.b)),
         ]);
     });
 
-    let y_st = H / 1;
-    const icon_bear = add([
-        sprite('bear_happy'),
-        anchor('bot'),
-        pos(vec2(W / 2, y_st)),
-        z(Z_UI_TOP),
-        scale(8),
+    const buttonYPos = height() - 100;
+
+    const replayButton = add([
+        rect(150, 50, { radius: 15 }),
+        anchor("center"),
+        pos(width() / 2 - 170, buttonYPos),
+        outline(4),
         area(),
-        "bear_happy",
-        "game_elements",
+        "replayButton",
+        "button",
     ]);
 
-    add([
-        sprite('honey'),
-        pos(width() / 2, height() / 3),
-        scale(8),
+    const replayButtonText = add([
+        text("Rejouer", { size: 20 }),
+        color(0, 0, 0),
+        pos(width() / 2 - 170, buttonYPos),
         anchor("center"),
+        area(),
+        "replayButton",
+        "button",
     ]);
 
-    add([
-        text("Record"),
-        pos(width() / 2, height() / 1.5),
-        scale(1),
+    onClick("replayButton", (b) => {
+        time = 300;
+        music = play('default_music', {
+            loop: true,
+            volume: 0.5,
+        });
+        go("game");
+    });
+
+    const scoreboardButton = add([
+        rect(150, 50, { radius: 15 }),
         anchor("center"),
+        pos(width() / 2, buttonYPos),
+        outline(4),
+        area(),
+        "scoreboardButton",
+        "button",
     ]);
+
+    const scoreboardButtonText = add([
+        text("Scoreboard", { size: 20 }),
+        color(0, 0, 0),
+        pos(width() / 2, buttonYPos),
+        anchor("center"),
+        area(),
+        "scoreboardButton",
+        "button",
+    ]);
+
+    onClick("scoreboardButton", (b) => {
+        go("scoreboard");
+    });
+
+    const menuButton = add([
+        rect(150, 50, { radius: 15 }),
+        anchor("center"),
+        pos(width() / 2 + 170, buttonYPos),
+        outline(4),
+        area(),
+        "button",
+        "menuButton",
+    ]);
+
+    const menuButtonText = add([
+        text("Menu", { size: 20 }),
+        color(0, 0, 0),
+        pos(width() / 2 + 170, buttonYPos),
+        anchor("center"),
+        area(),
+        "button",
+        "menuButton",
+    ]);
+
+    onClick("menuButton", (b) => {
+        go("startMenu");
+    });
 });
 
+scene("scoreboard", () => { //More GPT aussi
+    setBackground(rgb(79, 146, 240));
+
+    const buttonYPos = 50;
+    const scoreListYStart = 150;
+    const maxVisibleItems = Math.floor((height() - scoreListYStart) / 40);
+    let scrollOffset = 0;
+
+    // Rejouer button
+    const replayButton = add([
+        rect(150, 50, { radius: 15 }),
+        anchor("topright"),
+        pos(width() / 2 - 10, buttonYPos),
+        outline(4),
+        area(),
+        "replayButton",
+        "button",
+    ]);
+
+    const replayButtonText = replayButton.add([
+        text("Rejouer", { size: 20 }),
+        color(0, 0, 0),
+        pos(-40,18),
+        anchor("topright"),
+        area(),
+        "replayButton",
+        "button",
+    ]);
+
+    onClick("replayButton", () => {
+        time = 300;
+        music = play('default_music', {
+            loop: true,
+            volume: 0.5,
+        });
+        go("game");
+    });
+
+    // Menu button
+    const menuButton = add([
+        rect(150, 50, { radius: 15 }),
+        anchor("topleft"),
+        pos(width() / 2 + 10, buttonYPos),
+        outline(4),
+        area(),
+        "menuButton",
+        "button",
+    ]);
+
+    const menuButtonText = menuButton.add([
+        text("Menu", { size: 20 }),
+        color(0, 0, 0),
+        pos(50,18),
+        anchor("topleft"),
+        area(),
+        "menuButton",
+        "button",
+    ]);
+
+    onClick("menuButton", () => {
+        go("startMenu");
+    });
+
+    // Fetch high scores
+    let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+
+    function drawScores() {
+        destroyAll("scoreItem");
+
+        highScores.slice(scrollOffset, scrollOffset + maxVisibleItems).forEach((entry, index) => {
+            add([
+                text(entry.name, { size: 25 }),
+                pos(width() / 2 - 20, scoreListYStart + index * 40),
+                anchor("right"),
+                color(rgb(entry.color.r, entry.color.g, entry.color.b)),
+                "scoreItem"
+            ]);
+
+            add([
+                text(entry.score, { size: 25 }),
+                pos(width() / 2 + 20, scoreListYStart + index * 40),
+                anchor("left"),
+                color(rgb(entry.color.r, entry.color.g, entry.color.b)),
+                "scoreItem"
+            ]);
+        });
+    }
+
+    drawScores();
+
+    // Scroll functionality
+    onKeyPress("up", () => {
+        if (scrollOffset > 0) {
+            scrollOffset -= 1;
+            drawScores();
+        }
+    });
+
+    onKeyPress("down", () => {
+        if (scrollOffset < highScores.length - maxVisibleItems) {
+            scrollOffset += 1;
+            drawScores();
+        }
+    });
+
+    onScroll((dir) => { //I don't know how this works
+        if (dir === "up" && scrollOffset > 0) {
+            scrollOffset -= 1;
+        } else if (dir === "down" && scrollOffset < highScores.length - maxVisibleItems) {
+            scrollOffset += 1;
+        }
+        drawScores();
+    });
+
+        // Add the small text at the bottom right
+        add([
+            text("utilise les touches flèches pour descendre/monter", { size: 20 }),
+            pos(width() - 20, height() - 20),
+            anchor("botright"),
+            color(rgb(0, 0, 0)),
+        ]);
+});
 
 //GENERAL FUNCTIONS
     //Zoom out
@@ -2037,4 +2339,4 @@ scene("gameOver", () => {
 function startGame() {
     go("startMenu");
 }
-startGame(); 
+startGame();
