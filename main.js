@@ -161,6 +161,7 @@ loadRoot('assets/');
         })
         loadSprite('honey', 'game_elements/other/honey.png');
         loadSprite('beehive0', 'game_elements/other/beehive0.png')
+        loadSprite('space_bar', 'game_elements/other/space_bar.png')
         //bear
         loadSprite('bear', 'game_elements/bear/bear.png');
         loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
@@ -1180,7 +1181,6 @@ scene("game", () => {
             icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
             q++;
-            //music = play('default_music'); goes faster the more dialogs you click
         })
         /*onClick("dialog", (t) => {
             destroyAll("dialog");
@@ -1699,6 +1699,7 @@ scene("game", () => {
        function diaBubble(array_with_number){
             let width = W/1.5;
             destroyAll("dialog");
+            destroyAll("space_bar");
             const bubble = add([ //CAN'T ADD IT IN BEARBOX BECAUSE BEARBOX CAN'T HAVE THE AREA() FUNCTION
                 rect(width, H/8, { radius: 32 }),
                 anchor("center"),
@@ -1715,6 +1716,17 @@ scene("game", () => {
                 color(0, 0, 0),
                 z(Z_UI_BOTTOM),
                 area(),
+                "dialog",
+            ])
+            //space bar, is destroyed when dialogs are destroyed
+            const space = add([
+                sprite("space_bar"),
+                anchor("center"),
+                pos(BEARBOX.pos.x + 450, BEARBOX.pos.y - 50),
+                z(Z_UI_BOTTOM),
+                outline(4),
+                area(),
+                scale(4),
                 "dialog",
             ])
             icon_bear.use(sprite(array_with_number[0]));
