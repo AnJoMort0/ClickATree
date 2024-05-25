@@ -9,7 +9,8 @@
         //destroy bulldozer
         //click and ondestroy trash
     //Honey bottle in end screen and align it with the score results
-    //Add dialogue for when try to buy something whitout enough money or bees without enough flowers
+    //Add dialogue for when try to buy something whitout enough money or bees without enough flowers or beehives whitout enough bees for the first time
+    //Add dialogue when you have a bee but not a beehive
     //Move dialogues to more dynamic parts to not have overload of informations
     //Hide elements before they are needed (info_buttons, unavailable bees, beehives, etc)
  //If time
