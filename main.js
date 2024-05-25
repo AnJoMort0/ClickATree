@@ -1,9 +1,9 @@
 //IDEAS TO ADD
  //Priority
-    //Ajouter petite icône "barre d'espace" en bas à droite des dialogues
+    //* (à voir si ça va de dire "space"?) Ajouter petite icône "barre d'espace" en bas à droite des dialogues
     //Add sounds (sounds of the objects not just clicks) to different things
-        //pop when bee enter beehive because it means +1 honey and it gives an audio information
-        //leaves rumbling when click on tree or onDestroy or addTree
+        // * pop when bee enter beehive because it means +1 honey and it gives an audio information
+        // * (pour l'instant seulement quand addTree) leaves rumbling when click on tree or onDestroy or addTree
         //bulldozer on screen
         //click bulldozer
         //destroy bulldozer
@@ -216,6 +216,8 @@ loadRoot('assets/');
     loadSound('tree_fall',"audio/other/deforestation/tree_fall.wav");
     //by Nathan Gibson https://nathangibson.myportfolio.com 
     loadSound('bee_in_hive', "audio/other/beehive/Retro7.wav");
+    //by
+    loadSound('tree_leaf', "audio/other/tree/bush_rustling.wav");
 //load sfx
     //by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('birds_bg',"audio/sfx/birds/bird.wav");
@@ -1223,6 +1225,9 @@ scene("game", () => {
                         warning(text_new_tree_price);
                     } else {
                         addTree();
+                        music = play('tree_leaf', {
+                            volume: 5,
+                        });
                     }
                 }
             })
