@@ -86,7 +86,7 @@ let honey = 0;
 //load assets
 loadRoot('assets/');
 // Load the custom font
-    loadFont("d", "assets/PressStart2P-Regular.ttf");
+    loadFont("d", "assets/Press_Start_2P/PressStart2P-Regular.ttf");
     /*Copyright 2012 The Press Start 2P Project Authors (cody@zone38.net), with Reserved Font Name "Press Start 2P".
     This Font Software is licensed under the SIL Open Font License, Version 1.1.
     This license is copied below, and is also available with a FAQ at:
