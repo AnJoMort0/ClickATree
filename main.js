@@ -1,6 +1,13 @@
 //IDEAS TO ADD
  //Priority
-    //Change font
+    //Ajouter petite icône "barre d'espace" en bas à droite des dialogues
+    //Add sounds (sounds of the objects not just clicks) to different things
+        //pop when bee enter beehive because it means +1 honey and it gives an audio information
+        //leaves rumbling when click on tree or onDestroy or addTree
+        //bulldozer on screen
+        //click bulldozer
+        //destroy bulldozer
+        //click and ondestroy trash
     //Honey bottle in end screen and align it with the score results
     //Add dialogue for when try to buy something whitout enough money or bees without enough flowers
     //Move dialogues to more dynamic parts to not have overload of informations
@@ -50,8 +57,8 @@ const BG_TILE_SIZE              = SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE;
 const SPRITE_BUTTON_PIXEL_SIZE  = 400;
 const SPRITE_BUTTON_SCALE       = 0.2;
 const BUTTON_SIZE               = SPRITE_BUTTON_PIXEL_SIZE * SPRITE_BUTTON_SCALE;
-const BUTTON_PRICE_TXT_SCALE    = 1.5;
-const BUTTON_NB_TXT_SCALE       = 1.3;
+const BUTTON_PRICE_TXT_SCALE    = 0.9;
+const BUTTON_NB_TXT_SCALE       = 0.8;
 const BG_Y                      = H/2;
 const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
@@ -77,7 +84,12 @@ let honey = 0;
 
 //load assets
 loadRoot('assets/');
-
+// Load the custom font
+    loadFont("d", "assets/PressStart2P-Regular.ttf");
+    /*Copyright 2012 The Press Start 2P Project Authors (cody@zone38.net), with Reserved Font Name "Press Start 2P".
+    This Font Software is licensed under the SIL Open Font License, Version 1.1.
+    This license is copied below, and is also available with a FAQ at:
+    https://openfontlicense.org */
 //load images
     //game elements
         //background
@@ -307,7 +319,7 @@ scene("startMenu", () => {
             "button,"
         ])
         const timedStartText = add([
-            text("Mode 5 minutes"),
+            text("Mode 5 minutes", {size : 22, font : "d"}),
             pos(timedStartButton.pos),
             anchor("center"),
             color(0, 0, 0),
@@ -327,7 +339,7 @@ scene("startMenu", () => {
             "button,"
         ])
         const infStartText = add([
-            text("Mode infini"),
+            text("Mode infini" , {size : 22, font : "d"}),
             pos(infStartButton.pos),
             anchor("center"),
             color(0, 0, 0),
@@ -347,7 +359,7 @@ scene("startMenu", () => {
             "button,"
         ])
         const scoreBoardText = add([
-            text("Scoreboard", { size: 20 }),
+            text("Scoreboard", {size : 15, font : "d"}),
             pos(scoreBoardButton.pos),
             anchor("center"),
             color(0, 0, 0),
@@ -425,6 +437,8 @@ scene("game", () => {
      const text_cash = CASHBOX.add([
         text(formatNumber(cash, {useOrderSuffix: true, decimals: 1}),{
             width : W,
+            size : 26,
+            font : "d",
         }),
         anchor("left"),
         pos(-30, 0),
@@ -445,9 +459,10 @@ scene("game", () => {
         "ui",
      ]);
      const text_cash_per_sec = CASHBOX.add([
-        text(formatNumber(cps_final, {useOrderSuffix: true, decimals: 1}) + "/s",{
-            size    : 24,   
+        text(formatNumber(cps_final, {useOrderSuffix: true, decimals: 1}) + "/s",{   
             width   : W,
+            size : 16,
+            font : "d",
         }),
         anchor("left"),
         pos(icon_cash.pos.x, 35),
@@ -471,7 +486,8 @@ scene("game", () => {
      const text_honey = SCOREBOX.add([
         text(`${Math.floor(honey)}`,{
            width : W,
-           size : 60,
+           size : 40,
+           font : "d",
         }),
         anchor("left"),
         pos(icon_honey.pos.x + 85, 0),
@@ -487,7 +503,8 @@ scene("game", () => {
      const text_time = TOPLBOX.add([
         text(`Temps restant : ` + fancyTimeFormat(time),{
             width : W,
-            size : 30,
+            size : 22,
+            font : "d",
         }),
         anchor("left"),
         pos(0,0),
@@ -586,6 +603,7 @@ scene("game", () => {
         const text_new_tree_price = new_tree.add([
             text(formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1}),{
                 size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
+                font : "d",
             }),
             {
                 update(){
@@ -604,6 +622,7 @@ scene("game", () => {
         const text_nb_trees = new_tree.add([
             text(formatNumber(nb_trees, {useOrderSuffix: true}),{
                 size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
+                font:"d",
             }),
             {
                 update(){
@@ -611,7 +630,7 @@ scene("game", () => {
                 }
             },
             anchor("right"),
-            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
+            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
             z(Z_UI_TOP),
         ])
         //adding a new bird button
@@ -631,6 +650,7 @@ scene("game", () => {
             const text_new_bird_price = new_bird.add([
                 text(formatNumber(pr_new_bird, {useOrderSuffix: true, decimals: 1}),{
                     size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
+                    font:"d",
                 }),
                 {
                     update(){
@@ -649,6 +669,7 @@ scene("game", () => {
             const text_nb_birds = new_bird.add([
                 text(formatNumber(nb_birds, {useOrderSuffix: true}),{
                     size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
+                    font:"d",
                 }),
                 {
                     update(){
@@ -656,7 +677,7 @@ scene("game", () => {
                     }
                 },
                 anchor("right"),
-                pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
+                pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
                 z(Z_UI_TOP),
             ])
     //adding a new bee button
@@ -687,6 +708,7 @@ scene("game", () => {
         const text_new_bee_price = new_bee.add([
             text(formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1}),{
                 size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
+                font:"d",
             }),
             {
                 update(){
@@ -705,6 +727,7 @@ scene("game", () => {
         const text_nb_bees = new_bee.add([
             text(formatNumber(nb_bees, {useOrderSuffix: true}),{
                 size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
+                font:"d",
             }),
             {
                 update(){
@@ -712,7 +735,7 @@ scene("game", () => {
                 }
             },
             anchor("right"),
-            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
+            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
             z(Z_UI_TOP),
         ])
     //adding a new bee button
@@ -743,6 +766,7 @@ scene("game", () => {
         const text_new_beehive_price = new_beehive.add([
             text(formatNumber(pr_new_beehive, {useOrderSuffix: true, decimals: 1}),{
                 size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
+                font:"d",
             }),
             {
                 update(){
@@ -761,6 +785,7 @@ scene("game", () => {
         const text_nb_beehives = new_beehive.add([
             text(formatNumber(nb_beehives, {useOrderSuffix: true}),{
                 size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
+                font:"d",
             }),
             {
                 update(){
@@ -768,7 +793,7 @@ scene("game", () => {
                 }
             },
             anchor("right"),
-            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.75),
+            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
             z(Z_UI_TOP),
         ])
 
@@ -786,12 +811,6 @@ scene("game", () => {
             "new_button",
             "info",
          ])
-         //test: get info
-        onClick("info", (t) => {
-            console.log("clicked")
-            diaBubble(dia_info[t.dia]);
-            music = play('button_click'); //it works with onclick
-        })
         //bird
          const information_1 = NEWBOX.add([
             sprite('info'), 
@@ -1045,7 +1064,11 @@ scene("game", () => {
                 }
             }
             music = play('button_click'); // bulldozer click works too
-        })
+        });
+        onClick("info", (t) => {
+            diaBubble(dia_info[t.dia]);
+            music = play('button_click'); //it works with onclick
+        });
         onDestroy("trash", (t) =>{
             for (let i = 0; i < randi(5); i++) {
                 const trash_particle = add([
@@ -1478,7 +1501,6 @@ scene("game", () => {
                             if(this.pos.x == rB.pos.x && this.pos.y == rB.pos.y){
                                 b++;
                                 honey++;
-                                console.log(honey);
                             };
                         } else if ((b === 1 || b === 2) && nb_beehives == 0){
                             this.moveTo(rand(W), rand(H), BEE_SPEED);
@@ -1532,7 +1554,6 @@ scene("game", () => {
              z(randY),
              "trash",
           ]);
-          console.log('Trash added at (${randX}, ${randY})');
          }
         //Add a bulldozer
          function addBulldozer() {
@@ -1687,7 +1708,7 @@ scene("game", () => {
                 "dialog",
             ])
             const txt_bubble = add([
-                text(array_with_number[1], { size: 20, width: width - 15, align: "center" }),
+                text(array_with_number[1], { size: 16, font:"d", width: width - 15, align: "center" }),
                 pos(bubble.pos),
                 anchor("center"),
                 color(0, 0, 0),
@@ -1792,14 +1813,14 @@ scene("gameOver", () => {
     let customColor = { r: 255, g: 255, b: 255 };
 
     const inputBox = add([
-        text("Tappe ton nom !", { size: 30 }),
+        text("Tappe ton nom !", {font:"d", size: 30 }),
         color(0, 0, 0),
         pos(width() / 2, height() / 3 - 50),
         anchor("center"),
     ]);
 
     const input = add([
-        text("", { size: 40 }),
+        text("", {font:"d", size: 40 }),
         pos(width() / 2, height() / 3 + 40),
         anchor("center"),
         {
@@ -1831,14 +1852,12 @@ scene("gameOver", () => {
     });
 
     onKeyDown("left", () => {
-        console.log(customColor.r+","+customColor.g+","+customColor.b)
         customColor.r = Math.max(0, customColor.r - 1);
         customColor.g = Math.max(0, customColor.g - 2);
         customColor.b = Math.max(0, customColor.b - 3);
     });
 
     onKeyDown("right", () => {
-        console.log(customColor.r+","+customColor.g+","+customColor.b)
         customColor.r = Math.min(255, customColor.r + 1);
         customColor.g = Math.min(255, customColor.g + 2);
         customColor.b = Math.min(255, customColor.b + 3);
@@ -1855,7 +1874,7 @@ scene("gameOver", () => {
     ]);
 
     const confirmButtonText = add([
-        text("Confirmer", { size: 20 }),
+        text("Confirmer", {font:"d", size: 20 }),
         color(0, 0, 0),
         pos(width() / 2, height() / 2),
         anchor("center"),
@@ -1893,19 +1912,19 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     setBackground(rgb(79, 146, 240));
 
     add([
-        text("Ton score :", { size: 30 }),
+        text("Ton score :", {font:"d", size: 30 }),
         pos(width() / 2, height() / 4 - 50),
         anchor("center"),
     ]);
 
     add([
-        text(`${playerScore}`, { size: 40 }),
+        text(`${playerScore}`, {font:"d", size: 40 }),
         pos(width() / 2, height() / 4),
         anchor("center"),
     ]);
 
     add([
-        text("Meilleurs joueurs :", { size: 30 }),
+        text("Meilleurs joueurs :", {font:"d", size: 30 }),
         pos(width() / 2, height() / 2),
         anchor("center"),
     ]);
@@ -1914,7 +1933,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
 
     highScores.slice(0, 3).forEach((entry, index) => {
         add([
-            text(`${index + 1}. ${entry.name} : ${entry.score}`, { size: 25 }),
+            text(`${index + 1}. ${entry.name} : ${entry.score}`, {font:"d", size: 25 }),
             pos(width() / 2, height() / 2 + 50 + index * 30),
             anchor("center"),
             color(rgb(entry.color.r, entry.color.g, entry.color.b)),
@@ -1934,7 +1953,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     ]);
 
     const replayButtonText = add([
-        text("Rejouer", { size: 20 }),
+        text("Rejouer", {font:"d", size: 18 }),
         color(0, 0, 0),
         pos(width() / 2 - 170, buttonYPos),
         anchor("center"),
@@ -1963,7 +1982,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     ]);
 
     const scoreboardButtonText = add([
-        text("Scoreboard", { size: 20 }),
+        text("Scoreboard", {font:"d", size: 14 }),
         color(0, 0, 0),
         pos(width() / 2, buttonYPos),
         anchor("center"),
@@ -1987,7 +2006,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     ]);
 
     const menuButtonText = add([
-        text("Menu", { size: 20 }),
+        text("Menu", {font:"d", size: 18 }),
         color(0, 0, 0),
         pos(width() / 2 + 170, buttonYPos),
         anchor("center"),
@@ -2021,15 +2040,14 @@ scene("scoreboard", () => { //More GPT aussi
     ]);
 
     const replayButtonText = replayButton.add([
-        text("Rejouer", { size: 20 }),
+        text("Rejouer", {font:"d", size: 18 }),
         color(0, 0, 0),
-        pos(-40,18),
+        pos(-10,18),
         anchor("topright"),
         area(),
         "replayButton",
         "button",
     ]);
-
     onClick("replayButton", () => {
         time = 300;
         music = play('default_music', {
@@ -2038,7 +2056,6 @@ scene("scoreboard", () => { //More GPT aussi
         });
         go("game");
     });
-
     // Menu button
     const menuButton = add([
         rect(150, 50, { radius: 15 }),
@@ -2049,11 +2066,10 @@ scene("scoreboard", () => { //More GPT aussi
         "menuButton",
         "button",
     ]);
-
     const menuButtonText = menuButton.add([
-        text("Menu", { size: 20 }),
+        text("Menu", {font:"d", size: 18 }),
         color(0, 0, 0),
-        pos(50,18),
+        pos(40,18),
         anchor("topleft"),
         area(),
         "menuButton",
@@ -2072,7 +2088,7 @@ scene("scoreboard", () => { //More GPT aussi
 
         highScores.slice(scrollOffset, scrollOffset + maxVisibleItems).forEach((entry, index) => {
             add([
-                text(entry.name, { size: 25 }),
+                text(entry.name, {font:"d", size: 25 }),
                 pos(width() / 2 - 20, scoreListYStart + index * 40),
                 anchor("right"),
                 color(rgb(entry.color.r, entry.color.g, entry.color.b)),
@@ -2080,7 +2096,7 @@ scene("scoreboard", () => { //More GPT aussi
             ]);
 
             add([
-                text(entry.score, { size: 25 }),
+                text(entry.score, {font:"d", size: 25 }),
                 pos(width() / 2 + 20, scoreListYStart + index * 40),
                 anchor("left"),
                 color(rgb(entry.color.r, entry.color.g, entry.color.b)),
@@ -2117,7 +2133,7 @@ scene("scoreboard", () => { //More GPT aussi
 
         // Add the small text at the bottom right
         add([
-            text("utilise les touches flèches pour descendre/monter", { size: 20 }),
+            text("utilise les touches flèches pour descendre/monter", {font:"d", size: 10 }),
             pos(width() - 20, height() - 20),
             anchor("botright"),
             color(rgb(0, 0, 0)),
