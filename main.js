@@ -1,9 +1,9 @@
 //IDEAS TO ADD
  //Priority
-    //* (à voir si ça va de dire "space"?) Ajouter petite icône "barre d'espace" en bas à droite des dialogues
+    //* (à voir si ça va de dire "space"? - C'est bon) Ajouter petite icône "barre d'espace" en bas à droite des dialogues
     //Add sounds (sounds of the objects not just clicks) to different things
         // * pop when bee enter beehive because it means +1 honey and it gives an audio information
-        // * (pour l'instant seulement quand addTree) leaves rumbling when click on tree or onDestroy or addTree
+        // * (pour l'instant seulement quand addTree et onDestroy) leaves rumbling when click on tree or onDestroy or addTree --> onClick is way to spammy
         //bulldozer on screen
         //click bulldozer
         //destroy bulldozer
@@ -1099,6 +1099,8 @@ scene("game", () => {
             }
         })
         onDestroy("tree", (t) => {
+            music = play('tree_leaf', {
+                            volume: 5,});
             for (let i = 0; i < randi(10,20); i++) {
                 const leaf_particle = add([
                     pos(t.pos),
