@@ -4,8 +4,8 @@
     //Add sounds (sounds of the objects not just clicks) to different things
         // * pop when bee enter beehive because it means +1 honey and it gives an audio information
         // * (pour l'instant seulement quand addTree et onDestroy) leaves rumbling when click on tree or onDestroy or addTree --> onClick is way to spammy
-        //bulldozer on screen
-        //click bulldozer
+        // * bulldozer on screen
+        // * click bulldozer (peut-être que ça fait trop bruit de pistolet - à discuter)
         //destroy bulldozer
         //click and ondestroy trash
     //Honey bottle in end screen and align it with the score results
@@ -221,6 +221,8 @@ loadRoot('assets/');
     loadSound('tree_leaf', "audio/other/tree/bush_rustling.wav");
     //Essentials Series - Free Sound Effect by Nox_Sound_Design
     loadSound('bulldozer', "audio/other/bulldozer/truck.wav");
+    // brackeys platformer assets by Brackeys, Asbjørn Thirslund
+    loadSound('bulldozer_click', "audio/other/bulldozer/click_bulldozer.wav");
 //load sfx
     //by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('birds_bg',"audio/sfx/birds/bird.wav");
@@ -1072,7 +1074,7 @@ scene("game", () => {
                     destroy(t);
                 }
             }
-            music = play('button_click'); // bulldozer click works too
+            music = play('bulldozer_click'); // bulldozer click works too
         });
         onClick("info", (t) => {
             diaBubble(dia_info[t.dia]);
