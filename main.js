@@ -1230,9 +1230,6 @@ scene("game", () => {
                         warning(text_new_tree_price);
                     } else {
                         addTree();
-                        music = play('tree_leaf', {
-                            volume: 5,
-                        });
                     }
                 }
             })
@@ -1431,6 +1428,9 @@ scene("game", () => {
     //FUNCTIONS
        //Add a new tree
        function addTree() {
+        music = play('tree_leaf', {
+            volume: 5,
+        });
          let ranYA = H/2;
          let ranYB = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
          const randX  = rand(0, W);
