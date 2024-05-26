@@ -26,6 +26,7 @@
         //* Fixed it by calling it a feature
     //You can continue clicking the trees and placing them even when the time stops
         //* Fixed
+    // 2173 : width not defined
 
 //Add to README
     //2 function codes down the js page
@@ -216,8 +217,10 @@ loadRoot('assets/');
     loadSound('tree_fall',"audio/other/deforestation/tree_fall.wav");
     //by Nathan Gibson https://nathangibson.myportfolio.com 
     loadSound('bee_in_hive', "audio/other/beehive/Retro7.wav");
-    //by
+    //Minifantasy - Forgotten Plains Audio Pack by Leohpaz
     loadSound('tree_leaf', "audio/other/tree/bush_rustling.wav");
+    //Essentials Series - Free Sound Effect by Nox_Sound_Design
+    loadSound('bulldozer', "audio/other/bulldozer/truck.wav");
 //load sfx
     //by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('birds_bg',"audio/sfx/birds/bird.wav");
@@ -1203,9 +1206,9 @@ scene("game", () => {
         //})
 
         //get a fun fact
-        onClick("bear", (t) => {
-            diaBubble(choose(dia_funfact));
-        })
+        //onClick("bear", (t) => {
+        //    diaBubble(choose(dia_funfact));
+        //})
         
 
     //UI elements
@@ -1298,6 +1301,9 @@ scene("game", () => {
                     defo_over++;
                     if(get("bulldozer").length == 0){
                         addBulldozer();
+                        music = play('bulldozer', {
+                            loop: true,
+                        });
                         icon_bear.use(sprite("bear_scared"));
                     }
                 }
@@ -2170,7 +2176,7 @@ scene("scoreboard", () => { //More GPT aussi
         wait(0.1, () => {
             t.width  = t.width  / CLICK_JUMP;
             t.height = t.height / CLICK_JUMP;
-        })
+        });
     }
     //Zoom in
    function zoomIn(t){
