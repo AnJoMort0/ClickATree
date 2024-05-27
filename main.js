@@ -225,6 +225,8 @@ loadRoot('assets/');
     loadSound('bulldozer', "audio/other/bulldozer/truck.wav");
     // brackeys platformer assets by Brackeys, Asbjørn Thirslund
     loadSound('bulldozer_click', "audio/other/bulldozer/click_bulldozer.wav");
+    //Minifantasy - Forgotten Plains Audio Pack by Leohpaz
+    loadSound('trash_click', "audio/other/trash/trash_sound.wav");
 //load sfx
     //by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('birds_bg',"audio/sfx/birds/bird.wav");
@@ -1046,6 +1048,7 @@ scene("game", () => {
                     destroyAll("trash")
                 }
             }
+            music = play('trash_click');
         })
         //click the bulldozer
         onClick("bulldozer", (t) => { 
