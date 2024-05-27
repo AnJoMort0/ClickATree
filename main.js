@@ -4,7 +4,7 @@
     //Add sounds (sounds of the objects not just clicks) to different things
         // * pop when bee enter beehive because it means +1 honey and it gives an audio information
         // * (pour l'instant seulement quand addTree et onDestroy) leaves rumbling when click on tree or onDestroy or addTree --> onClick is way to spammy
-        //  bulldozer on screen --> faut encore arrêter le son quand ça part
+        // * bulldozer on screen et son s'arrête lorsque bulldozer est destroyed
         // * click bulldozer (peut-être que ça fait trop bruit de pistolet - à discuter)
         //destroy bulldozer
         //click and ondestroy trash
@@ -1076,7 +1076,7 @@ scene("game", () => {
                     destroy(t);
                 }
             }
-            music = play('bulldozer_click'); // bulldozer click works too
+            music = play('bulldozer_click'); 
         });
         onClick("info", (t) => {
             diaBubble(dia_info[t.dia]);
@@ -1183,6 +1183,7 @@ scene("game", () => {
                     "smoke_particle",
                 ])
                 smoke_particle.jump(rand(400, 500));
+                music_bulldozer.stop(); 
             }
             icon_bear.use(sprite("bear"));
         })
@@ -1304,7 +1305,7 @@ scene("game", () => {
                     defo_over++;
                     if(get("bulldozer").length == 0){
                         addBulldozer();
-                        music = play('bulldozer', {
+                        music_bulldozer = play('bulldozer', {
                             loop: true,
                         });
                         icon_bear.use(sprite("bear_scared"));
