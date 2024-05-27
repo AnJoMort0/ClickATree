@@ -4,7 +4,7 @@
     //Add sounds (sounds of the objects not just clicks) to different things
         // * pop when bee enter beehive because it means +1 honey and it gives an audio information
         // * (pour l'instant seulement quand addTree et onDestroy) leaves rumbling when click on tree or onDestroy or addTree --> onClick is way to spammy
-        // * bulldozer on screen
+        //  bulldozer on screen --> faut encore arrêter le son quand ça part
         // * click bulldozer (peut-être que ça fait trop bruit de pistolet - à discuter)
         //destroy bulldozer
         //click and ondestroy trash
@@ -26,7 +26,9 @@
         //* Fixed it by calling it a feature
     //You can continue clicking the trees and placing them even when the time stops
         //* Fixed
-    // 2173 : width not defined
+    // parfois des bugs apparaissent comme 2173 : width not defined et les problèmes avec les dialogues 
+    
+
 
 //Add to README
     //2 function codes down the js page
@@ -2342,17 +2344,17 @@ scene("scoreboard", () => { //More GPT aussi
         //["bear_wink", "Je te laisse découvrir la suite!"],
         ["bear_info", "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
         ["bear_talking", "Je te laisse découvrir la suite! Tu as 5 minutes pour m'aider à créer une belle forêt mais surtout à récupérer mon miel."],
-    ]
+    ] //tout bon
     const dia_pollution = [
         //["bear_scared", "Attention!! La barre de pollution augmente vite!"],
-        ["bear_wink", "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?"], 
+        ["bear_wink", "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?"], //1er
         ["bear_wink", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques?"],
         //1580 - text to change later
         ["bear_wink", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution?"],
     ]
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
-        ["bear_wink", "Savais-tu que les abeilles sont très importantes pour polliniser les plantes et produire des aliments?"], 
+        ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes et produire des aliments?"], //2e
         ["bear_wink", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux?"],
         ["bear_wink", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin?"],
     ]
