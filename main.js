@@ -8,7 +8,7 @@
         // * click bulldozer (peut-être que ça fait trop bruit de pistolet - à discuter)
         //destroy bulldozer
         // -  click and ondestroy trash --> pour l'instant seulement onclick est fait
-    //Honey bottle in end screen and align it with the score results
+    //* Honey bottle in end screen and align it with the score results
     //Add dialogue for when try to buy something whitout enough money or bees without enough flowers or beehives whitout enough bees for the first time
     //Add dialogue when you have a bee but not a beehive
     //Move dialogues to more dynamic parts to not have overload of informations
@@ -1268,6 +1268,15 @@ scene("game", () => {
                     if(cash < pr_new_bee){
                         warning(text_cash);
                         warning(text_new_bee_price);
+                        CASHBOX.add([
+                            text("Pas assez d'argent!", { 
+                                size: 20,
+                                font: "d",
+                            }),
+                            pos(text_cash.pos.x - 155, 150), // Adjust the position as needed
+                            color(255, 0, 0), // Set text color to red
+                            lifespan(2), // Text will disappear after 3 seconds
+                        ]);
                     } else {
                         addBee();
                     }
