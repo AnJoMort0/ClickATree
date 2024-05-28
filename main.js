@@ -1299,11 +1299,29 @@ scene("game", () => {
                     if(cash < pr_new_beehive){
                         warning(text_cash);
                         warning(text_new_beehive_price);
+                        CASHBOX.add([
+                            text("Pas assez d'argent!", { 
+                                size: 20,
+                                font: "d",
+                            }),
+                            pos(text_cash.pos.x - 155, 150), 
+                            color(255, 0, 0), 
+                            lifespan(2), 
+                        ]);
                     } else {
                         addBeehive();
                     }
                 } else if(diaL == 0 && b.is("not_available")){
                     warning(b);
+                    CASHBOX.add([
+                        text("Pas assez d'abeilles!", { 
+                            size: 20,
+                            font: "d",
+                        }),
+                        pos(text_cash.pos.x - 155, 150), 
+                        color(255, 0, 0), 
+                        lifespan(2), 
+                    ]);
                 };
             });
     //AUTOMATIC STUFF
