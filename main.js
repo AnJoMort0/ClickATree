@@ -9,7 +9,7 @@
         //destroy bulldozer
         // -  click and ondestroy trash --> pour l'instant seulement onclick est fait
     //* Honey bottle in end screen and align it with the score results
-    //Add dialogue for when try to buy something whitout enough money or bees without enough flowers or beehives whitout enough bees for the first time
+    //* Add dialogue for when try to buy something whitout enough money or bees without enough flowers or beehives whitout enough bees for the first time
     //Add dialogue when you have a bee but not a beehive
     //Move dialogues to more dynamic parts to not have overload of informations
     //Hide elements before they are needed (info_buttons, unavailable bees, beehives, etc)
@@ -1524,9 +1524,10 @@ scene("game", () => {
        }
        //Add a new bee
        function addBee(){
-        let rF = choose(get('flowered'));
+        let rF = choose(get('flowered')); //random flowered objects
         let rB = choose(get('beehive'));
-        let b = 0;
+        let b = 0; //tracking bee's state
+        //creating bee
         const bee = add([
             sprite('bee'),
             pos(choose(-10, W + 10), H/2),
@@ -1537,8 +1538,10 @@ scene("game", () => {
             {
                 update(){
                     if (diaL === 0) {
+                        //update based on y position
                         this.z = this.pos.y + 100;
                         this.scale = this.pos.y * BEE_SCALE;
+                        //bee moving to flower
                         if (b === 0 && nb_flowered != 0) {
                             if (this.pos.x > rF.pos.x) {
                                 this.flipX = true;
@@ -1547,15 +1550,25 @@ scene("game", () => {
                             }
                             this.moveTo(rF.pos.x, rF.pos.y - 50, BEE_SPEED);
                             if(this.pos.x == rF.pos.x && this.pos.y == rF.pos.y - 50){
-                                b++;
+                                b++; //once bee reaches flower, increment by 1
                                 this.z = rF.z + 1;
-                                rF = choose(get("flowered"));
+                                rF = choose(get("flowered")); //new random flower is chosen
                                 rB = choose(get("beehive"));
                             };
                         } else if (b === 0 && nb_flowered == 0){
-                            this.moveTo(rand(W), rand(H), BEE_SPEED);
+                            this.moveTo(rand(W), rand(H), BEE_SPEED); //if no flowers, bee moves to a random position
+                            CASHBOX.add([
+                                text("Tes abeilles sont perdues! Où sont les fleurs?", { 
+                                    size: 20,
+                                    font: "d",
+                                }),
+                                pos(text_cash.pos.x - 400, 150), 
+                                color(255, 0, 0), 
+                                lifespan(2), 
+                            ]);
                         }
-                        if (b === 1 && nb_beehives != 0) {
+                        //bee moving to beehive
+                        if (b === 1 && nb_beehives != 0) { //bee moves to beehive if there is one
                             if (rB == undefined){
                                 rB = choose(get("beehive"));
                             }
@@ -1566,13 +1579,23 @@ scene("game", () => {
                             }
                             this.moveTo(rB.pos.x, rB.pos.y, BEE_SPEED);
                             if(this.pos.x == rB.pos.x && this.pos.y == rB.pos.y){
-                                //bee pop sound when bee enters hive
+                                //bee pop sound when bee enters beehive
                                 music = play('bee_in_hive');
-                                b++;
-                                honey++;
+                                b++; 
+                                honey++; //honey count is incremented
                             };
                         } else if ((b === 1 || b === 2) && nb_beehives == 0){
+                            //if there are no beehives, the bee moves to a random position
                             this.moveTo(rand(W), rand(H), BEE_SPEED);
+                            CASHBOX.add([
+                                text("Où sont les ruches?", { 
+                                    size: 20,
+                                    font: "d",
+                                }),
+                                pos(text_cash.pos.x - 150, 200), 
+                                color(255, 0, 0), 
+                                lifespan(2), 
+                            ]);
                         };
                         if(b === 2){
                             zoomIn(rB)
