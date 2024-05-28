@@ -267,6 +267,12 @@ loadRoot('assets/');
     `)    
 //============================//
 
+//Globally declaring music
+music_main = play('default_music', {
+        loop: true,
+        volume: 0.5,
+    });
+
 //SCENES
 scene("startMenu", () => {
     const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]);
@@ -275,18 +281,18 @@ scene("startMenu", () => {
     let music;
     onClick("timedStartButton", (b) => {
         time = 300;
-        music = play('default_music', {
-            loop: true,
-            volume: 0.5,
-        });
+        //music = play('default_music', {
+        //    loop: true,
+        //    volume: 0.5,
+        //});
         go("game");
     });
     onClick("infStartButton", (b) => {
         time = -10;
-        music = play('default_music', {
-            loop: true,
-            volume: 0.5,
-        });
+        //music = play('default_music', {
+        //    loop: true,
+        //    volume: 0.5,
+        //});
         go("game");
     });
     onClick("scoreBoardButton", (b) => {
@@ -1250,7 +1256,7 @@ scene("game", () => {
                         warning(text_new_bird_price);
                     } else {
                         addBird();
-                        music = play('birds_bg', {
+                        music_bird = play('birds_bg', {
                             volume: 2,
                         });
                     }
@@ -1843,6 +1849,9 @@ scene("game", () => {
 scene("gameOver", () => {
     setBackground(rgb(79, 146, 240));
 
+    music_bulldozer.stop();
+    music_bird.stop();
+
     let playerName = "";
     let playerScore = honey;
     let colors = [RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN, WHITE, BLACK];
@@ -2013,10 +2022,10 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
 
     onClick("replayButton", (b) => {
         time = 300;
-        music = play('default_music', {
-            loop: true,
-            volume: 0.5,
-        });
+        //music = play('default_music', {
+        //    loop: true,
+        //    volume: 0.5,
+        //});
         go("game");
     });
 
@@ -2099,10 +2108,10 @@ scene("scoreboard", () => { //More GPT aussi
     ]);
     onClick("replayButton", () => {
         time = 300;
-        music = play('default_music', {
-            loop: true,
-            volume: 0.5,
-        });
+        //music = play('default_music', {
+        //    loop: true,
+        //    volume: 0.5,
+        //});
         go("game");
     });
     // Menu button
@@ -2224,7 +2233,7 @@ scene("scoreboard", () => { //More GPT aussi
     }
 
     onClick("button", (t) => {
-        music = play('button_click'); //it works with onclick
+        music = play('button_click');
     })
     //THESE DON'T WORK FOR SOME REASON
     onHover("button", (b) => {
