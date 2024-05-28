@@ -7,7 +7,7 @@
         // * bulldozer on screen et son s'arrête lorsque bulldozer est destroyed
         // * click bulldozer (peut-être que ça fait trop bruit de pistolet - à discuter)
         //destroy bulldozer
-        //click and ondestroy trash
+        // -  click and ondestroy trash --> pour l'instant seulement onclick est fait
     //Honey bottle in end screen and align it with the score results
     //Add dialogue for when try to buy something whitout enough money or bees without enough flowers or beehives whitout enough bees for the first time
     //Add dialogue when you have a bee but not a beehive
@@ -2358,7 +2358,7 @@ scene("scoreboard", () => { //More GPT aussi
     ]
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
-        ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes et produire des aliments?"], //2e
+        ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes et dans la production des aliments?"], //2e
         ["bear_wink", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux?"],
         ["bear_wink", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin?"],
     ]
