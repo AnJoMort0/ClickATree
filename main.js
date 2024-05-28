@@ -20,6 +20,7 @@
     //Have all scales depend on screen size
     //Create a fire event when auto-clicker
     //Hide HUD button
+    //Dialogs random
 
 //KNOWN BUGS
     // When multiple trees overlap, the player gets multiple points in a single click
@@ -1949,16 +1950,26 @@ scene("gameOver", () => {
 scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     setBackground(rgb(79, 146, 240));
 
+    const icon_honey = add([ //SCOREBOX
+        sprite('honey'),
+        anchor("center"),
+        pos(width() / 2, height() / 4 + 20),
+        z(0),
+        scale(10), //SPRITE_ICON_SCALE *
+        "ui",
+     ]);
+
     add([
         text("Ton score :", {font:"d", size: 30 }),
-        pos(width() / 2, height() / 4 - 50),
+        pos(width() / 2, height() / 4 - 130),
         anchor("center"),
     ]);
 
     add([
-        text(`${playerScore}`, {font:"d", size: 40 }),
-        pos(width() / 2, height() / 4),
+        text(`${playerScore}`, {font:"d", size: 40, color: BLACK}),
+        pos(width() / 2, height() / 4 + 80),
         anchor("center"),
+        color(0, 0, 0),
     ]);
 
     add([
