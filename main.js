@@ -1275,13 +1275,22 @@ scene("game", () => {
                             }),
                             pos(text_cash.pos.x - 155, 150), // Adjust the position as needed
                             color(255, 0, 0), // Set text color to red
-                            lifespan(2), // Text will disappear after 3 seconds
+                            lifespan(2), // Text will disappear after 2 seconds
                         ]);
                     } else {
                         addBee();
                     }
-                } else if(diaL == 0 && b.is("not_available")){
+                } else if(diaL == 0 && b.is("not_available")){ //when the button is not available
                     warning(b);
+                    CASHBOX.add([
+                        text("Pas assez d'arbres avec des fleurs!", { 
+                            size: 20,
+                            font: "d",
+                        }),
+                        pos(text_cash.pos.x - 300, 150), 
+                        color(255, 0, 0), 
+                        lifespan(2), 
+                    ]);
                 };
             })
             //New beehive
