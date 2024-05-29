@@ -50,6 +50,8 @@
 //===================================================================//
 //===================================================================//
 
+const VERSION = "v.1.0.mysteresUnil"
+
 kaboom({
     background  : [0, 0, 0],
     width       : window.innerWidth,
@@ -343,7 +345,7 @@ scene("startMenu", () => {
             music = play('button_click'); //it works with onclick
         });
         const timedStartButton = add([
-            rect(350, 75, { radius: 15 }),
+            rect(500, 125, { radius: 15 }),
             anchor("center"),
             pos(STARTBOX.pos.x, STARTBOX.pos.y + 80),
             z(Z_UI_BOTTOM),
@@ -353,7 +355,7 @@ scene("startMenu", () => {
             "button,"
         ])
         const timedStartText = add([
-            text("Mode 5 minutes", {size : 22, font : "d"}),
+            text("Mode Mytères de l'UNIL", {size : 22, font : "d"}),
             pos(timedStartButton.pos),
             anchor("center"),
             color(0, 0, 0),
@@ -402,6 +404,14 @@ scene("startMenu", () => {
             "scoreBoardButton",
             "button,"
         ])
+
+        // Add the small text at the bottom right for game version
+        add([
+            text(VERSION, {font:"d", size: 10 }),
+            pos(width() - 20, height() - 20),
+            anchor("botright"),
+            color(rgb(0, 0, 0)),
+        ]);
 });
 go("startMenu");
 
