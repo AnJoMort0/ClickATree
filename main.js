@@ -28,6 +28,17 @@
     //You can continue clicking the trees and placing them even when the time stops
         //* Fixed
     // parfois des bugs apparaissent comme 2173 : width not defined et les problèmes avec les dialogues 
+        //* Probably fixed
+    // This fixed the starting disappearing of the buttons but now if bulldozer destroys all flowers this just stops working
+        /**if (nb_flowered > 0) {
+                    if(nb_bees >= nb_flowered * nb_bees_p_flowered){
+                        this.use(shader("grayscale"));
+                        this.use("not_available");
+                    } else {
+                        this.use(shader(""));
+                        this.unuse("not_available");
+                    }
+                } */
     
 
 
@@ -665,6 +676,7 @@ scene("game", () => {
             anchor("topright"),
             area(),
             z(Z_UI),
+            opacity(0),
             "ui",
             "button",
             "new_button",
@@ -688,6 +700,7 @@ scene("game", () => {
                 anchor("right"),
                 pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
                 z(Z_UI_TOP),
+                opacity(0),
             ])
             const text_nb_birds = new_bird.add([
                 text(formatNumber(nb_birds, {useOrderSuffix: true}),{
@@ -702,18 +715,21 @@ scene("game", () => {
                 anchor("right"),
                 pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
                 z(Z_UI_TOP),
+                opacity(0),
             ])
     //adding a new bee button
      const new_bee = NEWBOX.add([
         sprite('new_bee'),
         {
             update(){
-                if(nb_bees >= nb_flowered * nb_bees_p_flowered){
-                    this.use(shader("grayscale"));
-                    this.use("not_available");
-                } else {
-                    this.use(shader(""));
-                    this.unuse("not_available");
+                if (nb_flowered > 0) {
+                    if(nb_bees >= nb_flowered * nb_bees_p_flowered){
+                        this.use(shader("grayscale"));
+                        this.use("not_available");
+                    } else {
+                        this.use(shader(""));
+                        this.unuse("not_available");
+                    }
                 }
             }
         },
@@ -723,6 +739,7 @@ scene("game", () => {
         anchor("topright"),
         area(),
         z(Z_UI),
+        opacity(0),
         "ui",
         "button",
         "new_button",
@@ -746,6 +763,7 @@ scene("game", () => {
             anchor("right"),
             pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
             z(Z_UI_TOP),
+            opacity(0),
         ])
         const text_nb_bees = new_bee.add([
             text(formatNumber(nb_bees, {useOrderSuffix: true}),{
@@ -760,18 +778,21 @@ scene("game", () => {
             anchor("right"),
             pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
             z(Z_UI_TOP),
+            opacity(0),
         ])
     //adding a new bee button
     const new_beehive = NEWBOX.add([
         sprite('new_beehive'), //change to new_beehive
         {
             update(){
-                if(nb_bees <= nb_beehives * nb_bees_p_behive || get("hiveable").length == 0){
-                    this.use(shader("grayscale"));
-                    this.use("not_available");
-                } else {
-                    this.use(shader(""));
-                    this.unuse("not_available");
+                if (nb_bees > 0) {
+                    if(nb_bees <= nb_beehives * nb_bees_p_behive || get("hiveable").length == 0 ){
+                        this.use(shader("grayscale"));
+                        this.use("not_available");
+                    } else {
+                        this.use(shader(""));
+                        this.unuse("not_available");
+                    }
                 }
             }
         },
@@ -781,6 +802,7 @@ scene("game", () => {
         anchor("topright"),
         area(),
         z(Z_UI),
+        opacity(0),
         "ui",
         "button",
         "new_button",
@@ -804,6 +826,7 @@ scene("game", () => {
             anchor("right"),
             pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
             z(Z_UI_TOP),
+            opacity(0),
         ])
         const text_nb_beehives = new_beehive.add([
             text(formatNumber(nb_beehives, {useOrderSuffix: true}),{
@@ -818,6 +841,7 @@ scene("game", () => {
             anchor("right"),
             pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
             z(Z_UI_TOP),
+            opacity(0),
         ])
 
         //test: info button = tree
@@ -1219,27 +1243,18 @@ scene("game", () => {
                 //loop(0.5, () => { //I can't make this stop for some reason
                     if (o == 0) {
                         information_0.use(opacity(1));
-                        information_1.use(opacity(1));
-                        information_2.use(opacity(1));
-                        information_3.use(opacity(1));
                         information_4.use(opacity(1));
                         information_5.use(opacity(1));
                         o = 1;
                     }/* else {
                         information_0.use(opacity(0));
-                        information_1.use(opacity(0));
-                        information_2.use(opacity(0));
-                        information_3.use(opacity(0));
                         information_4.use(opacity(0));
                         information_5.use(opacity(0));
                         o = 0;
-                    }
+                    }nn
                 });*/
             } else if(q > 3){
                 information_0.use(opacity(1));
-                information_1.use(opacity(1));
-                information_2.use(opacity(1));
-                information_3.use(opacity(1));
                 information_4.use(opacity(1));
                 information_5.use(opacity(1));
             }
@@ -1446,73 +1461,96 @@ scene("game", () => {
             }
         });
 
-        let p = 0; let d = 0;
+        let p = 0; let d = 0; let sbb = false; let sbeeb = false; let sbhb = false; //try to limit things so the update doesn't update everything even when not needed, but rather only tries to do the if
         onUpdate(() => {    
-        diaL        = get("dialog").length; //length to check if the dialogue is existent
-        nb_trees    = get('tree').length;
-        nb_bees     = get('bee').length;
-        nb_birds    = get('bird').length;
-        nb_trash    = get('trash').length;
-        nb_flowered = get('flowered').length;
-        nb_beehives = get('beehive').length;
+            diaL        = get("dialog").length; //length to check if the dialogue is existent
+            nb_trees    = get('tree').length;
+            nb_bees     = get('bee').length;
+            nb_birds    = get('bird').length;
+            nb_trash    = get('trash').length;
+            nb_flowered = get('flowered').length;
+            nb_beehives = get('beehive').length;
 
-        cps_tree = cps_t_base * (nb_bees * nb_flowered + 1);
+            cps_tree = cps_t_base * (nb_bees * nb_flowered + 1);
 
-         cash_per_sec = (nb_trees * cps_tree);
-         cps_final   = cash_per_sec / cps_penalty;
-         if (nb_trash == 0) {
-            cps_penalty = 1;
-         } else {
-            cps_penalty = nb_trash;
-         }
+            cash_per_sec = (nb_trees * cps_tree);
+            cps_final   = cash_per_sec / cps_penalty;
+            if (nb_trash == 0) {
+                cps_penalty = 1;
+            } else {
+                cps_penalty = nb_trash;
+            }
 
-         //Intro dialogue
-         if (q < dia_intro.length) {
-            diaBubble(dia_intro[q]);
-         }
+            //Intro dialogue
+            if (q < dia_intro.length) {
+                diaBubble(dia_intro[q]);
+            }
 
-         //Timer relative actions
-         switch(time){
-            case 0 : 
-                go("gameOver");
-                break;
-         }
+            //Hide objects based on their need
+            if(cash >= pr_new_bird && sbb == false){
+                sbb = true;
+                new_bird.use(opacity(1));
+                text_new_bird_price.use(opacity(1));
+                text_nb_birds.use(opacity(1));
+                information_1.use(opacity(1));
+            }
+            if(nb_flowered > 0 && sbeeb == false){
+                sbeeb = true;
+                new_bee.use(opacity(1));
+                text_new_bee_price.use(opacity(1));
+                text_nb_bees.use(opacity(1));
+                information_2.use(opacity(1));
+            }
+            if(nb_bees > 0 && sbhb == false){
+                sbhb = true;
+                new_beehive.use(opacity(1));
+                text_new_beehive_price.use(opacity(1));
+                text_nb_beehives.use(opacity(1));
+                information_3.use(opacity(1));
+            }
 
-         //Pollution relative actions
-         if (pollu_stat > 50 && p == 0) {
-            p++;
-            diaBubble(dia_pollution[0]);
-         }
-         if(pollu_over >= MAX_EVENT_STAT && p == 1) {
-            p++;
-            diaBubble(dia_pollution[1]);
-         }
-         if(pollu_over >= 15 && p == 2){
-            p++;
-            diaBubble(dia_pollution[2]);
-         }
-         if(pollu_stat < MAX_EVENT_STAT && p == 3){
-            p++;
-            diaBubble(dia_pollution[3]);
-         }
-         //Deforestation relative actions
-         if (defo_stat > 50 && d == 0) {
-            d++;
-            diaBubble(dia_deforestation[0]);
-         }
-         if(defo_over >= MAX_EVENT_STAT && d == 1) {
-            d++;
-            diaBubble(dia_deforestation[1]);
-         }
-         if(defo_over >= 15 && d == 2){
-            d++;
-            diaBubble(dia_deforestation[2]);
-         }
-         if(defo_stat < MAX_EVENT_STAT && d == 3){
-            d++;
-            diaBubble(dia_deforestation[3]);
-         } 
-    })
+            //Timer relative actions
+            switch(time){
+                case 0 : 
+                    go("gameOver");
+                    break;
+            }
+
+            //Pollution relative actions
+            if (pollu_stat > 50 && p == 0) {
+                p++;
+                diaBubble(dia_pollution[0]);
+            }
+            if(pollu_over >= MAX_EVENT_STAT && p == 1) {
+                p++;
+                diaBubble(dia_pollution[1]);
+            }
+            if(pollu_over >= 15 && p == 2){
+                p++;
+                diaBubble(dia_pollution[2]);
+            }
+            if(pollu_stat < MAX_EVENT_STAT && p == 3){
+                p++;
+                diaBubble(dia_pollution[3]);
+            }
+            //Deforestation relative actions
+            if (defo_stat > 50 && d == 0) {
+                d++;
+                diaBubble(dia_deforestation[0]);
+            }
+            if(defo_over >= MAX_EVENT_STAT && d == 1) {
+                d++;
+                diaBubble(dia_deforestation[1]);
+            }
+            if(defo_over >= 15 && d == 2){
+                d++;
+                diaBubble(dia_deforestation[2]);
+            }
+            if(defo_stat < MAX_EVENT_STAT && d == 3){
+                d++;
+                diaBubble(dia_deforestation[3]);
+            } 
+        })
 
     //FUNCTIONS
        //Add a new tree
