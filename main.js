@@ -1525,7 +1525,7 @@ scene("game", () => {
                 p++;
                 diaBubble(dia_pollution[2]);
             }
-            if(pollu_stat < MAX_EVENT_STAT && p == 3){
+            if(nb_trash == 0 && p == 3){
                 p++;
                 diaBubble(dia_pollution[3]);
             }
@@ -1540,11 +1540,11 @@ scene("game", () => {
             }
             if(defo_over >= 30 && d == 2){
                 d++;
-                diaBubble(dia_deforestation[2]);
+                //diaBubble(dia_deforestation[2]);
             }
             if(defo_stat < 6 && d == 3){
                 d++;
-                diaBubble(dia_deforestation[3]);
+                //diaBubble(dia_deforestation[3]);
             } 
         })
 
