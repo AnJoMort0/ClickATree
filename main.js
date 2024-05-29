@@ -21,7 +21,7 @@
     //You can continue clicking the trees and placing them even when the time stops
         //* Fixed
     // There's the possibility of clicking something when it is destroyed
-        //For now removed by removing zoomOut()
+        //Seems fixed
     
 //Add to README
     //2 function codes down the js page
@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.10.mysteresUnil"
+const VERSION = "v.alpha.1.11.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -46,6 +46,8 @@ const H = height();
 setGravity(800);
 const CLICK_JUMP                = 1.05;
 let time                        = -10;
+let honey                       = 0;
+let boughtBird                  = false;
 
 const SPRITE_PIXEL_SIZE         = 25;
 const SPRITE_ICON_SCALE         = 1.4;
@@ -63,7 +65,6 @@ const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
 const BEAR_SCALE                = 8;
 const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
-let honey = 0;
 //z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI        = H    + 125;
@@ -1369,6 +1370,7 @@ scene("game", () => {
                         warning(text_new_bird_price);
                     } else {
                         addBird();
+                        boughtBird = true;
                         music_bird = play('birds_bg', {
                             volume: 2,
                         });
@@ -2043,7 +2045,9 @@ scene("gameOver", () => {
     setBackground(rgb(79, 146, 240));
 
     music_bulldozer.stop();
-    music_bird.stop();
+    if (boughtBird == true) {
+        music_bird.stop();
+    }
 
     let playerName = "";
     let playerScore = honey;
