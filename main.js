@@ -1747,12 +1747,12 @@ scene("game", () => {
                                 this.z = this.pos.y + 100;
                                 b = 0;
                             });
-                            this.onAnimEnd((anim) => {
-                                if (anim === "pollen" && b === 1) {
-                                    b++;
-                                    this.play("main");
-                                }
-                            });
+                            //this.onAnimEnd((anim) => {
+                            //    if (anim === "pollen" && b === 1) {
+                            //        b++;
+                            //        this.play("main");
+                            //    }
+                            //});
                         }
                     }
                 },
