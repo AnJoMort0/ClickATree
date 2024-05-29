@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.12.mysteresUnil"
+const VERSION = "v.alpha.1.13.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -490,7 +490,7 @@ scene("game", () => {
         let pollu_over  = 0;
         let pollu_boost = 2;
         let pollu_color = rgb(31, 60, 33); //if change this need to change lower
-        let defo_stat   = 90;
+        let defo_stat   = 0;
         let defo_over   = 0;
         let defo_boost  = 1.5;
         let defo_color  = rgb(89, 66, 53); //if change this need to change lower
