@@ -1,6 +1,5 @@
 //IDEAS TO ADD
  //Priority
-    //* (à voir si ça va de dire "space"? - C'est bon) Ajouter petite icône "barre d'espace" en bas à droite des dialogues
     //Add sounds (sounds of the objects not just clicks) to different things
         // * pop when bee enter beehive because it means +1 honey and it gives an audio information
         // * (pour l'instant seulement quand addTree et onDestroy) leaves rumbling when click on tree or onDestroy or addTree --> onClick is way to spammy
@@ -8,11 +7,6 @@
         // * click bulldozer (peut-être que ça fait trop bruit de pistolet - à discuter)
         //destroy bulldozer
         // -  click and ondestroy trash --> pour l'instant seulement onclick est fait
-    //* Honey bottle in end screen and align it with the score results
-    //* Add dialogue for when try to buy something whitout enough money or bees without enough flowers or beehives whitout enough bees for the first time
-    //* Add dialogue when you have a bee but not a beehive
-    //Move dialogues to more dynamic parts to not have overload of informations
-    //Hide elements before they are needed (info_buttons, unavailable bees, beehives, etc)
  //If time
     //Minimal animations for the bees (for example move around when reach a tree)
     //Achievements
@@ -20,25 +14,14 @@
     //Have all scales depend on screen size
     //Create a fire event when auto-clicker
     //Hide HUD button
-    //Dialogs random
 
 //KNOWN BUGS
     // When multiple trees overlap, the player gets multiple points in a single click
         //* Fixed it by calling it a feature
     //You can continue clicking the trees and placing them even when the time stops
         //* Fixed
-    // parfois des bugs apparaissent comme 2173 : width not defined et les problèmes avec les dialogues 
-        //* Probably fixed
-    // This fixed the starting disappearing of the buttons but now if bulldozer destroys all flowers this just stops working
-        /**if (nb_flowered > 0) {
-                    if(nb_bees >= nb_flowered * nb_bees_p_flowered){
-                        this.use(shader("grayscale"));
-                        this.use("not_available");
-                    } else {
-                        this.use(shader(""));
-                        this.unuse("not_available");
-                    }
-                } */
+    // There's the possibility of clicking something when it is destroyed
+        //For now removed by removing zoomOut()
     
 
 
