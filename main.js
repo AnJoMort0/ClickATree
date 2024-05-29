@@ -23,8 +23,6 @@
     // There's the possibility of clicking something when it is destroyed
         //For now removed by removing zoomOut()
     
-
-
 //Add to README
     //2 function codes down the js page
     //Smoke spritesheet : https://miguelnero.itch.io/particle-smoke
@@ -2516,7 +2514,7 @@ scene("scoreboard", () => { //More GPT aussi
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
         ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes ?"], //2e
         ["bear_scared", "Oh non ! Ils vont couper nos arbres ! Clique sur le bulldozer pour le détruire !"],
-        ["bear_sad", "Vite ! Le bulldozer détruit tout la biodiversité ! Clique plus vite !"],
+        ["bear_sad", "Vite ! Le bulldozer détruit toute la biodiversité ! Clique plus vite !"],
         ["bear_happy", "Bravo ! Le bulldozer ne va pas retourner pendant un moment !"],
         ]
     //on garde ou non?
