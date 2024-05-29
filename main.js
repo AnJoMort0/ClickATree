@@ -2518,7 +2518,7 @@ scene("scoreboard", () => { //More GPT aussi
         //["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres que tu peux voir en haut à droite."],
         //["bear_wink", "Je te laisse découvrir la suite!"],
         ["bear_info", "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
-        ["bear_talking", "Je te laisse découvrir la suite! Tu as 5 minutes pour m'aider à créer une belle forêt mais surtout à récupérer mon miel."],
+        ["bear_talking", "Je te laisse découvrir la suite! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récupérer mon miel."],
     ] //tout bon
     const dia_pollution = [
         //["bear_scared", "Attention!! La barre de pollution augmente vite!"],
