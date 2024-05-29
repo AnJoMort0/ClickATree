@@ -1351,7 +1351,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_bee_price);
                         CASHBOX.add([
-                            text("Pas assez d'argent!", { 
+                            text("Pas assez de feuilles!", { 
                                 size: 20,
                                 font: "d",
                             }),
@@ -1382,7 +1382,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_beehive_price);
                         CASHBOX.add([
-                            text("Pas assez d'argent!", { 
+                            text("Pas assez de feuilles!", { 
                                 size: 20,
                                 font: "d",
                             }),
