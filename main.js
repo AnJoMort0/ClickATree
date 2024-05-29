@@ -159,7 +159,13 @@ loadRoot('assets/');
         //flowers
         loadSprite('flowers0', 'game_elements/vfx/flowers0.png');
         //others
-        loadSprite('bee', 'game_elements/other/bee.png');
+        loadSprite('bee', 'game_elements/other/bee_animation.png', { // loadSprite('bee', 'game_elements/other/bee.png');
+            sliceX: 3,
+            sliceY: 3,
+            anims: {
+                main: {from: 0 , to: 7 ,loop: true},
+            }
+        });
         loadSprite('trash', 'game_elements/other/trashcan_.png')
         loadSprite('bulldozer', 'game_elements/other/bulldozer.png')
         loadSprite('bird', 'game_elements/other/bird.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
@@ -1615,7 +1621,9 @@ scene("game", () => {
         let b = 0; //tracking bee's state
         //creating bee
         const bee = add([
-            sprite('bee'),
+            sprite('bee', {
+                anim: "main",
+            }),
             pos(choose(-10, W + 10), H/2),
             scale(H/2 * BEE_SCALE),
             anchor('center'),
@@ -2521,12 +2529,14 @@ scene("scoreboard", () => { //More GPT aussi
         ["bear_wink", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques?"],
         //1580 - text to change later
         ["bear_wink", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution?"],
+        ["bear_wink", "Savais-tu que les abeilles peuvent être affectées par la pollution de l'air? Protéger l'air, c'est aussi protéger nos pollinisateurs!"]
     ]
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
-        ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes et dans la production des aliments?"], //2e
+        ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes ?"], //2e
         ["bear_wink", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux?"],
         ["bear_wink", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin?"],
+        ["bear_wink", "Savais-tu que planter des arbres peut aider à remplacer ceux qui ont été coupés? C'est une façon de prendre soin de notre planète!"],
     ]
     //on garde ou non?
     //const dia_funfact = [
