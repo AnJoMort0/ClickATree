@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.3.mysteresUnil"
+const VERSION = "v.alpha.1.5.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -302,7 +302,7 @@ scene("startMenu", () => {
     const logo = STARTBOX.add([
         sprite('logo'),
         anchor('center'),
-        scale(0.3),
+        scale(0.5),
         pos(0, -W/8),
         z(Z_UI),
         area(),
@@ -329,7 +329,7 @@ scene("startMenu", () => {
                 leaf_particle.jump(rand(100, 350))
             }
             zoomOut(t);
-            music = play('button_click'); //it works with onclick
+            music = play(''); //it works with onclick
         });
         const timedStartButton = add([
             rect(500, 125, { radius: 15 }),
@@ -1005,7 +1005,6 @@ scene("game", () => {
         onClick("tree", (t) => { 
              //test: click tree
             music = play('button_click'); //it works with onclick
-        
             if (diaL == 0) {
                 plus(1);
                 nb_clicks++;
@@ -2006,23 +2005,23 @@ scene("gameOver", () => {
         playerName = playerName.substring(0, playerName.length - 1);
     });
 
-    onKeyPress("up", () => {
+    onKeyPress("right", () => {
         currentColorIndex = (currentColorIndex + 1) % colors.length;
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
     });
 
-    onKeyPress("down", () => {
+    onKeyPress("left", () => {
         currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
     });
 
-    onKeyDown("left", () => {
+    onKeyDown("down", () => {
         customColor.r = Math.max(0, customColor.r - 1);
         customColor.g = Math.max(0, customColor.g - 2);
         customColor.b = Math.max(0, customColor.b - 3);
     });
 
-    onKeyDown("right", () => {
+    onKeyDown("up", () => {
         customColor.r = Math.min(255, customColor.r + 1);
         customColor.g = Math.min(255, customColor.g + 2);
         customColor.b = Math.min(255, customColor.b + 3);
