@@ -207,11 +207,12 @@ loadRoot('assets/');
         })
         loadSprite('logo', 'icon/logo.png')
         //new buttons
-        loadSprite('new_tree', "ui/new_buttons/new_tree_button.png");
-        loadSprite('new_bee', "ui/new_buttons/new_bee_button.png");
-        loadSprite('new_bird', "ui/new_buttons/new_bird_button.png");
-        loadSprite('info', "ui/new_buttons/info_button.png");
+        loadSprite('new_tree'   , "ui/new_buttons/new_tree_button.png");
+        loadSprite('new_bee'    , "ui/new_buttons/new_bee_button.png");
+        loadSprite('new_bird'   , "ui/new_buttons/new_bird_button.png");
+        loadSprite('info'       , "ui/new_buttons/info_button.png");
         loadSprite('new_beehive', "ui/new_buttons/new_beehive_button.png");
+        loadSprite('new_empty'  , "ui/new_buttons/new_empty_button.png")
 
 //load ui sounds
     //loadSound('button_click',"audio/other/click.wav"): by Nathan Gibson https://nathangibson.myportfolio.com 
@@ -748,6 +749,26 @@ scene("game", () => {
                 z(Z_UI_TOP),
                 opacity(0),
             ])
+            const new_empty = NEWBOX.add([
+                sprite('new_empty'),
+                opacity(1),
+                {update(){
+                    if (this.opacity == 1) {
+                        this.use(shader("grayscale"));
+                    } else {
+                        this.use(shader(""));
+                    }
+                }},
+                anchor("topright"),
+                pos(new_bird.pos),
+                scale(SPRITE_BUTTON_SCALE),
+                anchor("topright"),
+                area(),
+                z(Z_UI_TOP),
+                "ui",
+                "button",
+                "new_button",
+             ])
     //adding a new bee button
      const new_bee = NEWBOX.add([
         sprite('new_bee'),
@@ -1333,6 +1354,9 @@ scene("game", () => {
             //New bird
             onClick("new_bird", (t) =>{
                 if (diaL == 0) {
+                    if(t.opacity == 0){
+                        diaBubble(dia_others[1]);
+                    }
                     if(cash < pr_new_bird){
                         warning(text_cash);
                         warning(text_new_bird_price);
@@ -1518,6 +1542,7 @@ scene("game", () => {
             //Hide objects based on their need
             if(cash >= pr_new_bird && sbb == false){
                 sbb = true;
+                new_empty.use(opacity(0));
                 new_bird.use(opacity(1));
                 text_new_bird_price.use(opacity(1));
                 text_nb_birds.use(opacity(1));
@@ -2566,7 +2591,8 @@ scene("scoreboard", () => { //More GPT aussi
     //others
     const dia_others = [
         //pause
-        ["bear_talking", "Ne t'inquiète pas, le jeu est en pause. Clique sur espace pour reprendre !"]
+        ["bear_talking", "Ne t'inquiète pas, le jeu est en pause. Clique sur espace pour reprendre !"],
+        ["bear_scared", "Qu'est-ce qui se cache là derrière ? Tu ne dois pas avoir assez de feuilles encore."],
     ]
 
 
