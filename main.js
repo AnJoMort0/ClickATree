@@ -1097,7 +1097,9 @@ scene("game", () => {
                 if(pollu_over <= 0){
                     let ran = randi(7);
                     if (ran == 2) {
-                        destroy(t);
+                        wait(0.1, () => {
+                            destroy(t);
+                        })                    
                     }
                 }
                 if(pollu_stat < 5){
@@ -1132,7 +1134,9 @@ scene("game", () => {
                 zoomOut(t);
                 minusDefo();
                 if(defo_stat < 5){
-                    destroy(t);
+                    wait(0.1, () => {
+                        destroy(t);
+                    })
                 }
             }
             music = play('bulldozer_click'); 
