@@ -1705,13 +1705,17 @@ scene("game", () => {
                             ]);
                         };
                         if(b === 2){
-                            zoomIn(rB)
-                                this.z = 0;
-                                wait(2, () =>{
+                            if (rB != undefined) {
+                                zoomIn(rB)
+                            }
+                            this.z = 0;
+                            wait(2, () =>{
+                                if (rB != undefined) {
                                     zoomOut(rB);
-                                    this.z = this.pos.y + 100;
-                                    b = 0;
-                                });
+                                }
+                                this.z = this.pos.y + 100;
+                                b = 0;
+                            });
                         }
                     }
                 },
