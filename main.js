@@ -2542,12 +2542,13 @@ scene("scoreboard", () => { //More GPT aussi
         ]
     //on garde ou non?
     const dia_funfact = [
-        ["bear_wink", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux?"],
-        ["bear_wink", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin?"],
-        ["bear_wink", "Savais-tu que planter des arbres peut aider à remplacer ceux qui ont été coupés? C'est une façon de prendre soin de notre planète!"],
-        ["bear_wink", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution?"],
-        ["bear_wink", "Savais-tu que les abeilles peuvent être affectées par la pollution de l'air? Protéger l'air, c'est aussi protéger nos pollinisateurs!"],
-        ["bear_wink", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques?"],
+        ["bear_wink", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux ?"],
+        ["bear_wink", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin ?"],
+        ["bear_wink", "Savais-tu que planter des arbres peut aider à remplacer ceux qui ont été coupés? C'est une façon de prendre soin de notre planète !"],
+        ["bear_wink", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution ?"],
+        ["bear_wink", "Savais-tu que les abeilles peuvent être affectées par la pollution de l'air? Protéger l'air, c'est aussi protéger nos pollinisateurs !"],
+        ["bear_wink", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques ?"],
+        ["bear_happy", "À la fin du jeu, quand tu tape ton nom, essaie de cliquer sur les touches flèches."],
     ]
     //peut-être une seule ligne ?
     const dia_info = [
