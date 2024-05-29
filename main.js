@@ -148,7 +148,13 @@ loadRoot('assets/');
             }
         });
         loadSprite('trash', 'game_elements/other/trashcan_.png')
-        loadSprite('bulldozer', 'game_elements/other/bulldozer.png')
+        loadSprite('bulldozer', 'game_elements/other/bulldozer.png', {
+            sliceX: 2,
+            sliceY: 3,
+            anims: {
+                main: {from: 0, to: 5,loop: true},
+            }
+        })
         loadSprite('bird', 'game_elements/other/bird.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
             sliceX: 11,
             sliceY: 8,
@@ -1783,7 +1789,9 @@ scene("game", () => {
          function addBulldozer() {
             let rT = choose(get('tree'));
             const bulldozer = add([
-                sprite('bulldozer'),
+                sprite('bulldozer', {
+                    anim: "main",
+                }),
                 anchor("bot"),
                 pos(-100, H/2),
                 {
