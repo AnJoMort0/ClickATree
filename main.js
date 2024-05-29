@@ -1582,7 +1582,7 @@ scene("game", () => {
                 p++;
                 //diaBubble(dia_pollution[0]);
             }
-            if(pollu_stat >= MAX_EVENT_STAT && p == 1) {
+            if(pollu_over >= 5 && p == 1) {
                 p++;
                 diaBubble(dia_pollution[1]);
             }
