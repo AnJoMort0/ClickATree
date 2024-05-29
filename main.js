@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.7.mysteresUnil"
+const VERSION = "v.alpha.1.8.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -329,7 +329,7 @@ scene("startMenu", () => {
                 leaf_particle.jump(rand(100, 350))
             }
             zoomOut(t);
-            music = play(''); //it works with onclick
+            music = play('button_click'); //it works with onclick
         });
     
     const timedStartButton = add([
