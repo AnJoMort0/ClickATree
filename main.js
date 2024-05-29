@@ -1391,7 +1391,7 @@ scene("game", () => {
                             size: 20,
                             font: "d",
                         }),
-                        pos(text_cash.pos.x - 155, 150), 
+                        pos(text_cash.pos.x - 155, 180), 
                         color(255, 0, 0), 
                         lifespan(2), 
                     ]);
