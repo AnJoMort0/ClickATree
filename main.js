@@ -829,6 +829,7 @@ scene("game", () => {
             area(),
             z(Z_UI),
             {dia : 0},
+            opacity(0),
             "ui",
             "button",
             "new_button",
@@ -843,6 +844,7 @@ scene("game", () => {
             area(),
             z(Z_UI),
             {dia: 1},
+            opacity(0),
             "ui",
             "button",
             "new_button",
@@ -858,10 +860,12 @@ scene("game", () => {
             area(),
             z(Z_UI),
             {dia : 2},
+            opacity(0),
             "ui",
             "button",
             "new_button",
             "info",
+            "info_bee",
          ])
         //beehive
          const information_3 = NEWBOX.add([
@@ -873,10 +877,12 @@ scene("game", () => {
             area(),
             z(Z_UI),
             {dia : 3},
+            opacity(0),
             "ui",
             "button",
             "new_button",
             "info",
+            "info_beehive",
          ])
 
         //Left side
@@ -889,6 +895,7 @@ scene("game", () => {
             area(),
             z(Z_UI),
             {dia : 4},
+            opacity(0),
             "ui",
             "button",
             "new_button",
@@ -903,6 +910,7 @@ scene("game", () => {
             area(),
             z(Z_UI),
             {dia : 5},
+            opacity(0),
             "ui",
             "button",
             "new_button",
@@ -1206,7 +1214,36 @@ scene("game", () => {
             icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
             q++;
-        })
+            if(q == 3){
+                let o = 0
+                //loop(0.5, () => { //I can't make this stop for some reason
+                    if (o == 0) {
+                        information_0.use(opacity(1));
+                        information_1.use(opacity(1));
+                        information_2.use(opacity(1));
+                        information_3.use(opacity(1));
+                        information_4.use(opacity(1));
+                        information_5.use(opacity(1));
+                        o = 1;
+                    }/* else {
+                        information_0.use(opacity(0));
+                        information_1.use(opacity(0));
+                        information_2.use(opacity(0));
+                        information_3.use(opacity(0));
+                        information_4.use(opacity(0));
+                        information_5.use(opacity(0));
+                        o = 0;
+                    }
+                });*/
+            } else if(q > 3){
+                information_0.use(opacity(1));
+                information_1.use(opacity(1));
+                information_2.use(opacity(1));
+                information_3.use(opacity(1));
+                information_4.use(opacity(1));
+                information_5.use(opacity(1));
+            }
+        });
         /*onClick("dialog", (t) => {
             destroyAll("dialog");
             icon_bear.use(sprite('bear'));
@@ -2295,6 +2332,7 @@ scene("scoreboard", () => { //More GPT aussi
     onClick("button", (t) => {
         music = play('button_click');
     })
+
     //THESE DON'T WORK FOR SOME REASON
     onHover("button", (b) => {
         console.log("HOVERING")
