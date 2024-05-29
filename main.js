@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.2.mysteresUnil"
+const VERSION = "v.alpha.1.3.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -1373,7 +1373,7 @@ scene("game", () => {
                     ]);
                 };
             });
-    //AUTOMATIC STUFF
+       //AUTOMATIC STUFF
         loop(1, () => {
             if (diaL == 0) { //Pauses the game if dialogue is opened
                 //Timer
@@ -1961,22 +1961,6 @@ scene("game", () => {
                 defo_stat = defo_stat - defo_boost;
             }
         }
-
-        //Debug
-        onKeyRelease("d", () => {
-            if(debug.inspect != true){
-                debug.inspect = true;
-            } else {
-                debug.inspect = false;
-            }
-        })
-        //Money Cheat
-        onKeyDown("0" ,() => {
-            cash = cash + 9999999999;
-        })
-        onKeyRelease("'" , () => {
-            cash = cash + 99;
-        })
 })
 
 scene("gameOver", () => {
