@@ -1134,7 +1134,7 @@ scene("game", () => {
                     ])
                     trash_particle.jump(rand(100, 350))
                 }
-                //zoomOut(t);
+                zoomOut(t);
                 minusPollu();
                 if(pollu_over <= 0){
                     let ran = randi(7);
@@ -1171,7 +1171,7 @@ scene("game", () => {
                     ])
                     smoke_particle.jump(rand(400, 500));
                 }
-                //zoomOut(t);
+                zoomOut(t);
                 minusDefo();
                 if(defo_stat < 5){
                     destroy(t);
@@ -1740,10 +1740,10 @@ scene("game", () => {
                             ]);
                         };
                         if(b === 2){
-                            //zoomIn(rB)
+                            zoomIn(rB)
                             this.z = 0;
                             wait(2, () =>{
-                                //zoomOut(rB);
+                                zoomOut(rB);
                                 this.z = this.pos.y + 100;
                                 b = 0;
                             });
@@ -2394,20 +2394,28 @@ scene("scoreboard", () => { //More GPT aussi
 //GENERAL FUNCTIONS
     //Zoom out
     function zoomOut(t){
-        t.width  = t.width   * CLICK_JUMP;
-        t.height = t.height  * CLICK_JUMP;            
+        if (t != undefined) {
+            t.width  = t.width   * CLICK_JUMP;
+            t.height = t.height  * CLICK_JUMP;
+        }            
         wait(0.1, () => {
-            t.width  = t.width  / CLICK_JUMP;
-            t.height = t.height / CLICK_JUMP;
+            if (t != undefined) {
+                t.width  = t.width  / CLICK_JUMP;
+                t.height = t.height / CLICK_JUMP;
+            }
         });
     }
     //Zoom in
    function zoomIn(t){
-        t.width  = t.width   / CLICK_JUMP;
-        t.height = t.height  / CLICK_JUMP;            
+        if (t != undefined) {
+            t.width  = t.width   / CLICK_JUMP;
+            t.height = t.height  / CLICK_JUMP;
+        }            
         wait(0.1, () => {
-            t.width  = t.width  * CLICK_JUMP;
-            t.height = t.height * CLICK_JUMP;
+            if (t != undefined) {
+                t.width  = t.width  * CLICK_JUMP;
+                t.height = t.height * CLICK_JUMP;
+            }
         })
     }
     //Warning in red
