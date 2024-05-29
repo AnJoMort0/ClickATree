@@ -144,7 +144,8 @@ loadRoot('assets/');
             sliceX: 3,
             sliceY: 3,
             anims: {
-                main: {from: 0 , to: 7 ,loop: true},
+                main: {from: 0 , to: 1 ,loop: true},
+                pollen: {from: 2, to: 7, loop: true},
             }
         });
         loadSprite('trash', 'game_elements/other/trashcan_.png')
@@ -1679,6 +1680,7 @@ scene("game", () => {
                         //update based on y position
                         this.z = this.pos.y + 100;
                         this.scale = this.pos.y * BEE_SCALE;
+
                         //bee moving to flower
                         if (b === 0 && nb_flowered != 0) {
                             if (this.pos.x > rF.pos.x) {
@@ -1690,6 +1692,7 @@ scene("game", () => {
                             if(this.pos.x == rF.pos.x && this.pos.y == rF.pos.y - 50){
                                 b++; //once bee reaches flower, increment by 1
                                 this.z = rF.z + 1;
+                                this.play("pollen");
                                 rF = choose(get("flowered")); //new random flower is chosen
                                 rB = choose(get("beehive"));
                             };
@@ -1721,6 +1724,7 @@ scene("game", () => {
                                 music = play('bee_in_hive');
                                 b++; 
                                 honey++; //honey count is incremented
+                                this.play("main");
                             };
                         } else if ((b === 1 || b === 2) && nb_beehives == 0){
                             //if there are no beehives, the bee moves to a random position
@@ -1742,6 +1746,12 @@ scene("game", () => {
                                 //zoomOut(rB);
                                 this.z = this.pos.y + 100;
                                 b = 0;
+                            });
+                            this.onAnimEnd((anim) => {
+                                if (anim === "pollen" && b === 1) {
+                                    b++;
+                                    this.play("main");
+                                }
                             });
                         }
                     }
