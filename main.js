@@ -2018,7 +2018,7 @@ scene("gameOver", () => {
     let customColor = { r: 255, g: 255, b: 255 };
 
     const inputBox = add([
-        text("Tappe ton nom !", {font:"d", size: 30 }),
+        text("Tape ton nom !", {font:"d", size: 30 }),
         color(0, 0, 0),
         pos(width() / 2, height() / 3 - 50),
         anchor("center"),
