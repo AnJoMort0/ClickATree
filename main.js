@@ -1092,14 +1092,12 @@ scene("game", () => {
                     ])
                     trash_particle.jump(rand(100, 350))
                 }
-                zoomOut(t);
+                //zoomOut(t);
                 minusPollu();
                 if(pollu_over <= 0){
                     let ran = randi(7);
                     if (ran == 2) {
-                        wait(0.1, () => {
-                            destroy(t);
-                        })                    
+                            destroy(t);                
                     }
                 }
                 if(pollu_stat < 5){
@@ -1131,12 +1129,10 @@ scene("game", () => {
                     ])
                     smoke_particle.jump(rand(400, 500));
                 }
-                zoomOut(t);
+                //zoomOut(t);
                 minusDefo();
                 if(defo_stat < 5){
-                    wait(0.1, () => {
-                        destroy(t);
-                    })
+                    destroy(t);
                 }
             }
             music = play('bulldozer_click'); 
