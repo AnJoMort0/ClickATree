@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.6.mysteresUnil"
+const VERSION = "v.alpha.1.7.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -395,48 +395,31 @@ scene("startMenu", () => {
 
     //Add bee moving around
     for (let i = 0; i < 3; i++) {
-        let b = 0;
-        let L = -10;
-        let R = W + 10;
+        let randX2 = rand(W);
         let randNY = rand(H);
         let randY2 = rand(H);
         const bee = add([
             sprite('bee', {
                 anim: "main",
             }),
-            pos(L, randNY),
+            pos(-10, randNY),
             scale(3),
             anchor('center'),
             area(),
             z(Z_UI_BOTTOM - 1),
             {
                 update(){
-                    //bee moving to other side
-                    if (b === 0) {
-                        if (this.pos.x > R) {
-                            this.flipX = true;
-                        } else {
-                            this.flipX = false;
-                        }
-                        this.moveTo(R, randY2, BEE_SPEED * 2);
-                        if(this.pos.x == R && this.pos.y == randY2){
-                            b++; //once bee reaches destination, increment by 1
-                            randY2 = rand(H);
-                        };
+                    //bee moving randomly
+                    if (this.pos.x > randX2) {
+                        this.flipX = true;
+                    } else {
+                        this.flipX = false;
                     }
-                    //bee moving to other side
-                    if (b === 1) { //bee moves to beehive if there is one
-                        if (this.pos.x > L) {
-                            this.flipX = true;
-                        } else {
-                            this.flipX = false;
-                        }
-                        this.moveTo(L, randY2, BEE_SPEED * 2);
-                        if(this.pos.x == L && this.pos.y == randY2){
-                            b = 0; //once bee reaches destination
-                            randY2 = rand(H);
-                        };
-                    }
+                    this.moveTo(randX2, randY2, BEE_SPEED * 2);
+                    if(this.pos.x == randX2 && this.pos.y == randY2){
+                        randX2 = rand(W);
+                        randY2 = rand(H);
+                    };
                 },
             },
             "bee",
