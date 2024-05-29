@@ -50,7 +50,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.0.mysteresUnil"
+const VERSION = "v.alpha.1.1.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -1296,11 +1296,10 @@ scene("game", () => {
         //})
 
         //get a fun fact
-        //onClick("bear", (t) => {
-        //    diaBubble(choose(dia_funfact));
-        //})
+        onClick("bear", (t) => {
+            diaBubble(choose(dia_funfact));
+        })
         
-
     //UI elements
         //click any button
         onClick("button", (b) => {
@@ -1539,13 +1538,13 @@ scene("game", () => {
             //Pollution relative actions
             if (pollu_stat > 50 && p == 0) {
                 p++;
-                diaBubble(dia_pollution[0]);
+                //diaBubble(dia_pollution[0]);
             }
-            if(pollu_over >= MAX_EVENT_STAT && p == 1) {
+            if(pollu_stat >= MAX_EVENT_STAT && p == 1) {
                 p++;
                 diaBubble(dia_pollution[1]);
             }
-            if(pollu_over >= 15 && p == 2){
+            if(pollu_over >= 30 && p == 2){
                 p++;
                 diaBubble(dia_pollution[2]);
             }
@@ -1556,17 +1555,17 @@ scene("game", () => {
             //Deforestation relative actions
             if (defo_stat > 50 && d == 0) {
                 d++;
-                diaBubble(dia_deforestation[0]);
+                //diaBubble(dia_deforestation[0]);
             }
-            if(defo_over >= MAX_EVENT_STAT && d == 1) {
+            if(defo_stat >= MAX_EVENT_STAT && d == 1) {
                 d++;
                 diaBubble(dia_deforestation[1]);
             }
-            if(defo_over >= 15 && d == 2){
+            if(defo_over >= 30 && d == 2){
                 d++;
                 diaBubble(dia_deforestation[2]);
             }
-            if(defo_stat < MAX_EVENT_STAT && d == 3){
+            if(defo_stat < 6 && d == 3){
                 d++;
                 diaBubble(dia_deforestation[3]);
             } 
@@ -2530,23 +2529,26 @@ scene("scoreboard", () => { //More GPT aussi
     const dia_pollution = [
         //["bear_scared", "Attention!! La barre de pollution augmente vite!"],
         ["bear_wink", "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?"], //1er
-        ["bear_wink", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques?"],
-        //1580 - text to change later
-        ["bear_wink", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution?"],
-        ["bear_wink", "Savais-tu que les abeilles peuvent être affectées par la pollution de l'air? Protéger l'air, c'est aussi protéger nos pollinisateurs!"]
-    ]
+        ["bear_scared", "Oh non ! La pollution a atteint des niveaux critiques ! Clique sur les poubelles pour les nettoyer !"],
+        ["bear_sad", "Pourquoi tu ne cliques pas sur les déchets pour les faire disparaître ?"],
+        ["bear_happy", "Bravo, il n'y a plus de déchets pour le moment. Mais attention, ils risquent de revenir !"],
+        ]
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
         ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes ?"], //2e
+        ["bear_scared", "Oh non ! Ils vont couper nos arbres ! Clique sur le bulldozer pour le détruire !"],
+        ["bear_sad", "Vite ! Le bulldozer détruit tout la biodiversité ! Clique plus vite !"],
+        ["bear_happy", "Bravo ! Le bulldozer ne va pas retourner pendant un moment !"],
+        ]
+    //on garde ou non?
+    const dia_funfact = [
         ["bear_wink", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux?"],
         ["bear_wink", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin?"],
         ["bear_wink", "Savais-tu que planter des arbres peut aider à remplacer ceux qui ont été coupés? C'est une façon de prendre soin de notre planète!"],
+        ["bear_wink", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution?"],
+        ["bear_wink", "Savais-tu que les abeilles peuvent être affectées par la pollution de l'air? Protéger l'air, c'est aussi protéger nos pollinisateurs!"],
+        ["bear_wink", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques?"],
     ]
-    //on garde ou non?
-    //const dia_funfact = [
-    //    ["bear_wink", "Ceci est un test !"],
-    //    ["bear_wink", "Ceci est un 2e test :)"],
-    //]
     //peut-être une seule ligne ?
     const dia_info = [
         //tree
