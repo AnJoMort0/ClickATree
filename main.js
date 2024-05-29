@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.8.mysteresUnil"
+const VERSION = "v.alpha.1.9.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -1730,14 +1730,10 @@ scene("game", () => {
                             ]);
                         };
                         if(b === 2){
-                            if (rB != undefined) {
-                                zoomIn(rB)
-                            }
+                            //zoomIn(rB)
                             this.z = 0;
                             wait(2, () =>{
-                                if (rB != undefined) {
-                                    zoomOut(rB);
-                                }
+                                //zoomOut(rB);
                                 this.z = this.pos.y + 100;
                                 b = 0;
                             });
