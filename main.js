@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.5.mysteresUnil"
+const VERSION = "v.alpha.1.6.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -331,74 +331,125 @@ scene("startMenu", () => {
             zoomOut(t);
             music = play(''); //it works with onclick
         });
-        const timedStartButton = add([
-            rect(500, 125, { radius: 15 }),
-            anchor("center"),
-            pos(STARTBOX.pos.x, STARTBOX.pos.y + 80),
-            z(Z_UI_BOTTOM),
-            outline(4),
-            area(),
-            "timedStartButton",
-            "button,"
-        ])
-        const timedStartText = add([
-            text("Mode Mytères de l'UNIL", {size : 22, font : "d"}),
-            pos(timedStartButton.pos),
-            anchor("center"),
-            color(0, 0, 0),
-            z(Z_UI),
-            area(),
-            "timedStartButton",
-            "button,"
-        ])
-        const infStartButton = add([
-            rect(350, 75, { radius: 15 }),
-            anchor("center"),
-            pos(STARTBOX.pos.x, STARTBOX.pos.y + 200),
-            z(Z_UI_BOTTOM),
-            outline(4),
-            area(),
-            "infStartButton",
-            "button,"
-        ])
-        const infStartText = add([
-            text("Mode infini" , {size : 22, font : "d"}),
-            pos(infStartButton.pos),
-            anchor("center"),
-            color(0, 0, 0),
-            z(Z_UI),
-            area(),
-            "infStartButton",
-            "button,"
-        ])
-        const scoreBoardButton = add([
-            rect(350, 30, { radius: 15 }),
-            anchor("center"),
-            pos(STARTBOX.pos.x, STARTBOX.pos.y + 300),
-            z(Z_UI_BOTTOM),
-            outline(4),
-            area(),
-            "scoreBoardButton",
-            "button,"
-        ])
-        const scoreBoardText = add([
-            text("Scoreboard", {size : 15, font : "d"}),
-            pos(scoreBoardButton.pos),
-            anchor("center"),
-            color(0, 0, 0),
-            z(Z_UI),
-            area(),
-            "scoreBoardButton",
-            "button,"
-        ])
+    
+    const timedStartButton = add([
+        rect(500, 125, { radius: 15 }),
+        anchor("center"),
+        pos(STARTBOX.pos.x, STARTBOX.pos.y + 80),
+        z(Z_UI_BOTTOM),
+        outline(4),
+        area(),
+        "timedStartButton",
+        "button,"
+    ])
+    const timedStartText = add([
+        text("Mode Mytères de l'UNIL", {size : 22, font : "d"}),
+        pos(timedStartButton.pos),
+        anchor("center"),
+        color(0, 0, 0),
+        z(Z_UI),
+        area(),
+        "timedStartButton",
+        "button,"
+    ])
+    const infStartButton = add([
+        rect(350, 75, { radius: 15 }),
+        anchor("center"),
+        pos(STARTBOX.pos.x, STARTBOX.pos.y + 200),
+        z(Z_UI_BOTTOM),
+        outline(4),
+        area(),
+        "infStartButton",
+        "button,"
+    ])
+    const infStartText = add([
+        text("Mode infini" , {size : 22, font : "d"}),
+        pos(infStartButton.pos),
+        anchor("center"),
+        color(0, 0, 0),
+        z(Z_UI),
+        area(),
+        "infStartButton",
+        "button,"
+    ])
+    const scoreBoardButton = add([
+        rect(350, 30, { radius: 15 }),
+        anchor("center"),
+        pos(STARTBOX.pos.x, STARTBOX.pos.y + 300),
+        z(Z_UI_BOTTOM),
+        outline(4),
+        area(),
+        "scoreBoardButton",
+        "button,"
+    ])
+    const scoreBoardText = add([
+        text("Scoreboard", {size : 15, font : "d"}),
+        pos(scoreBoardButton.pos),
+        anchor("center"),
+        color(0, 0, 0),
+        z(Z_UI),
+        area(),
+        "scoreBoardButton",
+        "button,"
+    ])
 
-        // Add the small text at the bottom right for game version
-        add([
-            text(VERSION, {font:"d", size: 10 }),
-            pos(width() - 20, height() - 20),
-            anchor("botright"),
-            color(rgb(0, 0, 0)),
-        ]);
+    //Add bee moving around
+    for (let i = 0; i < 3; i++) {
+        let b = 0;
+        let L = -10;
+        let R = W + 10;
+        let randNY = rand(H);
+        let randY2 = rand(H);
+        const bee = add([
+            sprite('bee', {
+                anim: "main",
+            }),
+            pos(L, randNY),
+            scale(3),
+            anchor('center'),
+            area(),
+            z(Z_UI_BOTTOM - 1),
+            {
+                update(){
+                    //bee moving to other side
+                    if (b === 0) {
+                        if (this.pos.x > R) {
+                            this.flipX = true;
+                        } else {
+                            this.flipX = false;
+                        }
+                        this.moveTo(R, randY2, BEE_SPEED * 2);
+                        if(this.pos.x == R && this.pos.y == randY2){
+                            b++; //once bee reaches destination, increment by 1
+                            randY2 = rand(H);
+                        };
+                    }
+                    //bee moving to other side
+                    if (b === 1) { //bee moves to beehive if there is one
+                        if (this.pos.x > L) {
+                            this.flipX = true;
+                        } else {
+                            this.flipX = false;
+                        }
+                        this.moveTo(L, randY2, BEE_SPEED * 2);
+                        if(this.pos.x == L && this.pos.y == randY2){
+                            b = 0; //once bee reaches destination
+                            randY2 = rand(H);
+                        };
+                    }
+                },
+            },
+            "bee",
+        ])
+    }
+
+    // Add the small text at the bottom right for game version
+    add([
+        text(VERSION, {font:"d", size: 10 }),
+        pos(width() - 20, height() - 20),
+        anchor("botright"),
+        color(rgb(0, 0, 0)),
+    ]);
 });
 go("startMenu");
 
