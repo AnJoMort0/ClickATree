@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.0.2.mysteresUnil"
+const VERSION = "v.beta.1.1.0.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -1191,8 +1191,10 @@ scene("game", () => {
             music = play('bulldozer_click'); 
         });
         onClick("info", (t) => {
-            diaBubble(dia_info[t.dia]);
-            music = play('button_click'); //it works with onclick
+            if (t.opacity != 0) {
+                diaBubble(dia_info[t.dia]);
+                music = play('button_click'); //it works with onclick
+            }
         });
         onDestroy("trash", (t) =>{
             for (let i = 0; i < randi(5); i++) {
@@ -1328,13 +1330,32 @@ scene("game", () => {
                 information_5.use(opacity(1));
             }
         });
-        /*onClick("dialog", (t) => {
+        onClick("skip", (t) => {
             destroyAll("dialog");
             icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
             q++;
-
-        })*/
+            if(q == 3){
+                let o = 0
+                //loop(0.5, () => { //I can't make this stop for some reason
+                    if (o == 0) {
+                        information_0.use(opacity(1));
+                        information_4.use(opacity(1));
+                        information_5.use(opacity(1));
+                        o = 1;
+                    }/* else {
+                        information_0.use(opacity(0));
+                        information_4.use(opacity(0));
+                        information_5.use(opacity(0));
+                        o = 0;
+                    }nn
+                });*/
+            } else if(q > 3){
+                information_0.use(opacity(1));
+                information_4.use(opacity(1));
+                information_5.use(opacity(1));
+            }
+        });
 
         //Pause menu
         //onKeyRelease("p", () => {
@@ -1995,9 +2016,10 @@ scene("game", () => {
                 pos(BEARBOX.pos.x + 450, BEARBOX.pos.y - 50),
                 z(Z_UI_BOTTOM),
                 outline(4),
-                area(),
+                area({scale : 0.75}),
                 scale(4),
                 "dialog",
+                "skip",
             ])
             icon_bear.use(sprite(array_with_number[0]));
             icon_bear.use(scale(BEAR_SCALE));
