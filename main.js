@@ -33,7 +33,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.1.1.mysteresUnil"
+const VERSION = "v.beta.1.1.2.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -293,7 +293,7 @@ scene("startMenu", () => {
 
     let music;
     onClick("timedStartButton", (b) => {
-        time = 3;
+        time = 300;
         //music = play('default_music', {
         //    loop: true,
         //    volume: 0.5,
