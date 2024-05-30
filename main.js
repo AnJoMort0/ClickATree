@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.alpha.1.13.mysteresUnil"
+const VERSION = "v.beta.1.0.0.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -352,7 +352,7 @@ scene("startMenu", () => {
         "button,"
     ])
     const timedStartText = add([
-        text("Mode Mytères de l'UNIL", {size : 22, font : "d"}),
+        text("Mode Mystères de l'UNIL", {size : 22, font : "d"}),
         pos(timedStartButton.pos),
         anchor("center"),
         color(0, 0, 0),
@@ -434,6 +434,16 @@ scene("startMenu", () => {
             "bee",
         ])
     }
+    onClick ("bee", (b) => {
+        add([
+            text("Essaie de cliquer sur les flèches quand tu taperas ton nom ;)", {font:"d", size: 12, width: 125, }),
+            pos(mousePos()),
+            anchor("center"),
+            color(rgb(256, 0, 0)),
+            lifespan(1, {fade: 0.3}),
+            z(Z_UI_TOP),
+        ]);
+    })
 
     // Add the small text at the bottom right for game version
     add([
