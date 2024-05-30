@@ -18,10 +18,12 @@
 //KNOWN BUGS
     // When multiple trees overlap, the player gets multiple points in a single click
         //* Fixed it by calling it a feature
-    //You can continue clicking the trees and placing them even when the time stops
+    // You can continue clicking the trees and placing them even when the time stops
         //* Fixed
     // There's the possibility of clicking something when it is destroyed
         //Seems fixed
+    // When using the on screen keyboard the click is processed multiple times
+        //To fix this for now, you can't input twice the same key
     
 //Add to README
     //2 function codes down the js page
@@ -31,7 +33,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.1.0.mysteresUnil"
+const VERSION = "v.beta.1.1.1.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -48,6 +50,7 @@ const CLICK_JUMP                = 1.05;
 let time                        = -10;
 let honey                       = 0;
 let boughtBird                  = false;
+let hasBulldozer                = false;
 
 const SPRITE_PIXEL_SIZE         = 25;
 const SPRITE_ICON_SCALE         = 1.4;
@@ -290,7 +293,7 @@ scene("startMenu", () => {
 
     let music;
     onClick("timedStartButton", (b) => {
-        time = 300;
+        time = 3;
         //music = play('default_music', {
         //    loop: true,
         //    volume: 0.5,
@@ -448,7 +451,7 @@ scene("startMenu", () => {
     // Add the small text at the bottom right for game version
     add([
         text(VERSION, {font:"d", size: 10 }),
-        pos(width() - 20, height() - 20),
+        pos(W - 20, H - 20),
         anchor("botright"),
         color(rgb(0, 0, 0)),
     ]);
@@ -1514,6 +1517,7 @@ scene("game", () => {
                     defo_over++;
                     if(get("bulldozer").length == 0){
                         addBulldozer();
+                        hasBulldozer = true;
                         music_bulldozer = play('bulldozer', {
                             loop: true,
                         });
@@ -2093,7 +2097,9 @@ scene("game", () => {
 scene("gameOver", () => {
     setBackground(rgb(79, 146, 240));
 
-    music_bulldozer.stop();
+    if (hasBulldozer == true) {
+        music_bulldozer.stop();
+    }
     if (boughtBird == true) {
         music_bird.stop();
     }
@@ -2109,13 +2115,13 @@ scene("gameOver", () => {
     const inputBox = add([
         text("Tape ton nom !", {font:"d", size: 30 }),
         color(0, 0, 0),
-        pos(width() / 2, height() / 3 - 50),
+        pos(W / 2, H / 3 - 50),
         anchor("center"),
     ]);
 
     const input = add([
         text("", {font:"d", size: 40 }),
-        pos(width() / 2, height() / 3 + 40),
+        pos(W / 2, H / 3 + 40),
         anchor("center"),
         {
             update() {
@@ -2159,7 +2165,7 @@ scene("gameOver", () => {
 
     const confirmButton = add([
         rect(200, 50, { radius: 15 }),
-        pos(width() / 2, height() / 2),
+        pos(W / 2, H / 2),
         anchor("center"),
         outline(4),
         area(),
@@ -2170,7 +2176,7 @@ scene("gameOver", () => {
     const confirmButtonText = add([
         text("Confirmer", {font:"d", size: 20 }),
         color(0, 0, 0),
-        pos(width() / 2, height() / 2),
+        pos(W / 2, H / 2),
         anchor("center"),
         area(),
         "confirmButton",
@@ -2200,6 +2206,149 @@ scene("gameOver", () => {
 
     onClick("confirmButton", saveScore);
     onKeyRelease("enter", saveScore);
+
+    // Mobile button
+    const mobileButton = add([
+        rect(200, 50, { radius: 15 }),
+        pos(W - 160, H - 60),
+        anchor("center"),
+        outline(4),
+        area(),
+        "mobileButton",
+        "button",
+    ]);
+
+    const mobileButtonText = add([
+        text("sur mobile", {font:"d", size: 18 }),
+        color(0, 0, 0),
+        pos(W - 160, H - 60),
+        anchor("center"),
+        area(),
+        "mobileButton",
+        "button",
+    ]);
+
+    const keys = [
+        ...'ABCDEFGHIJKLM',
+        ...'NOPQRSTUVWXYZ',
+        ...'0123456789',
+        '.', ',', '-',
+    ];
+
+    const specialKeys = [
+        { key: 'espace', display: 'espace', width: 320 },
+        { key: 'supprimer', display: 'supprimer', width: 200 },
+        { key: '<', display: '<', width: 50 },
+        { key: '>', display: '>', width: 50 },
+        { key: '^', display: '^', width: 50 },
+        { key: 'v', display: 'v', width: 50 }
+    ];
+
+    let keyboardVisible = false;
+
+    onClick("mobileButton", () => {
+        if (!keyboardVisible) {
+            keyboardVisible = true;
+            const buttonSize = 50;
+            const padding = 10;
+            const columns = 13; // Adjusted for the new layout
+            const startX = (W - (columns * (buttonSize + padding))) / 2;
+            const startY = H - (4 * (buttonSize + padding)) - 80;
+
+            keys.forEach((key, index) => {
+                const x = startX + (index % columns) * (buttonSize + padding);
+                const y = startY + Math.floor(index / columns) * (buttonSize + padding) + 50;
+
+                const keyButton = add([
+                    rect(buttonSize, buttonSize, { radius: 5 }),
+                    pos(x, y),
+                    anchor("center"),
+                    outline(2),
+                    area(),
+                    {key: key,},
+                    "keyButton",
+                    "button",
+                ]);
+
+                add([
+                    text(key, {font:"d", size: 16 }),
+                    pos(x, y),
+                    anchor("center"),
+                    color(0, 0, 0),
+                    {key: key,},
+                    "buttonText",
+                ]);
+
+                onClick("keyButton", (b) => {
+                    if (playerName.length < 10) {
+                        playerName += b.key;
+                        playerName = playerName.replace(/(.)\1+/g, "$1");
+                    }
+                });
+            });
+
+            specialKeys.forEach((specKey, index) => {
+                const x = -25 + startX + specialKeys.slice(0, index).reduce((sum, k) => sum + k.width + padding, 0) + specKey.width / 2;
+                const y = startY + (3 * (buttonSize + padding)) + 50;
+
+                const keyButton = add([
+                    rect(specKey.width, buttonSize, { radius: 5 }),
+                    pos(x, y),
+                    anchor("center"),
+                    outline(2),
+                    area(),
+                    {key: specKey.key},
+                    "specKeyButton",
+                    "button",
+                ]);
+
+                add([
+                    text(specKey.display, {font:"d", size: 16 }),
+                    pos(x, y),
+                    anchor("center"),
+                    color(0, 0, 0),
+                    "buttonText",
+                ]);
+
+                onClick("specKeyButton", (b) => {
+                    switch (b.key) {
+                        case 'supprimer':
+                            playerName = playerName.substring(0, playerName.length - 1);
+                            break;
+                        case '<':
+                            currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
+                            customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
+                            break;
+                        case '>':
+                            currentColorIndex = (currentColorIndex + 1) % colors.length;
+                            customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
+                            break;
+                        case '^':
+                            customColor.r = Math.min(255, customColor.r + 1);
+                            customColor.g = Math.min(255, customColor.g + 2);
+                            customColor.b = Math.min(255, customColor.b + 3);
+                            break;
+                        case 'v':
+                            customColor.r = Math.max(0, customColor.r - 1);
+                            customColor.g = Math.max(0, customColor.g - 2);
+                            customColor.b = Math.max(0, customColor.b - 3);
+                            break;
+                        case 'espace':
+                            if (playerName.length < 10) {
+                                playerName += ' ';
+                                playerName = playerName.replace(/(.)\1+/g, "$1");
+                            }
+                            break;
+                    }
+                });
+            });
+        }
+    });
+
+    onClick("button", (b) => {
+        zoomIn(b);
+        music = play('button_click');
+    });
 });
 
 scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
@@ -2208,7 +2357,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     const icon_honey = add([ //SCOREBOX
         sprite('honey'),
         anchor("center"),
-        pos(width() / 2, height() / 4 + 20),
+        pos(W / 2, H / 4 + 20),
         z(0),
         scale(10), //SPRITE_ICON_SCALE *
         "ui",
@@ -2216,20 +2365,20 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
 
     add([
         text("Ton score :", {font:"d", size: 30 }),
-        pos(width() / 2, height() / 4 - 130),
+        pos(W / 2, H / 4 - 130),
         anchor("center"),
     ]);
 
     add([
         text(`${playerScore}`, {font:"d", size: 40, color: BLACK}),
-        pos(width() / 2, height() / 4 + 80),
+        pos(W / 2, H / 4 + 80),
         anchor("center"),
         color(0, 0, 0),
     ]);
 
     add([
         text("Meilleurs joueurs :", {font:"d", size: 30 }),
-        pos(width() / 2, height() / 2),
+        pos(W / 2, H / 2),
         anchor("center"),
     ]);
 
@@ -2238,18 +2387,18 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     highScores.slice(0, 3).forEach((entry, index) => {
         add([
             text(`${index + 1}. ${entry.name} : ${entry.score}`, {font:"d", size: 25 }),
-            pos(width() / 2, height() / 2 + 50 + index * 30),
+            pos(W / 2, H / 2 + 50 + index * 30),
             anchor("center"),
             color(rgb(entry.color.r, entry.color.g, entry.color.b)),
         ]);
     });
 
-    const buttonYPos = height() - 100;
+    const buttonYPos = H - 100;
 
     const replayButton = add([
         rect(150, 50, { radius: 15 }),
         anchor("center"),
-        pos(width() / 2 - 170, buttonYPos),
+        pos(W / 2 - 170, buttonYPos),
         outline(4),
         area(),
         "replayButton",
@@ -2259,7 +2408,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     const replayButtonText = add([
         text("Rejouer", {font:"d", size: 18 }),
         color(0, 0, 0),
-        pos(width() / 2 - 170, buttonYPos),
+        pos(W / 2 - 170, buttonYPos),
         anchor("center"),
         area(),
         "replayButton",
@@ -2278,7 +2427,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     const scoreboardButton = add([
         rect(150, 50, { radius: 15 }),
         anchor("center"),
-        pos(width() / 2, buttonYPos),
+        pos(W / 2, buttonYPos),
         outline(4),
         area(),
         "scoreboardButton",
@@ -2288,7 +2437,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     const scoreboardButtonText = add([
         text("Scoreboard", {font:"d", size: 14 }),
         color(0, 0, 0),
-        pos(width() / 2, buttonYPos),
+        pos(W / 2, buttonYPos),
         anchor("center"),
         area(),
         "scoreboardButton",
@@ -2302,7 +2451,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     const menuButton = add([
         rect(150, 50, { radius: 15 }),
         anchor("center"),
-        pos(width() / 2 + 170, buttonYPos),
+        pos(W / 2 + 170, buttonYPos),
         outline(4),
         area(),
         "button",
@@ -2312,7 +2461,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     const menuButtonText = add([
         text("Menu", {font:"d", size: 18 }),
         color(0, 0, 0),
-        pos(width() / 2 + 170, buttonYPos),
+        pos(W / 2 + 170, buttonYPos),
         anchor("center"),
         area(),
         "button",
@@ -2329,14 +2478,14 @@ scene("scoreboard", () => { //More GPT aussi
 
     const buttonYPos = 50;
     const scoreListYStart = 150;
-    const maxVisibleItems = Math.floor((height() - scoreListYStart) / 40);
+    const maxVisibleItems = Math.floor((H - scoreListYStart) / 40);
     let scrollOffset = 0;
 
     // Rejouer button
     const replayButton = add([
         rect(150, 50, { radius: 15 }),
         anchor("topright"),
-        pos(width() / 2 - 10, buttonYPos),
+        pos(W / 2 - 10, buttonYPos),
         outline(4),
         area(),
         "replayButton",
@@ -2364,7 +2513,7 @@ scene("scoreboard", () => { //More GPT aussi
     const menuButton = add([
         rect(150, 50, { radius: 15 }),
         anchor("topleft"),
-        pos(width() / 2 + 10, buttonYPos),
+        pos(W / 2 + 10, buttonYPos),
         outline(4),
         area(),
         "menuButton",
@@ -2393,7 +2542,7 @@ scene("scoreboard", () => { //More GPT aussi
         highScores.slice(scrollOffset, scrollOffset + maxVisibleItems).forEach((entry, index) => {
             add([
                 text(entry.name, {font:"d", size: 25 }),
-                pos(width() / 2 - 20, scoreListYStart + index * 40),
+                pos(W / 2 - 20, scoreListYStart + index * 40),
                 anchor("right"),
                 color(rgb(entry.color.r, entry.color.g, entry.color.b)),
                 "scoreItem"
@@ -2401,7 +2550,7 @@ scene("scoreboard", () => { //More GPT aussi
 
             add([
                 text(entry.score, {font:"d", size: 25 }),
-                pos(width() / 2 + 20, scoreListYStart + index * 40),
+                pos(W / 2 + 20, scoreListYStart + index * 40),
                 anchor("left"),
                 color(rgb(entry.color.r, entry.color.g, entry.color.b)),
                 "scoreItem"
@@ -2438,7 +2587,7 @@ scene("scoreboard", () => { //More GPT aussi
         // Add the small text at the bottom right
         add([
             text("utilise les touches flèches pour descendre/monter", {font:"d", size: 10 }),
-            pos(width() - 20, height() - 20),
+            pos(W - 20, H - 20),
             anchor("botright"),
             color(rgb(0, 0, 0)),
         ]);
