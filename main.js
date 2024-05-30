@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.0.1.mysteresUnil"
+const VERSION = "v.beta.1.0.2.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -1364,6 +1364,15 @@ scene("game", () => {
                     if(cash < pr_new_tree){
                         warning(text_cash);
                         warning(text_new_tree_price);
+                        CASHBOX.add([
+                            text("Pas assez de feuilles!", { 
+                                size: 20,
+                                font: "d",
+                            }),
+                            pos(text_cash.pos.x - 155, 150), 
+                            color(255, 0, 0), 
+                            lifespan(2), 
+                        ]);
                     } else {
                         addTree();
                     }
@@ -1374,10 +1383,18 @@ scene("game", () => {
                 if (diaL == 0) {
                     if(t.opacity == 0){
                         diaBubble(dia_others[1]);
-                    }
-                    if(cash < pr_new_bird){
+                    } else if(cash < pr_new_bird){
                         warning(text_cash);
                         warning(text_new_bird_price);
+                        CASHBOX.add([
+                            text("Pas assez de feuilles!", { 
+                                size: 20,
+                                font: "d",
+                            }),
+                            pos(text_cash.pos.x - 155, 150), 
+                            color(255, 0, 0), 
+                            lifespan(2), 
+                        ]);
                     } else {
                         addBird();
                         boughtBird = true;
@@ -1389,7 +1406,7 @@ scene("game", () => {
             })
             //New bee
             onClick("new_bee", (b) =>{
-                if (diaL == 0 && b.is("not_available") == false){
+                if (diaL == 0 && b.is("not_available") == false && new_bee.opacity != 0){
                     if(cash < pr_new_bee){
                         warning(text_cash);
                         warning(text_new_bee_price);
@@ -1420,7 +1437,7 @@ scene("game", () => {
             })
             //New beehive
             onClick("new_beehive", (b) =>{
-                if (diaL == 0 && b.is("not_available") == false){
+                if (diaL == 0 && b.is("not_available") == false && new_beehive.opacity != 0){
                     if(cash < pr_new_beehive){
                         warning(text_cash);
                         warning(text_new_beehive_price);
