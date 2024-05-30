@@ -31,7 +31,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.0.0.mysteresUnil"
+const VERSION = "v.beta.1.0.1.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -342,7 +342,7 @@ scene("startMenu", () => {
         });
     
     const timedStartButton = add([
-        rect(500, 125, { radius: 15 }),
+        rect(525, 125, { radius: 15 }),
         anchor("center"),
         pos(STARTBOX.pos.x, STARTBOX.pos.y + 80),
         z(Z_UI_BOTTOM),
