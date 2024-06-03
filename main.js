@@ -33,7 +33,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.1.2.mysteresUnil"
+const VERSION = "v.beta.1.1.3.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -1542,10 +1542,16 @@ scene("game", () => {
                         pollu_color = rgb(31, 60, 33);
                     })
                 }
-                if (defo_stat >= MAX_EVENT_STAT) {
-                    defo_color = rgb(120, 66, 63);
-                    wait(0.3, () =>{
-                        defo_color = rgb(89, 66, 53);
+                if (get("bulldozer").length != 0) {
+                    defo_color = rgb(140, 80, 80);
+                    wait(0.25, () =>{
+                        defo_color = rgb(89, 66, 53);;
+                    })
+                    wait(0.5, () =>{
+                        defo_color = rgb(140, 80, 80);
+                    })
+                    wait(0.75, () => {
+                        defo_color = rgb(89, 66, 53);;
                     })
                 }
 
@@ -2783,7 +2789,7 @@ scene("scoreboard", () => { //More GPT aussi
     const dia_deforestation = [
         //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
         ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes ?"], //2e
-        ["bear_scared", "Oh non ! Ils vont couper nos arbres ! Clique sur le bulldozer pour le détruire !"],
+        ["bear_scared", "Oh non ! Ils vont couper nos arbres ! Clique sur le bulldozer pour le détruire ! La barre en haut indique sa vie."],
         ["bear_sad", "Vite ! Le bulldozer détruit toute la biodiversité ! Clique plus vite !"],
         ["bear_happy", "Bravo ! Le bulldozer ne va pas retourner pendant un moment !"],
         ]
