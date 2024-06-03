@@ -42,7 +42,7 @@ kaboom({
     letterbox   : true,
 })
 
-//static values
+// Static values
 const W = width();
 const H = height();
 setGravity(800);
@@ -68,34 +68,42 @@ const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
 const BEAR_SCALE                = 8;
 const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
-//z values:
+// Z values:
     //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI        = H    + 125;
     const Z_UI_TOP    = Z_UI + 1;
     const Z_UI_BOTTOM = Z_UI - 1;
-//relative scale of objects to screen height
+// Relative scale of objects to screen height
     const TREE_SCALE        = 1/100; 
     const TRASH_SCALE       = 3;
     const BULLDOZER_SCALE   = 1/90;
     const BIRD_SCALE        = 1/320;
     const BEE_SCALE         = 1/350;
     const BEEHIVE_SCALE     = 1/300;
-//speed of moving elements
+// Speed of moving elements
     const BULLDOZER_SPEED   = 60;
     const BIRD_SPEED        = 50;
     const BEE_SPEED         = 40;
 
-//load assets
+// Load assests for the game
 loadRoot('assets/');
-// Load the custom font
+    // Load the custom font
     loadFont("d", "assets/Press_Start_2P/PressStart2P-Regular.ttf");
     /*Copyright 2012 The Press Start 2P Project Authors (cody@zone38.net), with Reserved Font Name "Press Start 2P".
     This Font Software is licensed under the SIL Open Font License, Version 1.1.
     This license is copied below, and is also available with a FAQ at:
     https://openfontlicense.org */
-//load images
-    //game elements
-        //background
+    
+    /**
+     * Load images saved under the game_elements folder
+     * Folders under game_elements include: 
+     * background, bear, leaves, other, trees and vfx
+     * 
+     * Images created with the free online pixel art editor: Piskel
+     */
+
+    // Game elements 
+        // Background 
         loadSpriteAtlas("game_elements/background/backgrounds_spritesheet.png", {
             "main_bg": {
                 x: 0,
@@ -128,23 +136,24 @@ loadRoot('assets/');
                 },
             },
         })
-        //trees
+        // Trees
         loadSprite('tree0',"game_elements/trees/tree0.png");
         loadSprite('tree1',"game_elements/trees/tree1.png");
         loadSprite('tree2',"game_elements/trees/tree2.png");
         loadSprite('tree3',"game_elements/trees/tree3.png");
         const trees = ["tree0", "tree1", "tree2", "tree3"];
-        //leafs
+        // Leaves
         loadSprite('leaf0', "game_elements/leafs/leaf0.png");
         loadSprite('leaf1', "game_elements/leafs/leaf1.png");
         const leafs = ["leaf0", "leaf1"];
         leafs.forEach((spr) => {
             loadSprite(spr, `game_elements/leafs/${spr}.png`);
         })
-        //flowers
+        // Flowers
         loadSprite('flowers0', 'game_elements/vfx/flowers0.png');
-        //others
-        loadSprite('bee', 'game_elements/other/bee_animation.png', { // loadSprite('bee', 'game_elements/other/bee.png');
+        // Others
+        loadSprite('bee', 'game_elements/other/bee_animation.png', { 
+            // Slicing which animations from spritesheet to use and where
             sliceX: 3,
             sliceY: 3,
             anims: {
@@ -154,6 +163,7 @@ loadRoot('assets/');
         });
         loadSprite('trash', 'game_elements/other/trashcan_.png')
         loadSprite('bulldozer', 'game_elements/other/bulldozer.png', {
+            // Slicing which animations from spritesheet to use and where
             sliceX: 2,
             sliceY: 3,
             anims: {
@@ -161,6 +171,7 @@ loadRoot('assets/');
             }
         })
         loadSprite('bird', 'game_elements/other/bird.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
+            // Slicing which animations from spritesheet to use and where
             sliceX: 11,
             sliceY: 8,
             anims: {
@@ -177,7 +188,7 @@ loadRoot('assets/');
         loadSprite('honey', 'game_elements/other/honey.png');
         loadSprite('beehive0', 'game_elements/other/beehive0.png')
         loadSprite('space_bar', 'game_elements/other/space_bar.png')
-        //bear
+        // Bear
         loadSprite('bear', 'game_elements/bear/bear.png');
         loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
         loadSprite('bear_wink', 'game_elements/bear/bear_wink.png');
@@ -186,16 +197,22 @@ loadRoot('assets/');
         loadSprite('bear_talking', 'game_elements/bear/bear_talking.png');
         loadSprite('bear_info', 'game_elements/bear/bear_info.png');
         loadSprite('bear_flower', 'game_elements/bear/bear_flower.png');
-        //vfx
+        // Vfx 
         loadSprite('smoke', 'game_elements/vfx/smoke.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
+            // Slicing which animations from spritesheet to use and where
             sliceX: 3,
             sliceY: 3,
             anims: {
                 main: {from: 0,to: 6,},
             },
         })
-    //ui elements
-        //icons
+    
+        /**
+         * Load ui elements saved under the ui folder
+         * Folders under ui include: 
+         * new_buttons and status_icons
+         */
+        // Status icons
         loadSpriteAtlas("ui/status_icons/icons_spritesheet.png", {
             "pollution_icon" : {
                 x: 0,
@@ -216,8 +233,7 @@ loadRoot('assets/');
                 height: 25,
             }
         })
-        loadSprite('logo', 'icon/logo.png')
-        //new buttons
+        // New buttons
         loadSprite('new_tree'   , "ui/new_buttons/new_tree_button.png");
         loadSprite('new_bee'    , "ui/new_buttons/new_bee_button.png");
         loadSprite('new_bird'   , "ui/new_buttons/new_bird_button.png");
@@ -225,25 +241,36 @@ loadRoot('assets/');
         loadSprite('new_beehive', "ui/new_buttons/new_beehive_button.png");
         loadSprite('new_empty'  , "ui/new_buttons/new_empty_button.png")
 
-//load ui sounds
-    //loadSound('button_click',"audio/other/click.wav"): by Nathan Gibson https://nathangibson.myportfolio.com 
+        // Load game logo saved under the icon folder
+        loadSprite('logo', 'icon/logo.png')
+
+/**
+ * Load music and sound saved under the audio folder
+ * Folders under audio include: 
+ * music, other and sfx 
+ * 
+ * Music and sounds come from itch.io
+ */
+// Load ui sounds from other
+    // Source: by Nathan Gibson https://nathangibson.myportfolio.com 
     loadSound('button_click', "audio/other/button/click.wav");
-    //by FilmCow https://filmcow.itch.io/filmcow-sfx
+    // Source: by FilmCow https://filmcow.itch.io/filmcow-sfx
     loadSound('tree_fall',"audio/other/deforestation/tree_fall.wav");
-    //by Nathan Gibson https://nathangibson.myportfolio.com 
+    // Source: by Nathan Gibson https://nathangibson.myportfolio.com 
     loadSound('bee_in_hive', "audio/other/beehive/Retro7.wav");
-    //Minifantasy - Forgotten Plains Audio Pack by Leohpaz
+    // Source: Minifantasy - Forgotten Plains Audio Pack by Leohpaz https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack
     loadSound('tree_leaf', "audio/other/tree/bush_rustling.wav");
-    //Essentials Series - Free Sound Effect by Nox_Sound_Design
+    // Source: Essentials Series - Free Sound Effect by Nox_Sound_Design https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound
     loadSound('bulldozer', "audio/other/bulldozer/truck.wav");
-    // brackeys platformer assets by Brackeys, Asbjørn Thirslund
+    // Source: brackeys platformer assets by Brackeys, Asbjørn Thirslund https://brackeysgames.itch.io/brackeys-platformer-bundle
     loadSound('bulldozer_click', "audio/other/bulldozer/click_bulldozer.wav");
-    //Minifantasy - Forgotten Plains Audio Pack by Leohpaz
+    // Source: Minifantasy - Forgotten Plains Audio Pack by Leohpaz https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack 
     loadSound('trash_click', "audio/other/trash/trash_sound.wav");
-//load sfx
-    //by Diablo Luna https://pudretediablo.itch.io/butterfly
+// Load sounds from sfx 
+    // Source: by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('birds_bg',"audio/sfx/birds/bird.wav");
-//load music: by mayragandra https://mayragandra.itch.io/freeambientmusic 
+// Load game music: 
+    // Source: by mayragandra https://mayragandra.itch.io/freeambientmusic 
     loadSound('default_music',"audio/music/music.wav");
 
 //load shaders (All ChatGPT generated)
@@ -279,18 +306,22 @@ loadRoot('assets/');
     `)    
 //============================//
 
-//Globally declaring music
+// Globally declaring music
 music_main = play('default_music', {
         loop: true,
         volume: 0.5,
     });
 
-//SCENES
+/**
+ * SCENES
+ * Including startMenu, game, gameOver, highScoreDisplay and scoreboard
+ */
 scene("startMenu", () => {
     const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]);
-    //blue background
+    // Blue background
     setBackground(rgb(0, 191, 255));
 
+    // Music starts on a click
     let music;
     onClick("timedStartButton", (b) => {
         time = 300;
@@ -321,7 +352,7 @@ scene("startMenu", () => {
         "logo",
     ])
     onClick("logo", (t) => { 
-            //particles when clicked
+            // Leaf particles when logo is clicked
             for (let i = 0; i < 5; i++) {
                 const leaf_particle = add([
                     pos(mousePos()),
@@ -405,7 +436,7 @@ scene("startMenu", () => {
         "button,"
     ])
 
-    //Add bee moving around
+    // Add bee moving around
     for (let i = 0; i < 3; i++) {
         let randX2 = rand(W);
         let randNY = rand(H);
@@ -421,7 +452,7 @@ scene("startMenu", () => {
             z(Z_UI_BOTTOM - 1),
             {
                 update(){
-                    //bee moving randomly
+                    // Bee moving randomly
                     if (this.pos.x > randX2) {
                         this.flipX = true;
                     } else {
@@ -460,44 +491,44 @@ go("startMenu");
 
 scene("game", () => {
     honey = 0;
-    //DECLARING CONSTANTS
-     //Areas
-        //new buttons
+    // DECLARING CONSTANTS
+     // Areas
+        // New buttons
          const X_BUTTONS         = W - 10;
          const Y_FIRST_BUTTON    = 65;
-        //cash
+        // Cash
          const CASHBOX  = add([anchor("center"),pos(W/2 ,30)   ,z(Z_UI_BOTTOM),"ui"]);
          const SCOREBOX = add([anchor("left")  ,pos(15  ,H-60) ,z(Z_UI_BOTTOM),"ui"]);
          const TOPLBOX  = add([anchor("left")  ,pos(15  ,30)   ,z(Z_UI_BOTTOM),"ui"]);
          const NEWBOX   = add([anchor("right") ,pos(W-15,15)   ,z(Z_UI_BOTTOM),"ui"]);
          const BEARBOX  = add([anchor("bot")   ,pos(W/2 ,H)    ,z(Z_UI_BOTTOM),"ui"]);
-     //UI
+     // UI
         const ICON_DIST     = 40;
         const NEW_BT_DIST   = 5;
 
-    //DECLARING VARIABLES
+    // DECLARING VARIABLES
      let cash            = 0;
      let score           = 0;
      let cash_per_sec    = 0;
      let cps_penalty     = 1;
      let cps_final       = cash_per_sec / cps_penalty;
-     //prices
+     // Prices
         let scaling         = 1.6;
         let pr_new_tree     = 20;
         let pr_new_bird     = 200;
         let pr_new_bee      = 75;
         let pr_new_beehive  = 30;
-     //number of elements
+     // Number of elements
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
         let nb_birds    = get('bird').length;
         let nb_trash    = get('trash').length;
         let nb_flowered = get('flowered').length;
         let nb_beehives = get('beehives').length;
-     //cash/second
+     // Cash/second
         let cps_t_base  = 0.5
         let cps_tree    = cps_t_base * (nb_bees * nb_flowered + 1);
-     //events
+     // Events
         const MAX_EVENT_STAT = 100;
         let pollu_stat  = 0;
         let pollu_over  = 0;
@@ -507,7 +538,7 @@ scene("game", () => {
         let defo_over   = 0;
         let defo_boost  = 1.5;
         let defo_color  = rgb(89, 66, 53); //if change this need to change lower
-     //others
+     // Others
         let diaL = get("dialog").length; //length to check if the dialogue is existent
         let flowered_clicks     = 40;
         let nb_bees_p_flowered  = 3;
@@ -519,8 +550,8 @@ scene("game", () => {
     //    music = play('default_music'); //goes faster the more dialogs you click
     //})
 
-    //UI
-    //cash
+    // UI
+    // Cash
      const text_cash = CASHBOX.add([
         text(formatNumber(cash, {useOrderSuffix: true, decimals: 1}),{
             width : W,
@@ -561,7 +592,7 @@ scene("game", () => {
         },
         "ui",
      ])
-    //score
+    // Score
      const icon_honey = SCOREBOX.add([
         sprite('honey'),
         anchor("left"),
@@ -586,7 +617,7 @@ scene("game", () => {
         },
        "ui"
     ]);
-    //timer
+    // Timer
      const text_time = TOPLBOX.add([
         text(`Temps restant : ` + fancyTimeFormat(time),{
             width : W,
@@ -608,7 +639,7 @@ scene("game", () => {
         "ui",
     ]);
 
-    //EVENTS UI
+    // EVENTS UI
     const EVENTS = add([anchor("left"),pos(10,text_time.pos.y + 65),z(Z_UI_BOTTOM),"ui"])
     function emptyBar(){
         drawRect({
@@ -621,7 +652,7 @@ scene("game", () => {
         })
     }
 
-     //pollution
+     // Pollution
      const icon_pollution = EVENTS.add([
         sprite('pollution_icon'),
         anchor('left'),
@@ -640,7 +671,7 @@ scene("game", () => {
             })
             emptyBar();
         })
-    //deforestation
+    // Deforestation
     const icon_defo = EVENTS.add([
         sprite('defo_icon'),
         anchor('left'),
@@ -660,8 +691,8 @@ scene("game", () => {
             emptyBar();
         })
 
-    //DIALOG UI
-     //bear
+    // DIALOG UI
+     // Bear
      const icon_bear = BEARBOX.add([
          sprite('bear'),
          anchor('bot'),
@@ -673,8 +704,8 @@ scene("game", () => {
          "game_elements",
      ]);
     
-    //BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
-     //adding a new tree button
+    // BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
+     // Adding a new tree button
      const new_tree = NEWBOX.add([
         sprite('new_tree'),
         anchor("topright"),
@@ -720,7 +751,7 @@ scene("game", () => {
             pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
             z(Z_UI_TOP),
         ])
-        //adding a new bird button
+        // Adding a new bird button
         const new_bird = NEWBOX.add([
             sprite('new_bird'), 
             anchor("topright"),
@@ -790,7 +821,7 @@ scene("game", () => {
                 "button",
                 "new_button",
              ])
-    //adding a new bee button
+    // Adding a new bee button
      const new_bee = NEWBOX.add([
         sprite('new_bee'),
         {
@@ -853,7 +884,7 @@ scene("game", () => {
             z(Z_UI_TOP),
             opacity(0),
         ])
-    //adding a new bee button
+    // Adding a new bee button
     const new_beehive = NEWBOX.add([
         sprite('new_beehive'), //change to new_beehive
         {
@@ -917,7 +948,7 @@ scene("game", () => {
             opacity(0),
         ])
 
-        //test: info button = tree
+        // Info button for the tree
         const information_0 = NEWBOX.add([
             sprite('info'), 
             anchor("topright"),
@@ -932,7 +963,7 @@ scene("game", () => {
             "new_button",
             "info",
          ])
-        //bird
+        // Info button for the bird
          const information_1 = NEWBOX.add([
             sprite('info'), 
             anchor("topright"),
@@ -947,7 +978,7 @@ scene("game", () => {
             "new_button",
             "info",
          ])
-        //bee
+        // Info button for the bee
          const information_2 = NEWBOX.add([
             sprite('info'), 
             anchor("topright"),
@@ -964,7 +995,7 @@ scene("game", () => {
             "info",
             "info_bee",
          ])
-        //beehive
+        // Info button for the beehive
          const information_3 = NEWBOX.add([
             sprite('info'), 
             anchor("topright"),
@@ -982,8 +1013,8 @@ scene("game", () => {
             "info_beehive",
          ])
 
-        //Left side
-        //pollution
+        // Info buttons for the left side of the screen
+        // Info button for the pollution
          const information_4 = EVENTS.add([
             sprite('info'), 
             anchor("topleft"),
@@ -998,7 +1029,7 @@ scene("game", () => {
             "new_button",
             "info",
          ])
-        //deforestation
+        // Info button for the deforestation
          const information_5 = EVENTS.add([
             sprite('info'), 
             anchor("topleft"),
@@ -1016,7 +1047,7 @@ scene("game", () => {
         
 
     //BACKGROUND
-     //adding the background dynamically to the screen size
+     // Adding the background dynamically to the screen size
      for (let i = 0; i < NB_BG_X_TILES; i++) {
         const bg = add([
             sprite("main_bg"),
@@ -1057,8 +1088,8 @@ scene("game", () => {
         }
      }
 
-    //ADDING OBJECTS
-        //adding starting tree
+    // ADDING OBJECTS
+        // Adding starting tree
         let y_st = H/2 + 50; vec2(W/2,y_st)
         const start_tree = add([
             sprite(`tree0`),
@@ -1074,12 +1105,12 @@ scene("game", () => {
             "start_tree",
         ]);
 
-    //ADDING EVENT LISTENERS
-    //Game elements (inside an if(get("dialog").lenght == 0) to make sure it is impossible to click things if dialogues are on)
-        //click any tree
+    // ADDING EVENT LISTENERS
+    // Game elements (inside an if(get("dialog").lenght == 0) to make sure it is impossible to click things if dialogues are on)
+        // Click any tree
         let nb_clicks = 0;
         onClick("tree", (t) => { 
-             //test: click tree
+             // Test: click tree
             music = play('button_click'); //it works with onclick
             if (diaL == 0) {
                 plus(1);
@@ -1099,7 +1130,7 @@ scene("game", () => {
                 if(nb_clicks > flowered_clicks){
                     nb_clicks = 0;
                 }
-                //particles when clicked
+                // Particles when clicked
                 for (let i = 0; i < randi(0,3); i++) {
                     const leaf_particle = add([
                         pos(mousePos()),
@@ -1126,10 +1157,10 @@ scene("game", () => {
                 zoomOut(t);
             }
         })
-        //click the trashcans
+        // Click the trashcans
         onClick("trash", (t) => { 
             if (diaL == 0) {
-                //particles when clicked
+                // Particles when clicked
                 for (let i = 0; i < 1; i++) {
                     const trash_particle = add([
                         pos(mousePos()),
@@ -1162,7 +1193,7 @@ scene("game", () => {
             }
             music = play('trash_click');
         })
-        //click the bulldozer
+        // Click the bulldozer
         onClick("bulldozer", (t) => { 
             if (diaL == 0) {
                 //particles when clicked
@@ -1196,7 +1227,7 @@ scene("game", () => {
         onClick("info", (t) => {
             if (t.opacity != 0) {
                 diaBubble(dia_info[t.dia]);
-                music = play('button_click'); //it works with onclick
+                music = play('button_click'); 
             }
         });
         onDestroy("trash", (t) =>{
@@ -1305,7 +1336,7 @@ scene("game", () => {
             icon_bear.use(sprite("bear"));
         })
 
-        //skip dialogs
+        // Skip dialogs
         let q = 0;
         onKeyRelease("space", (t) => {
             destroyAll("dialog");
@@ -1368,21 +1399,21 @@ scene("game", () => {
         //    diaBubble(dia_others[0]);
         //})
 
-        //get a fun fact
+        // Get a fun fact
         onClick("bear", (t) => {
             diaBubble(choose(dia_funfact));
         })
         
-    //UI elements
-        //click any button
+    // UI elements
+        // Click any button
         onClick("button", (b) => {
             if (diaL == 0 && b.is("not_available") == false) {
                 zoomIn(b);
             }
         })
 
-        //New itens buttons
-            //New tree
+        // New itens buttons
+            // New tree
             onClick("new_tree", (t) =>{
                 if (diaL == 0) {
                     if(cash < pr_new_tree){
@@ -1402,7 +1433,7 @@ scene("game", () => {
                     }
                 }
             })
-            //New bird
+            // New bird
             onClick("new_bird", (t) =>{
                 if (diaL == 0) {
                     if(t.opacity == 0){
@@ -1428,7 +1459,7 @@ scene("game", () => {
                     }
                 }
             })
-            //New bee
+            // New bee
             onClick("new_bee", (b) =>{
                 if (diaL == 0 && b.is("not_available") == false && new_bee.opacity != 0){
                     if(cash < pr_new_bee){
@@ -1446,7 +1477,7 @@ scene("game", () => {
                     } else {
                         addBee();
                     }
-                } else if(diaL == 0 && b.is("not_available")){ //when the button is not available
+                } else if(diaL == 0 && b.is("not_available")){ // When the button is not available
                     warning(b);
                     CASHBOX.add([
                         text("Pas assez d'arbres avec des fleurs!", { 
@@ -1459,7 +1490,7 @@ scene("game", () => {
                     ]);
                 };
             })
-            //New beehive
+            // New beehive
             onClick("new_beehive", (b) =>{
                 if (diaL == 0 && b.is("not_available") == false && new_beehive.opacity != 0){
                     if(cash < pr_new_beehive){
@@ -1490,18 +1521,18 @@ scene("game", () => {
                     ]);
                 };
             });
-       //AUTOMATIC STUFF
+       // AUTOMATIC STUFF
         loop(1, () => {
-            if (diaL == 0) { //Pauses the game if dialogue is opened
-                //Timer
+            if (diaL == 0) { // Pauses the game if dialogue is opened
+                // Timer
                 if(time > 0){
                     time = time - 1
                 };       
                       
-                //Each element gives cash overtime
+                // Each element gives cash overtime
                 plus(cps_final);
     
-                //Increase the events stats
+                // Increase the events stats
                 let r_pollu = randi(10);
                 if (r_pollu != 2 && pollu_stat <= MAX_EVENT_STAT) {
                     pollu_stat = pollu_stat + pollu_boost;
@@ -1525,17 +1556,17 @@ scene("game", () => {
                     }
                 }
 
-                //Adds trashcans
+                // Adds trashcans
                 if(pollu_over % 5 == 0 && pollu_over != 0) {
                     addTrash();
                 }
     
-                //Flashes time at multiple occasions
+                // Flashes time at multiple occasions
                 if ((time < 61 && time >= 60) || (time < 31 && time >= 30) || (time <= 15)) {
                     smallWarning(text_time);
                 }
                 
-                //Flashes the events  bars when full
+                // Flashes the events  bars when full
                 if (pollu_stat >= MAX_EVENT_STAT) {
                     pollu_color = rgb(31, 100, 33);
                     wait(0.3, () =>{
@@ -1555,7 +1586,7 @@ scene("game", () => {
                     })
                 }
 
-                //spawn smoke particles on the bulldozer
+                // Spawn smoke particles on the bulldozer
                 if (get('bulldozer').length != 0) {
                     let bd = get('bulldozer')[0];
                     let smoke_dir = LEFT;
@@ -1581,9 +1612,9 @@ scene("game", () => {
             }
         });
 
-        let p = 0; let d = 0; let sbb = false; let sbeeb = false; let sbhb = false; //try to limit things so the update doesn't update everything even when not needed, but rather only tries to do the if
+        let p = 0; let d = 0; let sbb = false; let sbeeb = false; let sbhb = false; // Try to limit things so the update doesn't update everything even when not needed, but rather only tries to do the if
         onUpdate(() => {    
-            diaL        = get("dialog").length; //length to check if the dialogue is existent
+            diaL        = get("dialog").length; // Length to check if the dialogue is existent
             nb_trees    = get('tree').length;
             nb_bees     = get('bee').length;
             nb_birds    = get('bird').length;
@@ -1601,12 +1632,12 @@ scene("game", () => {
                 cps_penalty = nb_trash;
             }
 
-            //Intro dialogue
+            // Intro dialogue
             if (q < dia_intro.length) {
                 diaBubble(dia_intro[q]);
             }
 
-            //Hide objects based on their need
+            // Hide objects based on their need
             if(cash >= pr_new_bird && sbb == false){
                 sbb = true;
                 new_empty.use(opacity(0));
@@ -1630,17 +1661,17 @@ scene("game", () => {
                 information_3.use(opacity(1));
             }
 
-            //Timer relative actions
+            // Timer relative actions
             switch(time){
                 case 0 : 
                     go("gameOver");
                     break;
             }
 
-            //Pollution relative actions
+            // Pollution relative actions
             if (pollu_stat > 50 && p == 0) {
                 p++;
-                //diaBubble(dia_pollution[0]);
+                // diaBubble(dia_pollution[0]);
             }
             if(pollu_over >= 5 && p == 1) {
                 p++;
@@ -1654,7 +1685,7 @@ scene("game", () => {
                 p++;
                 diaBubble(dia_pollution[3]);
             }
-            //Deforestation relative actions
+            // Deforestation relative actions
             if (defo_stat > 50 && d == 0) {
                 d++;
                 //diaBubble(dia_deforestation[0]);
@@ -1673,8 +1704,8 @@ scene("game", () => {
             } 
         })
 
-    //FUNCTIONS
-       //Add a new tree
+    // FUNCTIONS
+       // Add a new tree
        function addTree() {
         music = play('tree_leaf', {
             volume: 5,
@@ -1687,7 +1718,7 @@ scene("game", () => {
             const saturation = calculateSaturation(randY, ranYA, ranYB);
             // CHATGPT Calculate RGB values based on saturation level
             const color = calculateColor(saturation);
-         //const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
+         // const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
          const tree  = add([
              sprite(choose(trees)),
              pos(randX, randY),
@@ -1695,16 +1726,16 @@ scene("game", () => {
              anchor("bot"),
              area(),
              z(randY),
-             //health(health_tree),
+             // health(health_tree),
              "tree",
              "hiveable",
           ]);
           tree.color = rgb(color.red, color.green, color.blue);
             pay(pr_new_tree);
-            //exp(pr_new_tree); //PK çA MARCHE PAS??????
+            // exp(pr_new_tree); //PK çA MARCHE PAS??????
             pr_new_tree = pr_new_tree * scaling;
        }
-        //Add custom new tree
+        // Add custom new tree
        function addCustTree(x,y) {
          const tree  = add([
              sprite(choose(trees)),
@@ -1719,12 +1750,12 @@ scene("game", () => {
           ])
             //exp(pr_new_tree); //PK çA MARCHE PAS??????
        }
-       //Add a new bee
+       // Add a new bee
        function addBee(){
-        let rF = choose(get('flowered')); //random flowered objects
+        let rF = choose(get('flowered')); // Random flowered objects
         let rB = choose(get('beehive'));
-        let b = 0; //tracking bee's state
-        //creating bee
+        let b = 0; // Tracking bee's state
+        // Creating bee
         const bee = add([
             sprite('bee', {
                 anim: "main",
@@ -1737,11 +1768,11 @@ scene("game", () => {
             {
                 update(){
                     if (diaL === 0) {
-                        //update based on y position
+                        // Update based on y position
                         this.z = this.pos.y + 100;
                         this.scale = this.pos.y * BEE_SCALE;
 
-                        //bee moving to flower
+                        //Bee moving to flower
                         if (b === 0 && nb_flowered != 0) {
                             if (this.pos.x > rF.pos.x) {
                                 this.flipX = true;
@@ -1750,14 +1781,14 @@ scene("game", () => {
                             }
                             this.moveTo(rF.pos.x, rF.pos.y - 50, BEE_SPEED);
                             if(this.pos.x == rF.pos.x && this.pos.y == rF.pos.y - 50){
-                                b++; //once bee reaches flower, increment by 1
+                                b++; // Once bee reaches flower, increment by 1
                                 this.z = rF.z + 1;
                                 this.play("pollen");
-                                rF = choose(get("flowered")); //new random flower is chosen
+                                rF = choose(get("flowered")); // New random flower is chosen
                                 rB = choose(get("beehive"));
                             };
                         } else if (b === 0 && nb_flowered == 0){
-                            this.moveTo(rand(W), rand(H), BEE_SPEED); //if no flowers, bee moves to a random position
+                            this.moveTo(rand(W), rand(H), BEE_SPEED); // If no flowers, bee moves to a random position
                             CASHBOX.add([
                                 text("Tes abeilles sont perdues! Où sont les fleurs?", { 
                                     size: 20,
@@ -1768,8 +1799,8 @@ scene("game", () => {
                                 lifespan(2), 
                             ]);
                         }
-                        //bee moving to beehive
-                        if (b === 1 && nb_beehives != 0) { //bee moves to beehive if there is one
+                        // Bee moving to beehive
+                        if (b === 1 && nb_beehives != 0) { // Bee moves to beehive if there is one
                             if (rB == undefined){
                                 rB = choose(get("beehive"));
                             }
@@ -1780,14 +1811,14 @@ scene("game", () => {
                             }
                             this.moveTo(rB.pos.x, rB.pos.y, BEE_SPEED);
                             if(this.pos.x == rB.pos.x && this.pos.y == rB.pos.y){
-                                //bee pop sound when bee enters beehive
+                                // Bee pop sound when bee enters beehive
                                 music = play('bee_in_hive');
                                 b++; 
                                 honey++; //honey count is incremented
                                 this.play("main");
                             };
                         } else if ((b === 1 || b === 2) && nb_beehives == 0){
-                            //if there are no beehives, the bee moves to a random position
+                            // If there are no beehives, the bee moves to a random position
                             this.moveTo(rand(W), rand(H), BEE_SPEED);
                             CASHBOX.add([
                                 text("Où sont les ruches?", { 
@@ -1820,10 +1851,10 @@ scene("game", () => {
             "bee",
         ])
             pay(pr_new_bee);
-            //change with function
+            // Change with function
             pr_new_bee  = pr_new_bee * scaling;
        }
-        //Add a new bee
+        // Add a new bee
          function addBeehive(){
          let rT = choose(get('hiveable'));
          const beehive = add([
@@ -1838,10 +1869,10 @@ scene("game", () => {
             rT.unuse("hiveable");
             rT.use("unhiveable");
             pay(pr_new_beehive);
-            //change with function
+            // Change with function
             pr_new_beehive  = pr_new_beehive * scaling;
         }
-        //Add a new trash
+        // Add a new trash
          function addTrash() {
          const randX  = rand(0, W - icon_bear.pos.x);
          const randY  = rand((H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)) + 10, (H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)) - 10);
@@ -1855,7 +1886,7 @@ scene("game", () => {
              "trash",
           ]);
          }
-        //Add a bulldozer
+        // Add a bulldozer
          function addBulldozer() {
             let rT = choose(get('tree'));
             const bulldozer = add([
@@ -1905,7 +1936,7 @@ scene("game", () => {
                 "bulldozer",
             ])
          }
-        //Add new bird
+        // Add new bird
         function addBird() {
             let b = 0;
             let rT = choose(get('tree'));
@@ -1993,15 +2024,15 @@ scene("game", () => {
                 "bird",
             ])
             pay(pr_new_bird);
-            //change with function
+            // Change with function
             pr_new_bird  = pr_new_bird * scaling;
          }
-       //Add a dialog box
+       // Add a dialog box
        function diaBubble(array_with_number){
             let width = W/1.5;
             destroyAll("dialog");
             destroyAll("space_bar");
-            const bubble = add([ //CAN'T ADD IT IN BEARBOX BECAUSE BEARBOX CAN'T HAVE THE AREA() FUNCTION
+            const bubble = add([ // CAN'T ADD IT IN BEARBOX BECAUSE BEARBOX CAN'T HAVE THE AREA() FUNCTION
                 rect(width, H/8, { radius: 32 }),
                 anchor("center"),
                 pos(BEARBOX.pos.x - 15, H - H/8),
@@ -2019,7 +2050,7 @@ scene("game", () => {
                 area(),
                 "dialog",
             ])
-            //space bar, is destroyed when dialogs are destroyed
+            // Space bar, is destroyed when dialogs are destroyed
             const space = add([
                 sprite("space_bar"),
                 anchor("center"),
@@ -2046,9 +2077,12 @@ scene("game", () => {
             return saturation;
         }
         function calculateColor(saturation) {
-            // Calculate RGB values based on saturation
-            // For demonstration, we'll use a simple linear interpolation from gray to fully saturated color
-            //ICI POUR CHANGER SATURATION - trial and error
+            /** 
+             * CHATGPT generate code
+             * Calculate RGB values based on saturation
+             * For demonstration, we'll use a simple linear interpolation from gray to fully saturated color
+             * Change saturation here - trial and error 
+            */
             const grayValue = 600; // Middle gray value
             const maxColorValue = 100; // Maximum color value
             const colorValue = grayValue + ((maxColorValue - grayValue) * (saturation / 100));
@@ -2061,26 +2095,26 @@ scene("game", () => {
             };
         }
 
-       //General Functions
-        //Add to score and cash
+       // General Functions
+        // Add to score and cash
         function plus(x){
             cash    = cash  + x;
             score   = score + x;
         }
 
-        //Pay with cash
+        // Pay with cash
         function pay(x){
             cash = cash - x;
         }
 
-        //Exponentially scale price
+        // Exponentially scale price
         function exp(x){
             console.log(x);
             x = x * scaling;
             console.log(x);
         }
 
-        //Remove pollu-stat
+        // Remove pollu-stat
         function minusPollu(){
             if (pollu_over > 0) {
                 pollu_over = pollu_over - pollu_boost;
@@ -2089,7 +2123,7 @@ scene("game", () => {
                 pollu_stat = pollu_stat - pollu_boost;
             }
         }
-        //Remove defo-stat
+        // Remove defo-stat
         function minusDefo(){
             if (defo_over > 0) {
                 defo_over = defo_over - defo_boost;
@@ -2100,6 +2134,7 @@ scene("game", () => {
         }
 })
 
+// GameOver Scene
 scene("gameOver", () => {
     setBackground(rgb(79, 146, 240));
 
@@ -2360,12 +2395,12 @@ scene("gameOver", () => {
 scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     setBackground(rgb(79, 146, 240));
 
-    const icon_honey = add([ //SCOREBOX
+    const icon_honey = add([ // SCOREBOX
         sprite('honey'),
         anchor("center"),
         pos(W / 2, H / 4 + 20),
         z(0),
-        scale(10), //SPRITE_ICON_SCALE *
+        scale(10), // SPRITE_ICON_SCALE *
         "ui",
      ]);
 
@@ -2479,7 +2514,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     });
 });
 
-scene("scoreboard", () => { //More GPT aussi
+scene("scoreboard", () => { // More GPT generate code 
     setBackground(rgb(79, 146, 240));
 
     const buttonYPos = 50;
@@ -2487,7 +2522,7 @@ scene("scoreboard", () => { //More GPT aussi
     const maxVisibleItems = Math.floor((H - scoreListYStart) / 40);
     let scrollOffset = 0;
 
-    // Rejouer button
+    // Replay button
     const replayButton = add([
         rect(150, 50, { radius: 15 }),
         anchor("topright"),
@@ -2581,7 +2616,7 @@ scene("scoreboard", () => { //More GPT aussi
         }
     });
 
-    onScroll((dir) => { //I don't know how this works
+    onScroll((dir) => { // I don't know how this works
         if (dir === "up" && scrollOffset > 0) {
             scrollOffset -= 1;
         } else if (dir === "down" && scrollOffset < highScores.length - maxVisibleItems) {
@@ -2599,8 +2634,8 @@ scene("scoreboard", () => { //More GPT aussi
         ]);
 });
 
-//GENERAL FUNCTIONS
-    //Zoom out
+// GENERAL FUNCTIONS
+    // Zoom out
     function zoomOut(t){
         if (t != undefined) {
             t.width  = t.width   * CLICK_JUMP;
@@ -2613,7 +2648,7 @@ scene("scoreboard", () => { //More GPT aussi
             }
         });
     }
-    //Zoom in
+    // Zoom in
    function zoomIn(t){
         if (t != undefined) {
             t.width  = t.width   / CLICK_JUMP;
@@ -2626,7 +2661,7 @@ scene("scoreboard", () => { //More GPT aussi
             }
         })
     }
-    //Warning in red
+    // Warning in red
     function warning(t){
         shake(1);
         t.color = rgb (255, 0, 0);
@@ -2645,7 +2680,7 @@ scene("scoreboard", () => { //More GPT aussi
         music = play('button_click');
     })
 
-    //THESE DON'T WORK FOR SOME REASON
+    // THESE DON'T WORK FOR SOME REASON
     onHover("button", (b) => {
         console.log("HOVERING")
         b.use(shader("lighten"));
@@ -2735,7 +2770,7 @@ scene("scoreboard", () => { //More GPT aussi
 
     return (style === '$' ? '$' : '') +
         x.toLocaleString(
-        'fr-CH',    //need to change that if multiple languages selection
+        'fr-CH',    // Need to change that if multiple languages selection
         {
             style: 'decimal',
             minimumFractionDigits: decimals,
@@ -2746,7 +2781,7 @@ scene("scoreboard", () => { //More GPT aussi
         (style === '%' ? '%' : '');
     }
 
-    //NEED REF IN READ.ME: https://stackoverflow.com/a/11486026 (answered Jul 14, 2012 at 20:48 by Vishal)
+    // NEED REF IN READ.ME: https://stackoverflow.com/a/11486026 (answered Jul 14, 2012 at 20:48 by Vishal)
     function fancyTimeFormat(duration) {
         // Hours, minutes and seconds
         const hrs = ~~(duration / 3600);
@@ -2766,10 +2801,15 @@ scene("scoreboard", () => { //More GPT aussi
         return ret;
       }
       
+/**
+ *  DIALOGS
+ * bear_happy
+ * bear_wink for fun facts
+ * bear_sad
+ * bear_talking for general dialog
+ * bear_scared when bulldozer appears
+*/  
 
-
-//DIALOGS
-    //bear = normal bear, smiling slightly - bear_scared, bear_wink (fun facts), starry-eyed bear
     const dia_intro = [
         ["bear_happy", "Bienvenue au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
