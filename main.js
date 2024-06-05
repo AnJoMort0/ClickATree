@@ -2814,7 +2814,7 @@ scene("scoreboard", () => { // More GPT generate code
         ["bear_happy", "Bienvenue au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
         ["bear_talking", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
-        //["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront d'acheter des arbres que tu peux voir en haut à droite."],
+        //["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront de planter des arbres que tu peux voir en haut à droite."],
         //["bear_wink", "Je te laisse découvrir la suite!"],
         ["bear_info", "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
         ["bear_talking", "Je te laisse découvrir la suite! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récupérer mon miel."],
@@ -2846,9 +2846,9 @@ scene("scoreboard", () => { // More GPT generate code
     //peut-être une seule ligne ?
     const dia_info = [
         //tree
-        ["bear_wink", "Après avoir accumulé assez de feuilles, tu pourras acheter des arbres. Le prix des arbres augmente à chaque fois que tu achètes un arbre."],
+        ["bear_wink", "Après avoir accumulé assez de feuilles, tu pourras planter des arbres. Le nombre de feuilles requis augmente à chaque fois que tu plantes un arbre."],
         //bird 
-        ["bear_wink", "Après avoir accumulé assez de feuilles, tu pourras acheter des oiseaux qui disperseront les graines pour t'aider à créer ta forêt."],
+        ["bear_wink", "Après avoir accumulé assez de feuilles, tu pourras placer des oiseaux qui disperseront les graines pour t'aider à créer ta forêt."],
         //bee
         ["bear_flower", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seules trois abeilles par arbre sont autorisées."],
         //beehive
