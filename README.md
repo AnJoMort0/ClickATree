@@ -2,8 +2,6 @@
 
 <img src="assets/game_elements/other/bee_animation.gif" alt="Bee GIF" width="150">
 
-<img src="assets/game_elements/other/game_screenshot.png" alt="Game Screenshot">
-
 Bienvenue dans Click a Tree, le jeu de clicker ultime où votre pouce vert prend le devant de la scène ! Plongez dans le monde amusant de la plantation, de la croissance et de la défense de votre propre forêt virtuelle. Préparez-vous à une aventure feuillue ! 🌳
 
 ## Aperçu du Jeu 🌿
@@ -11,6 +9,8 @@ Bienvenue dans Click a Tree, le jeu de clicker ultime où votre pouce vert prend
 ### Description 🌲
 
 Click a Tree n'est pas un jeu de clicker ordinaire - c'est votre propre forêt numérique ! Cliquez pour relever des défis, débloquer des éléments d'écosystème quasi-magiques et déjouer les forces qui menacent votre paradis vert. Il s'agit de grandir !
+
+<img src="assets/game_elements/other/game_screenshot.png" alt="Game Screenshot">
 
 ### Caractéristiques 🌍
 
