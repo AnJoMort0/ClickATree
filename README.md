@@ -1,6 +1,8 @@
-<img src="assets/icon/logo.png" alt="Click a Tree Logo" width="300">
+<div style="display: flex; justify-content: center;">
+    <img src="assets/icon/logo.png" alt="Click a Tree Logo" width="350">
+</div>
 
-<img src="assets/game_elements/other/bee_animation.gif" alt="Bee GIF" width="150">
+<img src="assets/game_elements/other/bee_animation.gif" alt="Bee GIF" width="50">
 
 Bienvenue dans Click a Tree, le jeu de clicker ultime où votre pouce vert prend le devant de la scène ! Plongez dans le monde amusant de la plantation, de la croissance et de la défense de votre propre forêt virtuelle. Préparez-vous à une aventure feuillue ! 🌳
 
@@ -10,7 +12,10 @@ Bienvenue dans Click a Tree, le jeu de clicker ultime où votre pouce vert prend
 
 Click a Tree n'est pas un jeu de clicker ordinaire - c'est votre propre forêt numérique ! Cliquez pour relever des défis, débloquer des éléments d'écosystème quasi-magiques et déjouer les forces qui menacent votre paradis vert. Il s'agit de grandir !
 
-<img src="assets/game_elements/other/game_screenshot.png" alt="Game Screenshot">
+<div style="display: flex; justify-content: space-between;">
+    <img src="assets/game_elements/other/game_screenshot1.png" alt="Game Screenshot 1" width="45%">
+    <img src="assets/game_elements/other/game_screenshot2.png" alt="Game Screenshot 2" width="45%">
+</div>
 
 ### Caractéristiques 🌍
 
@@ -22,7 +27,7 @@ Click a Tree n'est pas un jeu de clicker ordinaire - c'est votre propre forêt n
 ## Credits 🌟
 
 - **🧩 Concept et Développement:** Sophie Ward & André "AnJoMorto" Fonseca
-- **🎨 Conception visuelle:** Les visuels ont été créé sur Piskel par Sophie Ward & André "AnJoMorto" Fonseca
+- **🎨 Conception visuelle:** Les visuels ont été crééss sur Piskel par Sophie Ward & André "AnJoMorto" Fonseca
 
 - **👥 Sources Extérieures :**
     - Musique : [mayragandra](https://mayragandra.itch.io/freeambientmusic)
