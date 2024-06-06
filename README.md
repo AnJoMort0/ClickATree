@@ -12,7 +12,7 @@ Bienvenue dans Click a Tree, le jeu de clicker ultime où votre pouce vert prend
 
 Click a Tree n'est pas un jeu de clicker ordinaire - c'est votre propre forêt numérique ! Cliquez pour relever des défis, débloquer des éléments d'écosystème quasi-magiques et déjouer les forces qui menacent votre paradis vert. Il s'agit de grandir !
 
-<img src="assets/game_elements/other/game_screenshot.png" alt="Game Screenshot 1" width="45%">
+<img src="assets/game_elements/other/game_screenshot.png" alt="Game Screenshot 1" width="75%">
 
 ### Caractéristiques 🌍
 
@@ -39,5 +39,5 @@ Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" 
 Notre jeu est disponible sur [itch.io](https://anjomorto.itch.io/click-a-tree) ! Il suffit de cliquer sur **RUN GAME** ! 🌳💚
 
 <div style="display: flex; justify-content: right;">
-    <img src="assets/game_elements/bear/bear_happy.png" alt="Bear" width="150">
+    <img src="assets/game_elements/bear/bear_happy.png" alt="Bear" width="100">
 </div>
