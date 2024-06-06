@@ -1,6 +1,8 @@
-![Click a Tree Logo](assets/icon/logo.png)
+<img src="assets/icon/logo.png" alt="Click a Tree Logo" width="300">
 
-![Bee GIF](assets/game_elements/other/bee_animation.gif)
+<img src="assets/game_elements/other/bee_animation.gif" alt="Bee GIF" width="150">
+
+<img src="assets/game_elements/other/game_screenshot.png" alt="Game Screenshot">
 
 Bienvenue dans Click a Tree, le jeu de clicker ultime où votre pouce vert prend le devant de la scène ! Plongez dans le monde amusant de la plantation, de la croissance et de la défense de votre propre forêt virtuelle. Préparez-vous à une aventure feuillue ! 🌳
 
