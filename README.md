@@ -1,28 +1,35 @@
-# Click a Tree 🌳🎮
+![Click a Tree Logo](assets/icon/logo.png)
 
-Welcome to Click a Tree, the ultimate clicker game where your green thumb takes center stage! Dive into the fun world of planting, growing, and defending your very own virtual forest. Get ready for a leafy adventure! 🌳
+![Bee GIF](assets/game_elements/other/bee_animation.gif)
 
-## Game Overview 🌿
+Bienvenue dans Click a Tree, le jeu de clicker ultime où votre pouce vert prend le devant de la scène ! Plongez dans le monde amusant de la plantation, de la croissance et de la défense de votre propre forêt virtuelle. Préparez-vous à une aventure feuillue ! 🌳
+
+## Aperçu du Jeu 🌿
 
 ### Description 🌲
 
-Click a Tree is not your average clicker game – it's your own digital forest! Click your way through challenges, unlock near-magical ecosystem elements, and outsmart the forces that threaten your green paradise. It's all about growing!
+Click a Tree n'est pas un jeu de clicker ordinaire - c'est votre propre forêt numérique ! Cliquez pour relever des défis, débloquer des éléments d'écosystème quasi-magiques et déjouer les forces qui menacent votre paradis vert. Il s'agit de grandir !
 
-### Features 🌍
+### Caractéristiques 🌍
 
-- **👇 Click to Grow:** Start small, click big! Every tap brings life to your budding forest.
-- **🐝 Epic Ecosystem Elements:** Unleash the power of sunflowers, summon rain clouds, and enlist the help of friendly animals to amplify your forest's growth.
-- **🔥 Defend & Conquer:** Face off against quirky challenges – loggers, pollution, and more. Strategize to keep your trees standing tall.
-- **🍃 Upgrade & Expand:** Spend your hard-earned resources to upgrade your forest and cover new territories. Discover new trees and create breathtaking landscapes!
+- **👇 Cliquer pour Grandir:** Commencez petit, cliquez grand ! Chaque tapotement donne vie à votre forêt naissante.
+- **🐝 Abeilles et Miel:** Invoquez des abeilles diligentes pour récolter du miel pour un petit ours
+- **🔥 Défendre et Conquérir:** Affrontez des défis insolites, notamment un bulldozer et la pollution en mettant en place des stratégies pour que vos arbres restent debout.
+- **🍃 Amélioration et Expansion:** Dépensez vos ressources durement gagnées pour améliorer votre forêt, découvrir de nouveaux arbres et créer des paysages à couper le souffle !
 
 ## Credits 🌟
 
-- 🧩 Concept & Development: Sophie Ward & André "AnJoMorto" Fonseca
-- 🎨 Visual Design: Sophie Ward & André "AnJoMorto" Fonseca
-- 🎼 Melodic Magic: TBD
+- **🧩 Concept et Développement:** Sophie Ward & André "AnJoMorto" Fonseca
+- **🎨 Conception visuelle:** Les visuels ont été créé sur Piskel par Sophie Ward & André "AnJoMorto" Fonseca
 
-This project was developped for the class "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).
+- **👥 Sources Extérieures :**
+    - Musique : [mayragandra](https://mayragandra.itch.io/freeambientmusic)
+    - Sons : Itch.io : [Brackeys, Asbjørn Thirslund](https://brackeysgames.itch.io/brackeys-platformer-bundle), [Diablo Luna](https://pudretediablo.itch.io/butterfly), [FilmCow](https://filmcow.itch.io/filmcow-sfx), [Leohpaz](https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack), [Nathan Gibson](https://nathangibson.myportfolio.com), [Nox_Sound_Design](https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound)
+    - Snippets de code : Stackoverflow : [MarredCheese](https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148) et [Vishal](https://stackoverflow.com/a/11486026)
+    - Assistant IA : [OpenAI, ChatGPT](https://chat.openai.com) (dont GPT-3.5, GPT-4o et [Code Copilot](https://promptspellsmith.com/))
 
-## Game On! 🎮
+Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).
 
-Get ready for a green journey with Click a Tree. Grow, protect, and immerse yourself in the magic of nature! 🌳💚
+## Jouez sur itch.io! 🎮
+
+Notre jeu est disponible sur [itch.io](https://anjomorto.itch.io/click-a-tree) ! Il suffit de cliquer sur **RUN GAME** ! 🌳💚
