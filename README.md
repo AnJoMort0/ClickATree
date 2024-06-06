@@ -1,4 +1,4 @@
-<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+<div style="display: flex; justify-content: center; align-items: center;">
     <img src="assets/icon/logo.png" alt="Click a Tree Logo" width="350">
 </div>
 
