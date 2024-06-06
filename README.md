@@ -1,10 +1,9 @@
-<div style="display: flex; justify-content: center;">
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
     <img src="assets/icon/logo.png" alt="Click a Tree Logo" width="350">
 </div>
 
-<img src="assets/game_elements/other/bee_animation.gif" alt="Bee GIF" width="50">
-
 Bienvenue dans Click a Tree, le jeu de clicker ultime où votre pouce vert prend le devant de la scène ! Plongez dans le monde amusant de la plantation, de la croissance et de la défense de votre propre forêt virtuelle. Préparez-vous à une aventure feuillue ! 🌳
+<img src="assets/game_elements/other/bee_animation.gif" alt="Bee GIF" width="50">
 
 ## Aperçu du Jeu 🌿
 
@@ -40,3 +39,7 @@ Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" 
 ## Jouez sur itch.io! 🎮
 
 Notre jeu est disponible sur [itch.io](https://anjomorto.itch.io/click-a-tree) ! Il suffit de cliquer sur **RUN GAME** ! 🌳💚
+
+<div style="display: flex; justify-content: right;">
+    <img src="assets/game_elements/bear/bear_happy.png" alt="Bear" width="200">
+</div>
