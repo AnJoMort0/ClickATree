@@ -33,7 +33,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.1.3.mysteresUnil"
+const VERSION = "v.beta.1.1.4.mysteresUnil"
 
 kaboom({
     background  : [0, 0, 0],
@@ -480,6 +480,27 @@ scene("startMenu", () => {
     })
 
     // Add the small text at the bottom right for game version
+    const creditsButton = add([
+        rect(80, 30, { radius: 5 }),
+        pos(50, H - 25),
+        anchor("center"),
+        outline(2),
+        area(),
+        "creditsButton",
+        "button",
+    ]);
+    const creditsButtonText = creditsButton.add([
+        text("credits", { font: "d", size: 10 }),
+        pos(0,0),
+        anchor("center"),
+        color(rgb(0, 0, 0)),
+        area(),
+        "button"
+    ]);
+    onClick("creditsButton", () => {
+        go("creditsMenu"); 
+    });
+
     add([
         text(VERSION, {font:"d", size: 10 }),
         pos(W - 20, H - 20),
@@ -488,6 +509,286 @@ scene("startMenu", () => {
     ]);
 });
 go("startMenu");
+
+scene("creditsMenu", () => { //Heavily GPT Assisted
+    setBackground(rgb(79, 146, 240));
+
+    const centerX = W/2;
+    const containerHeight = H - 100;
+    const lineSpacing = 40;
+    const smallLineSpacing = 30;
+    let scrollOffset = 0;
+
+    const credits = [
+        { type: "title", text: "Credits", size: 48, weight: "bold", ySpacing: lineSpacing * 4 },
+        { type: "text", text: "Concept et Développement : ", size: 24, weight: "bold" },
+        { type: "text", text: 'Sophie Ward & André "AnJoMorto" Fonseca', size: 24, italic: true, ySpacing: lineSpacing },
+        { type: "text", text: "Conception visuelle : ", size: 24, weight: "bold", ySpacing: lineSpacing },
+        { type: "text", text: 'Sophie Ward & André "AnJoMorto" Fonseca', size: 24, italic: true, ySpacing: lineSpacing * 4 },
+        { type: "heading", text: "Sources Extérieures :", size: 28, weight: "bold", ySpacing: lineSpacing },
+        { type: "text", text: "Musique : ", size: 24, weight: "bold" },
+        { type: "link", text: "mayragandra", size: 24, url: "https://mayragandra.itch.io/freeambientmusic", ySpacing: lineSpacing },
+        { type: "text", text: "Sons :", size: 24, weight: "bold", ySpacing: lineSpacing },
+        { type: "link", text: "Brackeys, Asbjørn Thirslund", size: 20, url: "https://brackeysgames.itch.io/brackeys-platformer-bundle", ySpacing: smallLineSpacing },
+        { type: "link", text: "Diablo Luna", size: 20, url: "https://pudretediablo.itch.io/butterfly", ySpacing: smallLineSpacing },
+        { type: "link", text: "FilmCow", size: 20, url: "https://filmcow.itch.io/filmcow-sfx", ySpacing: smallLineSpacing },
+        { type: "link", text: "Leohpaz", size: 20, url: "https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack", ySpacing: smallLineSpacing },
+        { type: "link", text: "Nathan Gibson", size: 20, url: "https://nathangibson.myportfolio.com", ySpacing: smallLineSpacing },
+        { type: "link", text: "Nox_Sound_Design", size: 20, url: "https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound", ySpacing: smallLineSpacing },
+        { type: "text", text: "Snippets de code : ", size: 24, weight: "bold", ySpacing: lineSpacing },
+        { type: "link", text: "MarredCheese", size: 24, url: "https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148" },
+        { type: "link", text: "Vishal", size: 24, url: "https://stackoverflow.com/a/11486026", ySpacing: lineSpacing },
+        { type: "text", text: "Assistant IA : ", size: 24, weight: "bold", ySpacing: lineSpacing },
+        { type: "link", text: "OpenAI, ChatGPT", size: 24, url: "https://chat.openai.com", ySpacing: lineSpacing * 2 },
+        { type: "text", text: 'Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).', size: 24, tag: "supacat", ySpacing: lineSpacing },
+        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
+    ];
+
+    function drawCredits() {
+        destroyAll("creditsItem");
+        let posY = 100 - scrollOffset;
+
+        credits.forEach(item => {
+            let textObj;
+            switch (item.type) {
+                case "title":
+                    textObj = add([
+                        text(item.text, { size: item.size, font: "d", weight: item.weight }),
+                        pos(centerX, posY - lineSpacing * 1.5),
+                        anchor("center"),
+                        color(255, 255, 255),
+                        "creditsItem",
+                    ]);
+                    break;
+                case "heading":
+                    textObj = add([
+                        text(item.text, { size: item.size, font: "d", weight: item.weight }),
+                        pos(20, posY - lineSpacing * 1.25),
+                        anchor("left"),
+                        color(255, 255, 255),
+                        "creditsItem",
+                    ]);
+                    break;
+                case "text":
+                    if (item.text.length > 50) {
+                        const lines = wrapText(item.text, 50);
+                        lines.forEach((line, index) => {
+                            textObj = add([
+                                text(line, { size: item.size, font: "d", weight: item.weight, italic: item.italic }),
+                                pos(20, posY + index * lineSpacing),
+                                anchor("left"),
+                                color(255, 255, 255),
+                                area(),
+                                "creditsItem",
+                                item.tag,
+                            ]);
+                        });
+                        posY += lines.length * lineSpacing;
+                    } else {
+                        textObj = add([
+                            text(item.text, { size: item.size, font: "d", weight: item.weight, italic: item.italic }),
+                            pos(20, posY),
+                            anchor("left"),
+                            color(255, 255, 255),
+                            "creditsItem",
+                        ]);
+                        posY += item.ySpacing || lineSpacing;
+                    }
+                    break;
+                case "link":
+                    textObj = add([
+                        text(item.text, { size: item.size, font: "d" }),
+                        pos(20, posY),
+                        anchor("left"),
+                        color(0, 0, 255),
+                        area(),
+                        "creditsItem",
+                        item.url
+                    ]);
+                    posY += item.ySpacing || lineSpacing;
+                    break;
+            }
+        });
+
+        // Add menu button to return to the start menu
+        const menuButton = add([
+            rect(150, 50, { radius: 15 }),
+            anchor("center"),
+            pos(width() / 2, height() - 50),
+            outline(4),
+            area(),
+            "creditsItem",
+            "menuButton",
+        ]);
+
+        const menuButtonText = menuButton.add([
+            text("Menu", { font: "d", size: 18 }),
+            pos(0, 0),
+            anchor("center"),
+            color(rgb(0, 0, 0)),
+        ]);
+
+        onClick("menuButton", () => {
+            go("startMenu");
+        });
+
+        // Click events for links
+        onClick("https://mayragandra.itch.io/freeambientmusic", () => window.open("https://mayragandra.itch.io/freeambientmusic", '_blank'));
+        onClick("https://brackeysgames.itch.io/brackeys-platformer-bundle", () => window.open("https://brackeysgames.itch.io/brackeys-platformer-bundle", '_blank'));
+        onClick("https://pudretediablo.itch.io/butterfly", () => window.open("https://pudretediablo.itch.io/butterfly", '_blank'));
+        onClick("https://filmcow.itch.io/filmcow-sfx", () => window.open("https://filmcow.itch.io/filmcow-sfx", '_blank'));
+        onClick("https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack", () => window.open("https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack", '_blank'));
+        onClick("https://nathangibson.myportfolio.com", () => window.open("https://nathangibson.myportfolio.com", '_blank'));
+        onClick("https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound", () => window.open("https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound", '_blank'));
+        onClick("https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148", () => window.open("https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148", '_blank'));
+        onClick("https://stackoverflow.com/a/11486026", () => window.open("https://stackoverflow.com/a/11486026", '_blank'));
+        onClick("https://chat.openai.com", () => window.open("https://chat.openai.com", '_blank'));
+        onClick("supacat", () => go("supacat"));
+    }
+
+    function updateCredits() {
+        destroyAll("creditsItem");
+        drawCredits();
+    }
+
+    drawCredits();
+
+    onKeyPress("up", () => {
+        if (scrollOffset > 0) {
+            scrollOffset -= lineSpacing;
+            updateCredits();
+        }
+    });
+
+    onKeyPress("down", () => {
+        if (scrollOffset < credits.length * lineSpacing - containerHeight) {
+            scrollOffset += lineSpacing;
+            updateCredits();
+        }
+    });
+
+    onScroll((dir) => {
+        if (dir === "up" && scrollOffset > 0) {
+            scrollOffset -= lineSpacing;
+        } else if (dir === "down" && scrollOffset < credits.length * lineSpacing - containerHeight) {
+            scrollOffset += lineSpacing;
+        }
+        updateCredits();
+    });
+
+    function wrapText(text, maxLength) {
+        const words = text.split(" ");
+        const lines = [];
+        let currentLine = "";
+
+        words.forEach(word => {
+            if ((currentLine + word).length > maxLength) {
+                lines.push(currentLine);
+                currentLine = word + " ";
+            } else {
+                currentLine += word + " ";
+            }
+        });
+
+        lines.push(currentLine.trim());
+        return lines;
+    }
+});
+
+scene("supacat", () => {
+    // charger les assets
+    loadSprite("chat","ref/cat.png");
+    loadSound("miaou","ref/miau.wav");
+
+    // ajouter à l'écran
+
+    const chat = add([
+        sprite("chat"),
+        pos(20,20),
+        scale(0.2),
+        area(),
+        "chat"
+    ])
+
+    // ajouter des interactions
+
+    onKeyPress("space",()=>{
+        play("miaou",{
+            volume: 2,            
+        });
+    })
+
+    onKeyDown("left",()=>{
+        chat.move(-120,0);
+    })
+
+    onKeyDown("right",()=>{
+        chat.move(120,0);
+        chat.flipX = true;
+    })
+
+    onKeyDown("up",()=>{
+        chat.move(0,-120);
+    })
+
+    onKeyDown("down",()=>{
+        chat.move(0,120);
+    })
+
+    // un autre objet
+    const texte = add([
+        text("MIAOU",{
+            size : 48
+        }),
+        pos(200,20),
+        area(),
+        "texte"
+    ])
+
+    // ajouter un collider
+
+    onCollide("chat","texte", () =>{
+        destroy(chat);
+        play("miaou",{
+            volume: 4,
+            speed : 0.2,
+            detune : randi(0,12) * 100          
+        });
+    })
+
+    // Add menu button to return to the start menu
+    const menuButton = add([
+        rect(150, 50, { radius: 15 }),
+        anchor("center"),
+        pos(width() / 2, height() - 50),
+        outline(4),
+        area(),
+        "creditsItem",
+        "menuButton",
+    ]);
+
+    const menuButtonText = menuButton.add([
+        text("Menu", { font: "d", size: 18 }),
+        pos(0, 0),
+        anchor("center"),
+        color(rgb(0, 0, 0)),
+    ]);
+
+    onClick("menuButton", () => {
+        go("startMenu");
+    });
+
+    add([
+        text("Vous jouez à supacat par Isaac Pante, 6 juin 2024", {font:"d", size: 16 }),
+        pos(W - 100, H - 100),
+        anchor("botright"),
+        color(rgb(0, 0, 0)),
+    ]);    
+})
 
 scene("game", () => {
     honey = 0;
@@ -2514,7 +2815,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     });
 });
 
-scene("scoreboard", () => { // More GPT generate code 
+scene("scoreboard", () => { // More GPT assisted code 
     setBackground(rgb(79, 146, 240));
 
     const buttonYPos = 50;
