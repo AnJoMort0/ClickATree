@@ -23,12 +23,7 @@
     // There's the possibility of clicking something when it is destroyed
         //Seems fixed
     // When using the on screen keyboard the click is processed multiple times
-        //To fix this for now, you can't input twice the same key
-    
-//Add to README
-    //2 function codes down the js page
-    //Smoke spritesheet : https://miguelnero.itch.io/particle-smoke
-    //Bird spritesheet : https://rmazanek.itch.io/bird
+        //To fix this for now, you can't input twice the same keyfrea
 
 //===================================================================//
 //===================================================================//
@@ -2991,7 +2986,7 @@ scene("scoreboard", () => { // More GPT assisted code
         b.use(shader(""));
     })
 
-    //NEED TO REF IN READ.ME: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148 (answered Jul 4, 2019 at 20:48 by MarredCheese)
+    // From https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148 (answered Jul 4, 2019 at 20:48 by MarredCheese)
     /*
     * Return the given number as a formatted string.  The default format is a plain
     * integer with thousands-separator commas.  The optional parameters facilitate
@@ -3082,7 +3077,7 @@ scene("scoreboard", () => { // More GPT assisted code
         (style === '%' ? '%' : '');
     }
 
-    // NEED REF IN READ.ME: https://stackoverflow.com/a/11486026 (answered Jul 14, 2012 at 20:48 by Vishal)
+    // From https://stackoverflow.com/a/11486026 (answered Jul 14, 2012 at 20:48 by Vishal)
     function fancyTimeFormat(duration) {
         // Hours, minutes and seconds
         const hrs = ~~(duration / 3600);
