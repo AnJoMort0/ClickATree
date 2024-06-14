@@ -24,7 +24,7 @@ Click a Tree n'est pas un jeu de clicker ordinaire - c'est votre propre forêt n
 ## Credits 🌟
 
 - **🧩 Concept et Développement:** Sophie Ward & André "AnJoMorto" Fonseca
-- **🎨 Conception visuelle:** Les visuels ont été crééss sur Piskel par Sophie Ward & André "AnJoMorto" Fonseca
+- **🎨 Conception visuelle:** Les visuels ont été créés sur Piskel par Sophie Ward & André "AnJoMorto" Fonseca
 
 - **👥 Sources Extérieures :**
     - Musique : [mayragandra](https://mayragandra.itch.io/freeambientmusic)
