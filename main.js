@@ -1,17 +1,8 @@
 //IDEAS TO ADD
- //Priority
-    //Add sounds (sounds of the objects not just clicks) to different things
-        // * pop when bee enter beehive because it means +1 honey and it gives an audio information
-        // * (pour l'instant seulement quand addTree et onDestroy) leaves rumbling when click on tree or onDestroy or addTree --> onClick is way to spammy
-        // * bulldozer on screen et son s'arrête lorsque bulldozer est destroyed
-        // * click bulldozer (peut-être que ça fait trop bruit de pistolet - à discuter)
-        //destroy bulldozer
-        // -  click and ondestroy trash --> pour l'instant seulement onclick est fait
- //If time
-    //Minimal animations for the bees (for example move around when reach a tree)
+ //Minimal animations for the bees (for example move around when reach a tree)
     //Achievements
     //Darker colors at the beginning -> progress saturation the bigger the forest
-    //Have all scales depend on screen size
+    //Have all scales depend on screen size --> I'm going to lock screen size instead, it's a better way to make scores universal and prevent weird things when loading in different devices
     //Create a fire event when auto-clicker
     //Hide HUD button
 
@@ -23,54 +14,54 @@
     // There's the possibility of clicking something when it is destroyed
         //Seems fixed
     // When using the on screen keyboard the click is processed multiple times
-        //To fix this for now, you can't input twice the same keyfrea
+        //To fix this for now, you can't input twice the same key in a row
 
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.1.4.mysteresUnil"
+const VERSION = "v.beta.1.2.0.jeuVideo2D"
 
 kaboom({
-    background  : [0, 0, 0],
-    width       : window.innerWidth,
-    height      : window.innerHeight,
+    background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
+    width       : 1280,         //Even if the size is blocked from version beta.1.2.0, the relative size functions will stay in case we try to make it work at a later date
+    height      : 720,
     letterbox   : true,
 })
 
-// Static values
+// Universal values
 const W = width();
 const H = height();
 setGravity(800);
 const CLICK_JUMP                = 1.05;
+const MU_TIME                   = 300;  //set the time for the Mystères de l'UNIL mode
 let time                        = -10;
 let honey                       = 0;
 let boughtBird                  = false;
 let hasBulldozer                = false;
 
-const SPRITE_PIXEL_SIZE         = 25;
-const SPRITE_ICON_SCALE         = 1.4;
-const ICON_SIZE                 = SPRITE_PIXEL_SIZE * SPRITE_ICON_SCALE;
+const SPRITE_PIXEL_SIZE         = 25;   //value of the sprites' original size
+const SPRITE_ICON_SCALE         = 1.4;  //value to scale the sprites
+const ICON_SIZE                 = SPRITE_PIXEL_SIZE * SPRITE_ICON_SCALE;    //object's size in game
 const SPRITE_BG_PIXEL_SIZE      = 250;
 const SPRITE_BG_SCALE           = 3;
 const BG_TILE_SIZE              = SPRITE_BG_PIXEL_SIZE * SPRITE_BG_SCALE;
 const SPRITE_BUTTON_PIXEL_SIZE  = 400;
 const SPRITE_BUTTON_SCALE       = 0.2;
 const BUTTON_SIZE               = SPRITE_BUTTON_PIXEL_SIZE * SPRITE_BUTTON_SCALE;
-const BUTTON_PRICE_TXT_SCALE    = 0.9;
+const BUTTON_PRICE_TXT_SCALE    = 0.9;  //scaling for the texts on the buttons
 const BUTTON_NB_TXT_SCALE       = 0.8;
-const BG_Y                      = H/2;
-const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1;
+const BG_Y                      = H/2;  //placing of the y position of the background sprites
+const NB_BG_X_TILES             = Math.floor(W/(BG_TILE_SIZE)) + 1; //in case non-fixed screen size, this will check how many background sprite tiles are needed to fill the screen
 const NB_BG_Y_TILES             = Math.floor(H/(BG_TILE_SIZE)) + 1;
 const BEAR_SCALE                = 8;
-const BEAR_SMALL_SCALE          = BEAR_SCALE/1.5;
+const BEAR_SMALL_SCALE          = BEAR_SCALE / 2;
 // Z values:
-    //const Z_TOP_TREE = 300; //changed to be based on height
     const Z_UI        = H    + 125;
     const Z_UI_TOP    = Z_UI + 1;
     const Z_UI_BOTTOM = Z_UI - 1;
 // Relative scale of objects to screen height
     const TREE_SCALE        = 1/100; 
-    const TRASH_SCALE       = 3;
+    const TRASH_SCALE       = 3;    //trash was never calculated to screen size, will need it changed if that were to change
     const BULLDOZER_SCALE   = 1/90;
     const BIRD_SCALE        = 1/320;
     const BEE_SCALE         = 1/350;
@@ -132,10 +123,10 @@ loadRoot('assets/');
             },
         })
         // Trees
-        loadSprite('tree0',"game_elements/trees/tree0.png");
-        loadSprite('tree1',"game_elements/trees/tree1.png");
-        loadSprite('tree2',"game_elements/trees/tree2.png");
-        loadSprite('tree3',"game_elements/trees/tree3.png");
+        loadSprite('tree0', "game_elements/trees/tree0.png");
+        loadSprite('tree1', "game_elements/trees/tree1.png");
+        loadSprite('tree2', "game_elements/trees/tree2.png");
+        loadSprite('tree3', "game_elements/trees/tree3.png");
         const trees = ["tree0", "tree1", "tree2", "tree3"];
         // Leaves
         loadSprite('leaf0', "game_elements/leafs/leaf0.png");
@@ -145,9 +136,9 @@ loadRoot('assets/');
             loadSprite(spr, `game_elements/leafs/${spr}.png`);
         })
         // Flowers
-        loadSprite('flowers0', 'game_elements/vfx/flowers0.png');
+        loadSprite('flowers0'   , 'game_elements/vfx/flowers0.png');
         // Others
-        loadSprite('bee', 'game_elements/other/bee_animation.png', { 
+        loadSprite('bee'        , 'game_elements/other/bee_animation.png', { 
             // Slicing which animations from spritesheet to use and where
             sliceX: 3,
             sliceY: 3,
@@ -156,8 +147,8 @@ loadRoot('assets/');
                 pollen: {from: 2, to: 7, loop: true},
             }
         });
-        loadSprite('trash', 'game_elements/other/trashcan_.png')
-        loadSprite('bulldozer', 'game_elements/other/bulldozer.png', {
+        loadSprite('trash'      , 'game_elements/other/trashcan_.png')
+        loadSprite('bulldozer'  , 'game_elements/other/bulldozer.png', {
             // Slicing which animations from spritesheet to use and where
             sliceX: 2,
             sliceY: 3,
@@ -165,7 +156,7 @@ loadRoot('assets/');
                 main: {from: 0, to: 5,loop: true},
             }
         })
-        loadSprite('bird', 'game_elements/other/bird.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
+        loadSprite('bird'       , 'game_elements/other/bird.png', { //this one is not ours, so the format is not the same
             // Slicing which animations from spritesheet to use and where
             sliceX: 11,
             sliceY: 8,
@@ -180,20 +171,20 @@ loadRoot('assets/');
                 land:       {from: 77,to: 83,loop: false},
             },
         })
-        loadSprite('honey', 'game_elements/other/honey.png');
-        loadSprite('beehive0', 'game_elements/other/beehive0.png')
-        loadSprite('space_bar', 'game_elements/other/space_bar.png')
+        loadSprite('honey'          , 'game_elements/other/honey.png');
+        loadSprite('beehive0'       , 'game_elements/other/beehive0.png');
+        loadSprite('space_bar'      , 'game_elements/other/space_bar.png');
         // Bear
-        loadSprite('bear', 'game_elements/bear/bear.png');
-        loadSprite('bear_scared', 'game_elements/bear/bear_scared.png');
-        loadSprite('bear_wink', 'game_elements/bear/bear_wink.png');
-        loadSprite('bear_happy', 'game_elements/bear/bear_happy.png');
-        loadSprite('bear_sad', 'game_elements/bear/bear_sad.png');
-        loadSprite('bear_talking', 'game_elements/bear/bear_talking.png');
-        loadSprite('bear_info', 'game_elements/bear/bear_info.png');
-        loadSprite('bear_flower', 'game_elements/bear/bear_flower.png');
+        loadSprite('bear'           , 'game_elements/bear/bear.png');
+        loadSprite('bear_scared'    , 'game_elements/bear/bear_scared.png');
+        loadSprite('bear_wink'      , 'game_elements/bear/bear_wink.png');
+        loadSprite('bear_happy'     , 'game_elements/bear/bear_happy.png');
+        loadSprite('bear_sad'       , 'game_elements/bear/bear_sad.png');
+        loadSprite('bear_talking'   , 'game_elements/bear/bear_talking.png');
+        loadSprite('bear_info'      , 'game_elements/bear/bear_info.png');
+        loadSprite('bear_flower'    , 'game_elements/bear/bear_flower.png');
         // Vfx 
-        loadSprite('smoke', 'game_elements/vfx/smoke.png', { //this one is not ours so the format is not the same, so not in the big game spritesheet
+        loadSprite('smoke'          , 'game_elements/vfx/smoke.png', { //this one is not ours so the format is not the same
             // Slicing which animations from spritesheet to use and where
             sliceX: 3,
             sliceY: 3,
@@ -237,7 +228,7 @@ loadRoot('assets/');
         loadSprite('new_empty'  , "ui/new_buttons/new_empty_button.png")
 
         // Load game logo saved under the icon folder
-        loadSprite('logo', 'icon/logo.png')
+        loadSprite('logo'       , 'icon/logo.png')
 
 /**
  * Load music and sound saved under the audio folder
@@ -248,25 +239,25 @@ loadRoot('assets/');
  */
 // Load ui sounds from other
     // Source: by Nathan Gibson https://nathangibson.myportfolio.com 
-    loadSound('button_click', "audio/other/button/click.wav");
+    loadSound('button_click'    , "audio/other/button/click.wav");
     // Source: by FilmCow https://filmcow.itch.io/filmcow-sfx
-    loadSound('tree_fall',"audio/other/deforestation/tree_fall.wav");
+    loadSound('tree_fall'       , "audio/other/deforestation/tree_fall.wav");
     // Source: by Nathan Gibson https://nathangibson.myportfolio.com 
-    loadSound('bee_in_hive', "audio/other/beehive/Retro7.wav");
+    loadSound('bee_in_hive'     , "audio/other/beehive/Retro7.wav");
     // Source: Minifantasy - Forgotten Plains Audio Pack by Leohpaz https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack
-    loadSound('tree_leaf', "audio/other/tree/bush_rustling.wav");
+    loadSound('tree_leaf'       , "audio/other/tree/bush_rustling.wav");
     // Source: Essentials Series - Free Sound Effect by Nox_Sound_Design https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound
-    loadSound('bulldozer', "audio/other/bulldozer/truck.wav");
+    loadSound('bulldozer'       , "audio/other/bulldozer/truck.wav");
     // Source: brackeys platformer assets by Brackeys, Asbjørn Thirslund https://brackeysgames.itch.io/brackeys-platformer-bundle
-    loadSound('bulldozer_click', "audio/other/bulldozer/click_bulldozer.wav");
+    loadSound('bulldozer_click' , "audio/other/bulldozer/click_bulldozer.wav");
     // Source: Minifantasy - Forgotten Plains Audio Pack by Leohpaz https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack 
-    loadSound('trash_click', "audio/other/trash/trash_sound.wav");
+    loadSound('trash_click'     , "audio/other/trash/trash_sound.wav");
 // Load sounds from sfx 
     // Source: by Diablo Luna https://pudretediablo.itch.io/butterfly
-    loadSound('birds_bg',"audio/sfx/birds/bird.wav");
+    loadSound('birds_bg'        ,"audio/sfx/birds/bird.wav");
 // Load game music: 
     // Source: by mayragandra https://mayragandra.itch.io/freeambientmusic 
-    loadSound('default_music',"audio/music/music.wav");
+    loadSound('default_music'   ,"audio/music/music.wav");
 
 //load shaders (All ChatGPT generated)
     // Grayscale shader
@@ -276,7 +267,7 @@ loadRoot('assets/');
         float gray = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
         return vec4(vec3(gray), texColor.a);
     }`)   
-    //Red Tint
+    //Red Tint shader
     loadShader("redTint", null, `
         vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         vec4 texColor = texture2D(tex, uv);
@@ -289,6 +280,7 @@ loadRoot('assets/');
         vec4 desaturatedColor = mix(vec4(vec3(gray), tintedColor.a), tintedColor, 0.7);
         return desaturatedColor;
     }`)
+    //Lighten shader
     loadShader("lighten", null, `
     vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
         vec4 texColor = texture2D(tex, uv);
@@ -297,8 +289,7 @@ loadRoot('assets/');
         // Lighten the color by mixing with white
         vec4 lightenedColor = mix(texColor, vec4(1.0, 1.0, 1.0, 1.0), lightenAmount);
         return lightenedColor;
-    }
-    `)    
+    }`)    
 //============================//
 
 // Globally declaring music
@@ -312,64 +303,61 @@ music_main = play('default_music', {
  * Including startMenu, game, gameOver, highScoreDisplay and scoreboard
  */
 scene("startMenu", () => {
-    const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]);
+    const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]); //Creates a general place for all the objects in the main menu
     // Blue background
     setBackground(rgb(0, 191, 255));
 
-    // Music starts on a click
+    // Music starts on any click
     let music;
-    onClick("timedStartButton", (b) => {
-        time = 300;
-        //music = play('default_music', {
-        //    loop: true,
-        //    volume: 0.5,
-        //});
+    //Event listeners of the different buttons
+    onClick("timedStartButton", () => {    //start the timed version of the game scene
+        time = MU_TIME;
         go("game");
     });
-    onClick("infStartButton", (b) => {
+    onClick("infStartButton", () => {      //start the infinite time version of the game scene
         time = -10;
-        //music = play('default_music', {
-        //    loop: true,
-        //    volume: 0.5,
-        //});
         go("game");
     });
-    onClick("scoreBoardButton", (b) => {
+    onClick("scoreBoardButton", () => {
         go("scoreboard");
     });
+    onClick("creditsButton", () => {
+        go("creditsMenu"); 
+    });
+    onClick("logo", (t) => { 
+        // Leaf particles when logo is clicked
+        for (let i = 0; i < 5; i++) {
+            const leaf_particle = add([
+                pos(mousePos()),
+                z(t.z + 10),
+                sprite(choose(leafs)),
+                anchor("center"),
+                scale(rand(1, 0.6)),
+                area({ collisionIgnore:["leaf_particle"]}),
+                body(),
+                lifespan(0.5, {fade: 0.2}),
+                opacity(1),
+                move(choose([LEFT, RIGHT]), rand(30, 150)),
+                rotate(rand(0, 360)),
+                offscreen({destroy: true}),
+                "leaf_particle",
+            ])
+            leaf_particle.jump(rand(100, 350))
+        }
+        zoomOut(t);
+        music = play('button_click');
+    });
+
+    //Add the different elements to the scene
     const logo = STARTBOX.add([
         sprite('logo'),
         anchor('center'),
-        scale(0.5),
+        scale(0.4),
         pos(0, -W/8),
         z(Z_UI),
         area(),
         "logo",
-    ])
-    onClick("logo", (t) => { 
-            // Leaf particles when logo is clicked
-            for (let i = 0; i < 5; i++) {
-                const leaf_particle = add([
-                    pos(mousePos()),
-                    z(t.z + 10),
-                    sprite(choose(leafs)),
-                    anchor("center"),
-                    scale(rand(1, 0.6)),
-                    area({ collisionIgnore:["leaf_particle"]}),
-                    body(),
-                    lifespan(0.5, {fade: 0.2}),
-                    opacity(1),
-                    move(choose([LEFT, RIGHT]), rand(30, 150)),
-                    rotate(rand(0, 360)),
-                    offscreen({destroy: true}),
-                    "leaf_particle",
-                ])
-                leaf_particle.jump(rand(100, 350))
-            }
-            zoomOut(t);
-            music = play('button_click'); //it works with onclick
-        });
-    
+    ]);
     const timedStartButton = add([
         rect(525, 125, { radius: 15 }),
         anchor("center"),
@@ -379,12 +367,12 @@ scene("startMenu", () => {
         area(),
         "timedStartButton",
         "button,"
-    ])
+    ]);
     const timedStartText = add([
         text("Mode Mystères de l'UNIL", {size : 22, font : "d"}),
         pos(timedStartButton.pos),
         anchor("center"),
-        color(0, 0, 0),
+        color(BLACK),
         z(Z_UI),
         area(),
         "timedStartButton",
@@ -404,7 +392,7 @@ scene("startMenu", () => {
         text("Mode infini" , {size : 22, font : "d"}),
         pos(infStartButton.pos),
         anchor("center"),
-        color(0, 0, 0),
+        color(BLACK),
         z(Z_UI),
         area(),
         "infStartButton",
@@ -424,14 +412,37 @@ scene("startMenu", () => {
         text("Scoreboard", {size : 15, font : "d"}),
         pos(scoreBoardButton.pos),
         anchor("center"),
-        color(0, 0, 0),
+        color(BLACK),
         z(Z_UI),
         area(),
         "scoreBoardButton",
         "button,"
     ])
+    const creditsButton = add([
+        rect(80, 30, { radius: 5 }),
+        pos(50, H - 25),
+        anchor("center"),
+        outline(2),
+        area(),
+        "creditsButton",
+        "button",
+    ]);
+    const creditsButtonText = creditsButton.add([
+        text("credits", { font: "d", size: 10 }),
+        pos(0,0),
+        anchor("center"),
+        color(BLACK),
+        area(),
+        "button"
+    ]);
+    add([ //add text indicate the version on the bottom corner
+        text(VERSION, {font:"d", size: 10 }),
+        pos(W - 20, H - 20),
+        anchor("botright"),
+        color(BLACK),
+    ]);
 
-    // Add bee moving around
+    // Add bee moving around and easter egg message
     for (let i = 0; i < 3; i++) {
         let randX2 = rand(W);
         let randNY = rand(H);
@@ -473,74 +484,54 @@ scene("startMenu", () => {
             z(Z_UI_TOP),
         ]);
     })
-
-    // Add the small text at the bottom right for game version
-    const creditsButton = add([
-        rect(80, 30, { radius: 5 }),
-        pos(50, H - 25),
-        anchor("center"),
-        outline(2),
-        area(),
-        "creditsButton",
-        "button",
-    ]);
-    const creditsButtonText = creditsButton.add([
-        text("credits", { font: "d", size: 10 }),
-        pos(0,0),
-        anchor("center"),
-        color(rgb(0, 0, 0)),
-        area(),
-        "button"
-    ]);
-    onClick("creditsButton", () => {
-        go("creditsMenu"); 
-    });
-
-    add([
-        text(VERSION, {font:"d", size: 10 }),
-        pos(W - 20, H - 20),
-        anchor("botright"),
-        color(rgb(0, 0, 0)),
-    ]);
 });
 go("startMenu");
 
 scene("creditsMenu", () => { //Heavily GPT Assisted
-    setBackground(rgb(79, 146, 240));
+    /**
+     * This scene was heavily assisted by OpenAI's chatGPT-4o.
+     * The prompt and response would be too long to add to the code, here is the process of usage:
+     *      Gave it the entirety of this code to serve as an example of proper Kaboom.js coding;
+     *      Explained the logic of what needs to be done in this scene;
+     *      Saw the poor results and tested them;
+     *      Re-explained the logic and try to correct it where I couldn't find a fix;
+     *      Tested a closer result and change it to fit the full purpose of the scene;
+     */
+    setBackground(0, 191, 255);
 
-    const centerX = W/2;
-    const containerHeight = H - 100;
-    const lineSpacing = 40;
-    const smallLineSpacing = 30;
-    let scrollOffset = 0;
+    const centerX           = W/2;
+    const containerHeight   = H - 100;
+    const lineSpacing       = 40;
+    const smallLineSpacing  = 30;
+    let scrollOffset        = 0;
 
     const credits = [
-        { type: "title", text: "Credits", size: 48, weight: "bold", ySpacing: lineSpacing * 4 },
-        { type: "text", text: "Concept et Développement : ", size: 24, weight: "bold" },
-        { type: "text", text: 'Sophie Ward & André "AnJoMorto" Fonseca', size: 24, italic: true, ySpacing: lineSpacing },
-        { type: "text", text: "Conception visuelle : ", size: 24, weight: "bold", ySpacing: lineSpacing },
-        { type: "text", text: 'Sophie Ward & André "AnJoMorto" Fonseca', size: 24, italic: true, ySpacing: lineSpacing * 4 },
-        { type: "heading", text: "Sources Extérieures :", size: 28, weight: "bold", ySpacing: lineSpacing },
-        { type: "text", text: "Musique : ", size: 24, weight: "bold" },
-        { type: "link", text: "mayragandra", size: 24, url: "https://mayragandra.itch.io/freeambientmusic", ySpacing: lineSpacing },
-        { type: "text", text: "Sons :", size: 24, weight: "bold", ySpacing: lineSpacing },
-        { type: "link", text: "Brackeys, Asbjørn Thirslund", size: 20, url: "https://brackeysgames.itch.io/brackeys-platformer-bundle", ySpacing: smallLineSpacing },
-        { type: "link", text: "Diablo Luna", size: 20, url: "https://pudretediablo.itch.io/butterfly", ySpacing: smallLineSpacing },
-        { type: "link", text: "FilmCow", size: 20, url: "https://filmcow.itch.io/filmcow-sfx", ySpacing: smallLineSpacing },
-        { type: "link", text: "Leohpaz", size: 20, url: "https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack", ySpacing: smallLineSpacing },
-        { type: "link", text: "Nathan Gibson", size: 20, url: "https://nathangibson.myportfolio.com", ySpacing: smallLineSpacing },
-        { type: "link", text: "Nox_Sound_Design", size: 20, url: "https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound", ySpacing: smallLineSpacing },
-        { type: "text", text: "Snippets de code : ", size: 24, weight: "bold", ySpacing: lineSpacing },
-        { type: "link", text: "MarredCheese", size: 24, url: "https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148" },
-        { type: "link", text: "Vishal", size: 24, url: "https://stackoverflow.com/a/11486026", ySpacing: lineSpacing },
-        { type: "text", text: "Assistant IA : ", size: 24, weight: "bold", ySpacing: lineSpacing },
-        { type: "link", text: "OpenAI, ChatGPT", size: 24, url: "https://chat.openai.com", ySpacing: lineSpacing * 2 },
-        { type: "text", text: 'Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).', size: 24, tag: "supacat", ySpacing: lineSpacing },
-        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
-        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
-        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
-        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
-        { type: "text", text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "title"     , text: "Credits"                                   , size: 48, weight: "bold"  , ySpacing: lineSpacing * 4 },
+        { type: "text"      , text: "Concept et Développement : "               , size: 24, weight: "bold" },
+        { type: "text"      , text: 'Sophie Ward & André "AnJoMorto" Fonseca'   , size: 24, italic: true    , ySpacing: lineSpacing },
+        { type: "text"      , text: "Conception visuelle : "                    , size: 24, weight: "bold"  , ySpacing: lineSpacing },
+        { type: "text"      , text: 'Sophie Ward & André "AnJoMorto" Fonseca'   , size: 24, italic: true    , ySpacing: lineSpacing * 4 },
+        { type: "heading"   , text: "Sources Extérieures :"                     , size: 28, weight: "bold"  , ySpacing: lineSpacing },
+        { type: "text"      , text: "Musique : "                                , size: 24, weight: "bold" },
+        { type: "link"      , text: "mayragandra"                               , size: 20, url:    "https://mayragandra.itch.io/freeambientmusic"                     , ySpacing: smallLineSpacing },
+        { type: "text"      , text: "Sons :"                                    , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
+        { type: "link"      , text: "Brackeys, Asbjørn Thirslund"               , size: 20, url:    "https://brackeysgames.itch.io/brackeys-platformer-bundle"         , ySpacing: smallLineSpacing },
+        { type: "link"      , text: "Diablo Luna"                               , size: 20, url:    "https://pudretediablo.itch.io/butterfly"                          , ySpacing: smallLineSpacing },
+        { type: "link"      , text: "FilmCow"                                   , size: 20, url:    "https://filmcow.itch.io/filmcow-sfx"                              , ySpacing: smallLineSpacing },
+        { type: "link"      , text: "Leohpaz"                                   , size: 20, url:    "https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack"    , ySpacing: smallLineSpacing },
+        { type: "link"      , text: "Nathan Gibson"                             , size: 20, url:    "https://nathangibson.myportfolio.com"                             , ySpacing: smallLineSpacing },
+        { type: "link"      , text: "Nox_Sound_Design"                          , size: 20, url:    "https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound" , ySpacing: smallLineSpacing },
+        { type: "text"      , text: "Snippets de code : "                       , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
+        { type: "link"      , text: "MarredCheese"                              , size: 20, url:    "https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148", ySpacing: smallLineSpacing },
+        { type: "link"      , text: "Vishal"                                    , size: 20, url:    "https://stackoverflow.com/a/11486026"                             , ySpacing: smallLineSpacing },
+        { type: "text"      , text: "Assistant IA : "                           , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
+        { type: "link"      , text: "OpenAI, ChatGPT"                           , size: 20, url:    "https://chat.openai.com"   , ySpacing: lineSpacing * 2 },
+        { type: "text"      , text: 'Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).', size: 24, tag: "supacat", ySpacing: smallLineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
     ];
 
     function drawCredits() {
@@ -555,7 +546,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
                         text(item.text, { size: item.size, font: "d", weight: item.weight }),
                         pos(centerX, posY - lineSpacing * 1.5),
                         anchor("center"),
-                        color(255, 255, 255),
+                        color(WHITE),
                         "creditsItem",
                     ]);
                     break;
@@ -564,7 +555,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
                         text(item.text, { size: item.size, font: "d", weight: item.weight }),
                         pos(20, posY - lineSpacing * 1.25),
                         anchor("left"),
-                        color(255, 255, 255),
+                        color(WHITE),
                         "creditsItem",
                     ]);
                     break;
@@ -576,7 +567,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
                                 text(line, { size: item.size, font: "d", weight: item.weight, italic: item.italic }),
                                 pos(20, posY + index * lineSpacing),
                                 anchor("left"),
-                                color(255, 255, 255),
+                                color(WHITE),
                                 area(),
                                 "creditsItem",
                                 item.tag,
@@ -588,7 +579,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
                             text(item.text, { size: item.size, font: "d", weight: item.weight, italic: item.italic }),
                             pos(20, posY),
                             anchor("left"),
-                            color(255, 255, 255),
+                            color(WHITE),
                             "creditsItem",
                         ]);
                         posY += item.ySpacing || lineSpacing;
@@ -599,7 +590,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
                         text(item.text, { size: item.size, font: "d" }),
                         pos(20, posY),
                         anchor("left"),
-                        color(0, 0, 255),
+                        color(BLUE),
                         area(),
                         "creditsItem",
                         item.url
@@ -619,32 +610,31 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
             "creditsItem",
             "menuButton",
         ]);
-
         const menuButtonText = menuButton.add([
             text("Menu", { font: "d", size: 18 }),
             pos(0, 0),
             anchor("center"),
             color(rgb(0, 0, 0)),
         ]);
-
         onClick("menuButton", () => {
             go("startMenu");
         });
 
-        // Click events for links
-        onClick("https://mayragandra.itch.io/freeambientmusic", () => window.open("https://mayragandra.itch.io/freeambientmusic", '_blank'));
-        onClick("https://brackeysgames.itch.io/brackeys-platformer-bundle", () => window.open("https://brackeysgames.itch.io/brackeys-platformer-bundle", '_blank'));
-        onClick("https://pudretediablo.itch.io/butterfly", () => window.open("https://pudretediablo.itch.io/butterfly", '_blank'));
-        onClick("https://filmcow.itch.io/filmcow-sfx", () => window.open("https://filmcow.itch.io/filmcow-sfx", '_blank'));
-        onClick("https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack", () => window.open("https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack", '_blank'));
-        onClick("https://nathangibson.myportfolio.com", () => window.open("https://nathangibson.myportfolio.com", '_blank'));
-        onClick("https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound", () => window.open("https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound", '_blank'));
-        onClick("https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148", () => window.open("https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148", '_blank'));
-        onClick("https://stackoverflow.com/a/11486026", () => window.open("https://stackoverflow.com/a/11486026", '_blank'));
-        onClick("https://chat.openai.com", () => window.open("https://chat.openai.com", '_blank'));
+        // Click events for links --> currently this isn't working. It seems like Kaboom.js overides the vanilla javascript "window.open" and has no native replacement.
+        onClick("https://mayragandra.itch.io/freeambientmusic"                      , () => window.open("https://mayragandra.itch.io/freeambientmusic"                      , '_blank'));
+        onClick("https://brackeysgames.itch.io/brackeys-platformer-bundle"          , () => window.open("https://brackeysgames.itch.io/brackeys-platformer-bundle"          , '_blank'));
+        onClick("https://pudretediablo.itch.io/butterfly"                           , () => window.open("https://pudretediablo.itch.io/butterfly"                           , '_blank'));
+        onClick("https://filmcow.itch.io/filmcow-sfx"                               , () => window.open("https://filmcow.itch.io/filmcow-sfx"                               , '_blank'));
+        onClick("https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack"     , () => window.open("https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack"     , '_blank'));
+        onClick("https://nathangibson.myportfolio.com"                              , () => window.open("https://nathangibson.myportfolio.com"                              , '_blank'));
+        onClick("https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound"  , () => window.open("https://nox-sound-design.itch.io/essentials-series-sfx-nox-sound"  , '_blank'));
+        onClick("https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148"  , () => window.open("https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148"  , '_blank'));
+        onClick("https://stackoverflow.com/a/11486026"                              , () => window.open("https://stackoverflow.com/a/11486026"                              , '_blank'));
+        onClick("https://chat.openai.com"                                           , () => window.open("https://chat.openai.com"                                           , '_blank'));
         onClick("supacat", () => go("supacat"));
     }
 
+    // Function to move the page up and down with arrows
     function updateCredits() {
         destroyAll("creditsItem");
         drawCredits();
@@ -694,13 +684,12 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
     }
 });
 
-scene("supacat", () => {
+scene("supacat", () => { // ;)
     // charger les assets
     loadSprite("chat","ref/cat.png");
     loadSound("miaou","ref/miau.wav");
 
     // ajouter à l'écran
-
     const chat = add([
         sprite("chat"),
         pos(20,20),
@@ -710,7 +699,6 @@ scene("supacat", () => {
     ])
 
     // ajouter des interactions
-
     onKeyPress("space",()=>{
         play("miaou",{
             volume: 2,            
@@ -745,7 +733,6 @@ scene("supacat", () => {
     ])
 
     // ajouter un collider
-
     onCollide("chat","texte", () =>{
         destroy(chat);
         play("miaou",{
@@ -765,19 +752,16 @@ scene("supacat", () => {
         "creditsItem",
         "menuButton",
     ]);
-
     const menuButtonText = menuButton.add([
         text("Menu", { font: "d", size: 18 }),
         pos(0, 0),
         anchor("center"),
         color(rgb(0, 0, 0)),
     ]);
-
     onClick("menuButton", () => {
         go("startMenu");
     });
-
-    add([
+    add([ //Credits
         text("Vous jouez à supacat par Isaac Pante, 6 juin 2024", {font:"d", size: 16 }),
         pos(W - 100, H - 100),
         anchor("botright"),
@@ -786,18 +770,14 @@ scene("supacat", () => {
 })
 
 scene("game", () => {
-    honey = 0;
+    honey = 0; //set the score to 0 at every start
     // DECLARING CONSTANTS
      // Areas
-        // New buttons
-         const X_BUTTONS         = W - 10;
-         const Y_FIRST_BUTTON    = 65;
-        // Cash
-         const CASHBOX  = add([anchor("center"),pos(W/2 ,30)   ,z(Z_UI_BOTTOM),"ui"]);
-         const SCOREBOX = add([anchor("left")  ,pos(15  ,H-60) ,z(Z_UI_BOTTOM),"ui"]);
-         const TOPLBOX  = add([anchor("left")  ,pos(15  ,30)   ,z(Z_UI_BOTTOM),"ui"]);
-         const NEWBOX   = add([anchor("right") ,pos(W-15,15)   ,z(Z_UI_BOTTOM),"ui"]);
-         const BEARBOX  = add([anchor("bot")   ,pos(W/2 ,H)    ,z(Z_UI_BOTTOM),"ui"]);
+         const CASHBOX  = add([anchor("center"), pos(W/2 ,30)   , z(Z_UI_BOTTOM), "ui"]);
+         const SCOREBOX = add([anchor("left")  , pos(15  ,H-60) , z(Z_UI_BOTTOM), "ui"]);
+         const TOPLBOX  = add([anchor("left")  , pos(15  ,30)   , z(Z_UI_BOTTOM), "ui"]);
+         const NEWBOX   = add([anchor("right") , pos(W-15,15)   , z(Z_UI_BOTTOM), "ui"]);
+         const BEARBOX  = add([anchor("bot")   , pos(W/2 ,H)    , z(Z_UI_BOTTOM), "ui"]);
      // UI
         const ICON_DIST     = 40;
         const NEW_BT_DIST   = 5;
@@ -814,7 +794,7 @@ scene("game", () => {
         let pr_new_bird     = 200;
         let pr_new_bee      = 75;
         let pr_new_beehive  = 30;
-     // Number of elements
+     // Number of elements -> these are later updated on the general onUpdate
         let nb_trees    = get('tree').length;
         let nb_bees     = get('bee').length;
         let nb_birds    = get('bird').length;
@@ -825,34 +805,29 @@ scene("game", () => {
         let cps_t_base  = 0.5
         let cps_tree    = cps_t_base * (nb_bees * nb_flowered + 1);
      // Events
-        const MAX_EVENT_STAT = 100;
-        let pollu_stat  = 0;
-        let pollu_over  = 0;
-        let pollu_boost = 2;
-        let pollu_color = rgb(31, 60, 33); //if change this need to change lower
-        let defo_stat   = 0;
-        let defo_over   = 0;
-        let defo_boost  = 1.5;
-        let defo_color  = rgb(89, 66, 53); //if change this need to change lower
+        const MAX_EVENT_STAT    = 100;
+        let pollu_stat          = 0;
+        let pollu_over          = 0;
+        let pollu_boost         = 2;
+        let pollu_color         = rgb(31, 60, 33); //if change this needs to be changed lower - these values can't seem to be stored
+        let defo_stat           = 0;
+        let defo_over           = 0;
+        let defo_boost          = 1.5;
+        let defo_color          = rgb(89, 66, 53); //if change this needs to be changed lower - these values can't seem to be stored
      // Others
-        let diaL = get("dialog").length; //length to check if the dialogue is existent
+        let diaL                = get("dialog").length; //to check if the dialogue is existant (mostly to pause other functions)
         let flowered_clicks     = 40;
         let nb_bees_p_flowered  = 3;
         let nb_bees_p_behive    = 5;
-        //let health_tree = 20;
 
-    //sound
-    //onKeyRelease("space", (t) => {
-    //    music = play('default_music'); //goes faster the more dialogs you click
-    //})
-
+    // ADDING ELEMENTS
     // UI
     // Cash
      const text_cash = CASHBOX.add([
         text(formatNumber(cash, {useOrderSuffix: true, decimals: 1}),{
-            width : W,
-            size : 26,
-            font : "d",
+            width   : W,
+            size    : 26,
+            font    : "d",
         }),
         anchor("left"),
         pos(-30, 0),
@@ -875,8 +850,8 @@ scene("game", () => {
      const text_cash_per_sec = CASHBOX.add([
         text(formatNumber(cps_final, {useOrderSuffix: true, decimals: 1}) + "/s",{   
             width   : W,
-            size : 16,
-            font : "d",
+            size    : 16,
+            font    : "d",
         }),
         anchor("left"),
         pos(icon_cash.pos.x, 35),
@@ -899,9 +874,9 @@ scene("game", () => {
      ]);
      const text_honey = SCOREBOX.add([
         text(`${Math.floor(honey)}`,{
-           width : W,
-           size : 40,
-           font : "d",
+           width    : W,
+           size     : 40,
+           font     : "d",
         }),
         anchor("left"),
         pos(icon_honey.pos.x + 85, 0),
@@ -916,9 +891,9 @@ scene("game", () => {
     // Timer
      const text_time = TOPLBOX.add([
         text(`Temps restant : ` + fancyTimeFormat(time),{
-            width : W,
-            size : 22,
-            font : "d",
+            width   : W,
+            size    : 22,
+            font    : "d",
         }),
         anchor("left"),
         pos(0,0),
@@ -927,8 +902,8 @@ scene("game", () => {
             update(){
                 if (time >= 0) {
                     this.text = `Temps restant : ` + fancyTimeFormat(time);
-                }else{
-                    this.text="";
+                } else {
+                    this.text= ""; //hides this text in infinite mode
                 }
             }
         },
@@ -936,17 +911,17 @@ scene("game", () => {
     ]);
 
     // EVENTS UI
-    const EVENTS = add([anchor("left"),pos(10,text_time.pos.y + 65),z(Z_UI_BOTTOM),"ui"])
+    const EVENTS = add([anchor("left"), pos(10,text_time.pos.y + 65), z(Z_UI_BOTTOM), "ui"]);
     function emptyBar(){
         drawRect({
-            pos: vec2(30, 0),
-            width: MAX_EVENT_STAT + 2,
-            height: 13,
-            anchor: "left",
-            fill: false,
-            outline: { color: BLACK, width: 2 },
-        })
-    }
+            pos     : vec2(30, 0),
+            width   : MAX_EVENT_STAT + 2,
+            height  : 13,
+            anchor  : "left",
+            fill    : false,
+            outline : {color: BLACK, width: 2 },
+        });
+    };
 
      // Pollution
      const icon_pollution = EVENTS.add([
@@ -959,11 +934,11 @@ scene("game", () => {
      ]);
         icon_pollution.onDraw(() => {
             drawRect({
-                pos: vec2(30, 0),
-                width: pollu_stat,
-                height: 13,
-                anchor: "left",
-                color: pollu_color,
+                pos     : vec2(30, 0),
+                width   : pollu_stat,
+                height  : 13,
+                anchor  : "left",
+                color   : pollu_color,
             })
             emptyBar();
         })
@@ -978,11 +953,11 @@ scene("game", () => {
      ]);
         icon_defo.onDraw(() => {
             drawRect({
-                pos: vec2(30, 0),
-                width: defo_stat,
-                height: 13,
-                anchor: "left",
-                color: defo_color,
+                pos     : vec2(30, 0),
+                width   : defo_stat,
+                height  : 13,
+                anchor  : "left",
+                color   : defo_color,
             })
             emptyBar();
         })
@@ -1000,7 +975,7 @@ scene("game", () => {
          "game_elements",
      ]);
     
-    // BUTTONS TO ADD NEW ELEMENTS (maybe add a onScroll for these elements)
+    // BUTTONS TO ADD NEW ELEMENTS
      // Adding a new tree button
      const new_tree = NEWBOX.add([
         sprite('new_tree'),
@@ -1013,7 +988,7 @@ scene("game", () => {
         "button",
         "new_button",
         "new_tree",
-     ])
+     ]);
         const text_new_tree_price = new_tree.add([
             text(formatNumber(pr_new_tree, {useOrderSuffix: true, decimals: 1}),{
                 size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
@@ -1032,21 +1007,21 @@ scene("game", () => {
             anchor("right"),
             pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
             z(Z_UI_TOP),
-        ])
+        ]);
         const text_nb_trees = new_tree.add([
             text(formatNumber(nb_trees, {useOrderSuffix: true}),{
                 size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
-                font:"d",
+                font : "d",
             }),
             {
                 update(){
-                this.text = formatNumber(nb_trees, {useOrderSuffix: true});
+                    this.text = formatNumber(nb_trees, {useOrderSuffix: true});
                 }
             },
             anchor("right"),
             pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
             z(Z_UI_TOP),
-        ])
+        ]);
         // Adding a new bird button
         const new_bird = NEWBOX.add([
             sprite('new_bird'), 
@@ -1061,11 +1036,11 @@ scene("game", () => {
             "button",
             "new_button",
             "new_bird",
-         ])
+         ]);
             const text_new_bird_price = new_bird.add([
                 text(formatNumber(pr_new_bird, {useOrderSuffix: true, decimals: 1}),{
                     size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
-                    font:"d",
+                    font : "d",
                 }),
                 {
                     update(){
@@ -1081,26 +1056,27 @@ scene("game", () => {
                 pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
                 z(Z_UI_TOP),
                 opacity(0),
-            ])
+            ]);
             const text_nb_birds = new_bird.add([
                 text(formatNumber(nb_birds, {useOrderSuffix: true}),{
                     size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
-                    font:"d",
+                    font : "d",
                 }),
                 {
                     update(){
-                    this.text = formatNumber(nb_birds, {useOrderSuffix: true});
+                        this.text = formatNumber(nb_birds, {useOrderSuffix: true});
                     }
                 },
                 anchor("right"),
                 pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
                 z(Z_UI_TOP),
                 opacity(0),
-            ])
-            const new_empty = NEWBOX.add([
+            ]);
+            const new_empty = NEWBOX.add([ //The empty button that appears in the place of the birds one
                 sprite('new_empty'),
                 opacity(1),
-                {update(){
+                {
+                    update(){
                     if (this.opacity == 1) {
                         this.use(shader("grayscale"));
                     } else {
@@ -1116,7 +1092,7 @@ scene("game", () => {
                 "ui",
                 "button",
                 "new_button",
-             ])
+             ]);
     // Adding a new bee button
      const new_bee = NEWBOX.add([
         sprite('new_bee'),
@@ -1144,11 +1120,11 @@ scene("game", () => {
         "button",
         "new_button",
         "new_bee",
-     ])
+     ]);
         const text_new_bee_price = new_bee.add([
             text(formatNumber(pr_new_bee, {useOrderSuffix: true, decimals: 1}),{
                 size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
-                font:"d",
+                font : "d",
             }),
             {
                 update(){
@@ -1164,25 +1140,25 @@ scene("game", () => {
             pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
             z(Z_UI_TOP),
             opacity(0),
-        ])
+        ]);
         const text_nb_bees = new_bee.add([
             text(formatNumber(nb_bees, {useOrderSuffix: true}),{
                 size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
-                font:"d",
+                font : "d",
             }),
             {
                 update(){
-                this.text = formatNumber(nb_bees, {useOrderSuffix: true});
+                    this.text = formatNumber(nb_bees, {useOrderSuffix: true});
                 }
             },
             anchor("right"),
-            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
+            pos(-BUTTON_SIZE * 6, BUTTON_SIZE * 3.6),
             z(Z_UI_TOP),
             opacity(0),
-        ])
+        ]);
     // Adding a new bee button
     const new_beehive = NEWBOX.add([
-        sprite('new_beehive'), //change to new_beehive
+        sprite('new_beehive'),
         {
             update(){
                 if (nb_bees > 0) {
@@ -1211,7 +1187,7 @@ scene("game", () => {
         const text_new_beehive_price = new_beehive.add([
             text(formatNumber(pr_new_beehive, {useOrderSuffix: true, decimals: 1}),{
                 size : BUTTON_SIZE * BUTTON_PRICE_TXT_SCALE,
-                font:"d",
+                font : "d",
             }),
             {
                 update(){
@@ -1224,26 +1200,27 @@ scene("game", () => {
                 }
             },
             anchor("right"),
-            pos(-BUTTON_SIZE * 4,BUTTON_SIZE * 1.7),
+            pos(-BUTTON_SIZE * 4, BUTTON_SIZE * 1.7),
             z(Z_UI_TOP),
             opacity(0),
         ])
         const text_nb_beehives = new_beehive.add([
             text(formatNumber(nb_beehives, {useOrderSuffix: true}),{
                 size : BUTTON_SIZE * BUTTON_NB_TXT_SCALE,
-                font:"d",
+                font : "d",
             }),
             {
                 update(){
-                this.text = formatNumber(nb_beehives, {useOrderSuffix: true});
+                    this.text = formatNumber(nb_beehives, {useOrderSuffix: true});
                 }
             },
             anchor("right"),
-            pos(-BUTTON_SIZE * 6,BUTTON_SIZE * 3.6),
+            pos(-BUTTON_SIZE * 6, BUTTON_SIZE * 3.6),
             z(Z_UI_TOP),
             opacity(0),
         ])
 
+     //Info bubbles
         // Info button for the tree
         const information_0 = NEWBOX.add([
             sprite('info'), 
@@ -1309,7 +1286,6 @@ scene("game", () => {
             "info_beehive",
          ])
 
-        // Info buttons for the left side of the screen
         // Info button for the pollution
          const information_4 = EVENTS.add([
             sprite('info'), 
@@ -1343,7 +1319,7 @@ scene("game", () => {
         
 
     //BACKGROUND
-     // Adding the background dynamically to the screen size
+     // Adding the background dynamically to the screen size -> this becomes redundant from v. beta.1.2.0, but keep it in case of a change to dynamic scaling again.
      for (let i = 0; i < NB_BG_X_TILES; i++) {
         const bg = add([
             sprite("main_bg"),
@@ -1361,7 +1337,7 @@ scene("game", () => {
                 const bg = add([
                     sprite("sky_bg"),
                     anchor("left"),
-                    pos((BG_TILE_SIZE) * i, BG_Y - ((BG_TILE_SIZE)*j)),
+                    pos((BG_TILE_SIZE) * i, BG_Y - ((BG_TILE_SIZE) * j)),
                     scale(SPRITE_BG_SCALE),
                     z(0),
                     "bg",
@@ -1374,7 +1350,7 @@ scene("game", () => {
                 const bg = add([
                     sprite("water_bg"),
                     anchor("left"),
-                    pos((BG_TILE_SIZE) * i, BG_Y + ((BG_TILE_SIZE)*j)),
+                    pos((BG_TILE_SIZE) * i, BG_Y + ((BG_TILE_SIZE) * j)),
                     scale(SPRITE_BG_SCALE),
                     z(0),
                     "bg",
@@ -1394,7 +1370,7 @@ scene("game", () => {
             anchor("bot"),
             area(),
             z(y_st),
-            //health(health_tree),
+            //health(health_tree), --> this was not working for some reason, I'll still keep the code in case a fix comes to be
             "tree",
             "hiveable",
             "clickable",
@@ -1402,25 +1378,24 @@ scene("game", () => {
         ]);
 
     // ADDING EVENT LISTENERS
-    // Game elements (inside an if(get("dialog").lenght == 0) to make sure it is impossible to click things if dialogues are on)
+    // Game elements (inside an if(diaL == 0) to make sure it is impossible to click things if dialogues are on)
         // Click any tree
-        let nb_clicks = 0;
+        let nb_clicks = 0; // --> this is what replaced the health code
         onClick("tree", (t) => { 
-             // Test: click tree
-            music = play('button_click'); //it works with onclick
+            music = play('button_click');
             if (diaL == 0) {
                 plus(1);
                 nb_clicks++;
-                if(nb_clicks == flowered_clicks && t.is("flowered") != true){
+                if(nb_clicks == flowered_clicks && t.is("flowered") != true){ //Checks if the tree is not flowered and if the number the clicks is enough to make the tree flowered
                     const flowers = add([
                         sprite("flowers0"),
                         anchor("bot"),
                         pos(t.pos),
-                        z(t.z+1),
+                        z(t.z + 1),
                         scale(t.scale),
                         area(),
                         "flowers",
-                    ])
+                    ]);
                     t.use("flowered");
                 }
                 if(nb_clicks > flowered_clicks){
@@ -1447,12 +1422,12 @@ scene("game", () => {
                 }
                 zoomOut(t);
             }
-        })
-        onClick("flowers", (t) => {
+        });
+        onClick("flowers", (t) => { //Also makes the floweres zoomOut when clicking on a tree
             if (diaL == 0) {
                 zoomOut(t);
             }
-        })
+        });
         // Click the trashcans
         onClick("trash", (t) => { 
             if (diaL == 0) {
@@ -1473,22 +1448,22 @@ scene("game", () => {
                         offscreen({destroy: true}),
                         "trash_particle",
                     ])
-                    trash_particle.jump(rand(100, 350))
+                    trash_particle.jump(rand(100, 350));
                 }
                 zoomOut(t);
                 minusPollu();
-                if(pollu_over <= 0){
+                if(pollu_over <= 0){ //has a random change of getting destroyed when clicked on
                     let ran = randi(7);
                     if (ran == 2) {
-                            destroy(t);                
+                        destroy(t);                
                     }
                 }
                 if(pollu_stat < 5){
-                    destroyAll("trash")
+                    destroyAll("trash");
                 }
             }
             music = play('trash_click');
-        })
+        });
         // Click the bulldozer
         onClick("bulldozer", (t) => { 
             if (diaL == 0) {
@@ -1509,23 +1484,25 @@ scene("game", () => {
                         move(choose([LEFT,RIGHT]), rand(30, 150)),
                         offscreen({destroy: true}),
                         "smoke_particle",
-                    ])
+                    ]);
                     smoke_particle.jump(rand(400, 500));
                 }
                 zoomOut(t);
                 minusDefo();
-                if(defo_stat < 5){
+                if(defo_stat < 5){ //gets destroyed on the deforestation bar reaches 5 or less
                     destroy(t);
                 }
             }
             music = play('bulldozer_click'); 
         });
+        //Click the info bubbles
         onClick("info", (t) => {
             if (t.opacity != 0) {
                 diaBubble(dia_info[t.dia]);
                 music = play('button_click'); 
             }
         });
+        //Explode particles destruction of the different things
         onDestroy("trash", (t) =>{
             for (let i = 0; i < randi(5); i++) {
                 const trash_particle = add([
@@ -1543,12 +1520,13 @@ scene("game", () => {
                     offscreen({destroy: true}),
                     "trash_particle",
                 ])
-                trash_particle.jump(rand(100, 350))
+                trash_particle.jump(rand(100, 350));
             }
-        })
+        });
         onDestroy("tree", (t) => {
             music = play('tree_leaf', {
-                            volume: 5,});
+                volume: 5,
+            });
             for (let i = 0; i < randi(10,20); i++) {
                 const leaf_particle = add([
                     pos(t.pos),
@@ -1564,10 +1542,10 @@ scene("game", () => {
                     rotate(rand(0, 360)),
                     offscreen({destroy: true}),
                     "leaf_particle",
-                ])
+                ]);
                 leaf_particle.jump(rand(100, 350));
             }
-        })
+        });
         onDestroy("flowers", (t) => {
             for (let i = 0; i < randi(10,20); i++) {
                 const leaf_particle = add([
@@ -1584,10 +1562,10 @@ scene("game", () => {
                     rotate(rand(0, 360)),
                     offscreen({destroy: true}),
                     "leaf_particle",
-                ])
+                ]);
                 leaf_particle.jump(rand(100, 350));
             }
-        })
+        });
         onDestroy("beehive", (t) => {
             for (let i = 0; i < randi(10,20); i++) {
                 const leaf_particle = add([
@@ -1604,10 +1582,10 @@ scene("game", () => {
                     rotate(rand(0, 360)),
                     offscreen({destroy: true}),
                     "leaf_particle",
-                ])
+                ]);
                 leaf_particle.jump(rand(100, 350));
             }
-        })
+        });
         onDestroy("bulldozer", (t) => {
             for (let i = 0; i < randi(10,30); i++) {
                 const smoke_particle = add([
@@ -1630,18 +1608,18 @@ scene("game", () => {
                 music_bulldozer.stop(); 
             }
             icon_bear.use(sprite("bear"));
-        })
+        });
 
         // Skip dialogs
-        let q = 0;
-        onKeyRelease("space", (t) => {
+        let q = 0; //this value is here for the introductory dialogue
+        onKeyRelease("space", () => {
             destroyAll("dialog");
             icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
             q++;
             if(q == 3){
                 let o = 0
-                //loop(0.5, () => { //I can't make this stop for some reason
+                //loop(0.5, () => { //I can't make this stop for some reason --> it was suppose to make the bubbles blink for a small while
                     if (o == 0) {
                         information_0.use(opacity(1));
                         information_4.use(opacity(1));
@@ -1660,7 +1638,7 @@ scene("game", () => {
                 information_5.use(opacity(1));
             }
         });
-        onClick("skip", (t) => {
+        onClick("skip", () => { //this is mainly here for the mobile version
             destroyAll("dialog");
             icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
@@ -1687,7 +1665,7 @@ scene("game", () => {
             }
         });
 
-        //Pause menu
+        //Pause menu --> for some reason, this is locking other functionalities
         //onKeyRelease("p", () => {
         //    diaBubble(dia_others[0]);
         //})
@@ -1717,11 +1695,11 @@ scene("game", () => {
                         warning(text_new_tree_price);
                         CASHBOX.add([
                             text("Pas assez de feuilles!", { 
-                                size: 20,
-                                font: "d",
+                                size : 20,
+                                font : "d",
                             }),
                             pos(text_cash.pos.x - 155, 150), 
-                            color(255, 0, 0), 
+                            color(RED), 
                             lifespan(2), 
                         ]);
                     } else {
@@ -1739,11 +1717,11 @@ scene("game", () => {
                         warning(text_new_bird_price);
                         CASHBOX.add([
                             text("Pas assez de feuilles!", { 
-                                size: 20,
-                                font: "d",
+                                size : 20,
+                                font : "d",
                             }),
                             pos(text_cash.pos.x - 155, 150), 
-                            color(255, 0, 0), 
+                            color(RED), 
                             lifespan(2), 
                         ]);
                     } else {
@@ -1763,12 +1741,12 @@ scene("game", () => {
                         warning(text_new_bee_price);
                         CASHBOX.add([
                             text("Pas assez de feuilles!", { 
-                                size: 20,
-                                font: "d",
+                                size : 20,
+                                font : "d",
                             }),
-                            pos(text_cash.pos.x - 155, 150), // Adjust the position as needed
-                            color(255, 0, 0), // Set text color to red
-                            lifespan(2), // Text will disappear after 2 seconds
+                            pos(text_cash.pos.x - 155, 150),
+                            color(RED),
+                            lifespan(2),
                         ]);
                     } else {
                         addBee();
@@ -1781,7 +1759,7 @@ scene("game", () => {
                             font: "d",
                         }),
                         pos(text_cash.pos.x - 300, 150), 
-                        color(255, 0, 0), 
+                        color(RED), 
                         lifespan(2), 
                     ]);
                 };
@@ -1794,11 +1772,11 @@ scene("game", () => {
                         warning(text_new_beehive_price);
                         CASHBOX.add([
                             text("Pas assez de feuilles!", { 
-                                size: 20,
-                                font: "d",
+                                size : 20,
+                                font : "d",
                             }),
                             pos(text_cash.pos.x - 155, 150), 
-                            color(255, 0, 0), 
+                            color(RED), 
                             lifespan(2), 
                         ]);
                     } else {
@@ -1808,15 +1786,16 @@ scene("game", () => {
                     warning(b);
                     CASHBOX.add([
                         text("Pas assez d'abeilles!", { 
-                            size: 20,
-                            font: "d",
+                            size : 20,
+                            font : "d",
                         }),
                         pos(text_cash.pos.x - 155, 180), 
-                        color(255, 0, 0), 
+                        color(RED), 
                         lifespan(2), 
                     ]);
                 };
             });
+
        // AUTOMATIC STUFF
         loop(1, () => {
             if (diaL == 0) { // Pauses the game if dialogue is opened
@@ -1910,7 +1889,7 @@ scene("game", () => {
 
         let p = 0; let d = 0; let sbb = false; let sbeeb = false; let sbhb = false; // Try to limit things so the update doesn't update everything even when not needed, but rather only tries to do the if
         onUpdate(() => {    
-            diaL        = get("dialog").length; // Length to check if the dialogue is existent
+            diaL        = get("dialog").length;
             nb_trees    = get('tree').length;
             nb_bees     = get('bee').length;
             nb_birds    = get('bird').length;
@@ -1918,10 +1897,10 @@ scene("game", () => {
             nb_flowered = get('flowered').length;
             nb_beehives = get('beehive').length;
 
-            cps_tree = cps_t_base * (nb_bees * nb_flowered + 1);
+            cps_tree = cps_t_base * (nb_bees * nb_flowered + 1); //Changes the passive revenue of trees
 
-            cash_per_sec = (nb_trees * cps_tree);
-            cps_final   = cash_per_sec / cps_penalty;
+            cash_per_sec    = (nb_trees * cps_tree);        //Changes the general passive revenue
+            cps_final       = cash_per_sec / cps_penalty;   //Changes the general passive revenue based on the penalties (for now, only the trashcans do)
             if (nb_trash == 0) {
                 cps_penalty = 1;
             } else {
@@ -1965,7 +1944,7 @@ scene("game", () => {
             }
 
             // Pollution relative actions
-            if (pollu_stat > 50 && p == 0) {
+            if (pollu_stat > 50 && p == 0) { //all these >50 are now redundant
                 p++;
                 // diaBubble(dia_pollution[0]);
             }
@@ -2010,9 +1989,8 @@ scene("game", () => {
          let ranYB = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
          const randX  = rand(0, W);
          const randY  = rand(ranYA, ranYB);
-
             const saturation = calculateSaturation(randY, ranYA, ranYB);
-            // CHATGPT Calculate RGB values based on saturation level
+            // chatGPT Calculate RGB values based on saturation level --> this doesn't seem to fully work
             const color = calculateColor(saturation);
          // const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
          const tree  = add([
@@ -2022,16 +2000,16 @@ scene("game", () => {
              anchor("bot"),
              area(),
              z(randY),
-             // health(health_tree),
+             //health(health_tree), // --> same problem as in starting tree
              "tree",
              "hiveable",
           ]);
           tree.color = rgb(color.red, color.green, color.blue);
             pay(pr_new_tree);
-            // exp(pr_new_tree); //PK çA MARCHE PAS??????
+            // exp(pr_new_tree); //This was supposed to increase the price of the tree (and other elements bellow), but doesn't seem to work for some reason
             pr_new_tree = pr_new_tree * scaling;
        }
-        // Add custom new tree
+        // Add custom new tree for the birds
        function addCustTree(x,y) {
          const tree  = add([
              sprite(choose(trees)),
@@ -2044,14 +2022,13 @@ scene("game", () => {
              "tree",
              "hiveable"
           ])
-            //exp(pr_new_tree); //PK çA MARCHE PAS??????
+            //exp(pr_new_tree); //not working
        }
        // Add a new bee
        function addBee(){
         let rF = choose(get('flowered')); // Random flowered objects
-        let rB = choose(get('beehive'));
+        let rB = choose(get('beehive'));  // Random beehive
         let b = 0; // Tracking bee's state
-        // Creating bee
         const bee = add([
             sprite('bee', {
                 anim: "main",
@@ -2091,7 +2068,7 @@ scene("game", () => {
                                     font: "d",
                                 }),
                                 pos(text_cash.pos.x - 400, 150), 
-                                color(255, 0, 0), 
+                                color(RED), 
                                 lifespan(2), 
                             ]);
                         }
@@ -2118,11 +2095,11 @@ scene("game", () => {
                             this.moveTo(rand(W), rand(H), BEE_SPEED);
                             CASHBOX.add([
                                 text("Où sont les ruches?", { 
-                                    size: 20,
-                                    font: "d",
+                                    size : 20,
+                                    font : "d",
                                 }),
                                 pos(text_cash.pos.x - 150, 200), 
-                                color(255, 0, 0), 
+                                color(RED), 
                                 lifespan(2), 
                             ]);
                         };
@@ -2134,22 +2111,15 @@ scene("game", () => {
                                 this.z = this.pos.y + 100;
                                 b = 0;
                             });
-                            //this.onAnimEnd((anim) => {
-                            //    if (anim === "pollen" && b === 1) {
-                            //        b++;
-                            //        this.play("main");
-                            //    }
-                            //});
                         }
                     }
                 },
             },
             "bee",
-        ])
+        ]);
             pay(pr_new_bee);
-            // Change with function
             pr_new_bee  = pr_new_bee * scaling;
-       }
+       };
         // Add a new bee
          function addBeehive(){
          let rT = choose(get('hiveable'));
@@ -2165,7 +2135,6 @@ scene("game", () => {
             rT.unuse("hiveable");
             rT.use("unhiveable");
             pay(pr_new_beehive);
-            // Change with function
             pr_new_beehive  = pr_new_beehive * scaling;
         }
         // Add a new trash
@@ -2198,7 +2167,7 @@ scene("game", () => {
                             /*//dynamically scale bulldozer
                             if (get('bulldozer').length != 0) {
                                 get('bulldozer')[0].scale = get('bulldozer')[0].pos.y * BULLDOZER_SCALE;
-                            }*/ //-----> makes it untoucheable for some reason 
+                            }*/ //-----> makes it unclickeable for some reason 
                             if (this.pos.x > rT.pos.x) {
                                 this.flipX = false;
                             } else {
@@ -2230,24 +2199,24 @@ scene("game", () => {
                 scale(H/2 * BULLDOZER_SCALE),
                 area(0.5),
                 "bulldozer",
-            ])
-         }
+            ]);
+         };
         // Add new bird
         function addBird() {
-            let b = 0;
-            let rT = choose(get('tree'));
-            let ranYA = H/2;
-            let ranYB = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
-            let randX  = rand(0, W);
-            let randY  = rand(ranYA, ranYB);
-            const bird = add([
+            let b       = 0;
+            let rT      = choose(get('tree'));
+            let ranYA   = H/2;
+            let ranYB   = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
+            let randX   = rand(0, W);
+            let randY   = rand(ranYA, ranYB);
+            const bird  = add([
                 sprite('bird', {
                     anim : "fly",
                 }),
                 anchor("bot"),
                 pos(choose(-10, W+10), H/2),
                 {
-                    update(){
+                    update(){ //bird's actions and mouvements
                         if (diaL === 0) {
                             this.z = this.pos.y + 100;
                             this.scale = this.pos.y * BIRD_SCALE;
@@ -2298,9 +2267,9 @@ scene("game", () => {
                                         b = 0;
                                         addCustTree(this.pos.x, this.pos.y);
                                         this.play("fly");
-                                        rT = choose(get('tree'));
-                                        randX  = rand(0, W);
-                                        randY  = rand(ranYA, ranYB);
+                                        rT      = choose(get('tree'));
+                                        randX   = rand(0, W);
+                                        randY   = rand(ranYA, ranYB);
                                     }
                                 });
                             }
@@ -2318,17 +2287,16 @@ scene("game", () => {
                 scale(BIRD_SCALE),
                 area(),
                 "bird",
-            ])
+            ]);
             pay(pr_new_bird);
-            // Change with function
             pr_new_bird  = pr_new_bird * scaling;
-         }
+         };
        // Add a dialog box
        function diaBubble(array_with_number){
             let width = W/1.5;
             destroyAll("dialog");
             destroyAll("space_bar");
-            const bubble = add([ // CAN'T ADD IT IN BEARBOX BECAUSE BEARBOX CAN'T HAVE THE AREA() FUNCTION
+            const bubble = add([ // can't add this to BEARBOX like intended because the area() stops working
                 rect(width, H/8, { radius: 32 }),
                 anchor("center"),
                 pos(BEARBOX.pos.x - 15, H - H/8),
@@ -2336,33 +2304,38 @@ scene("game", () => {
                 outline(4),
                 area(),
                 "dialog",
-            ])
+            ]);
             const txt_bubble = add([
                 text(array_with_number[1], { size: 16, font:"d", width: width - 15, align: "center" }),
                 pos(bubble.pos),
                 anchor("center"),
-                color(0, 0, 0),
+                color(BLACK),
                 z(Z_UI_BOTTOM),
                 area(),
                 "dialog",
-            ])
-            // Space bar, is destroyed when dialogs are destroyed
+            ]);
             const space = add([
                 sprite("space_bar"),
                 anchor("center"),
-                pos(BEARBOX.pos.x + 450, BEARBOX.pos.y - 50),
+                pos(BEARBOX.pos.x + 360, BEARBOX.pos.y - 40), //the position is not relative to the bubbles, if the scale and position was to be dynamic to screensize it should be changed
                 z(Z_UI_BOTTOM),
                 outline(4),
                 area({scale : 0.75}),
                 scale(4),
                 "dialog",
                 "skip",
-            ])
+            ]);
             icon_bear.use(sprite(array_with_number[0]));
             icon_bear.use(scale(BEAR_SCALE));
-       }
+       };
 
        function calculateSaturation(yPos, minY, maxY) {
+            /** 
+             * ChatGPT generated code
+             * Calculate RGB values based on saturation
+             * For demonstration, we'll use a simple linear interpolation from gray to fully saturated color
+             * Change saturation here - trial and error 
+            */
             // Calculate the percentage of yPos within the range minY to maxY
             const percentage = (yPos - minY) / (maxY - minY);
         
@@ -2374,20 +2347,20 @@ scene("game", () => {
         }
         function calculateColor(saturation) {
             /** 
-             * CHATGPT generate code
+             * ChatGPT generated code
              * Calculate RGB values based on saturation
              * For demonstration, we'll use a simple linear interpolation from gray to fully saturated color
              * Change saturation here - trial and error 
             */
-            const grayValue = 600; // Middle gray value
+            const grayValue     = 600; // Middle gray value
             const maxColorValue = 100; // Maximum color value
-            const colorValue = grayValue + ((maxColorValue - grayValue) * (saturation / 100));
+            const colorValue    = grayValue + ((maxColorValue - grayValue) * (saturation / 100));
         
             // Return an object containing RGB values
             return {
-                red: colorValue,
-                green: colorValue,
-                blue: colorValue
+                red     : colorValue,
+                green   : colorValue,
+                blue    : colorValue
             };
         }
 
@@ -2403,7 +2376,7 @@ scene("game", () => {
             cash = cash - x;
         }
 
-        // Exponentially scale price
+        // Exponentially scale price --> for some reason this does not work
         function exp(x){
             console.log(x);
             x = x * scaling;
@@ -2430,8 +2403,17 @@ scene("game", () => {
         }
 })
 
-// GameOver Scene
+// GameOver Scene --> Type name scene
 scene("gameOver", () => {
+    /**
+     * This scene was heavily assisted by OpenAI's chatGPT-4o.
+     * The prompt and response would be too long to add to the code, here is the process of usage:
+     *      Gave it the entirety of this code to serve as an example of proper Kaboom.js coding;
+     *      Explained the logic of what needs to be done in this scene;
+     *      Saw the poor results and tested them;
+     *      Re-explained the logic and try to correct it where I couldn't find a fix;
+     *      Tested a closer result and change it to fit the full purpose of the scene;
+     */
     setBackground(rgb(79, 146, 240));
 
     if (hasBulldozer == true) {
@@ -2449,9 +2431,15 @@ scene("gameOver", () => {
     // Custom color adjustment values
     let customColor = { r: 255, g: 255, b: 255 };
 
-    const inputBox = add([
+    const gameOverText = add([
+        text("TEMPS ÉCOULÉ", {font:"d", size: 50 }),
+        color(BLUE),
+        pos(W / 2, 100),
+        anchor("center"),
+    ]);
+    const instructionText = add([
         text("Tape ton nom !", {font:"d", size: 30 }),
-        color(0, 0, 0),
+        color(BLACK),
         pos(W / 2, H / 3 - 50),
         anchor("center"),
     ]);
@@ -2554,7 +2542,6 @@ scene("gameOver", () => {
         "mobileButton",
         "button",
     ]);
-
     const mobileButtonText = add([
         text("sur mobile", {font:"d", size: 18 }),
         color(0, 0, 0),
@@ -2689,14 +2676,21 @@ scene("gameOver", () => {
 });
 
 scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
-    setBackground(rgb(79, 146, 240));
+    /**
+     * This scene was lightly assisted by OpenAI's chatGPT-4o.
+     * The prompt and response would be too long to add to the code, here is the process of usage:
+     *      Explained the logic of what the bits I couldn't figure out about localStorage;
+     *      Tried to understand the code
+     *      Adapted it and added it to the scene based on my newly aquired knowledge
+     */
+    setBackground(79, 146, 240);
 
     const icon_honey = add([ // SCOREBOX
         sprite('honey'),
         anchor("center"),
         pos(W / 2, H / 4 + 20),
         z(0),
-        scale(10), // SPRITE_ICON_SCALE *
+        scale(10),
         "ui",
      ]);
 
@@ -2710,7 +2704,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
         text(`${playerScore}`, {font:"d", size: 40, color: BLACK}),
         pos(W / 2, H / 4 + 80),
         anchor("center"),
-        color(0, 0, 0),
+        color(BLACK),
     ]);
 
     add([
@@ -2720,7 +2714,6 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     ]);
 
     let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
-
     highScores.slice(0, 3).forEach((entry, index) => {
         add([
             text(`${index + 1}. ${entry.name} : ${entry.score}`, {font:"d", size: 25 }),
@@ -2753,11 +2746,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     ]);
 
     onClick("replayButton", (b) => {
-        time = 300;
-        //music = play('default_music', {
-        //    loop: true,
-        //    volume: 0.5,
-        //});
+        time = MU_TIME;
         go("game");
     });
 
@@ -2781,7 +2770,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
         "button",
     ]);
 
-    onClick("scoreboardButton", (b) => {
+    onClick("scoreboardButton", () => {
         go("scoreboard");
     });
 
@@ -2805,18 +2794,25 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
         "menuButton",
     ]);
 
-    onClick("menuButton", (b) => {
+    onClick("menuButton", () => {
         go("startMenu");
     });
 });
 
-scene("scoreboard", () => { // More GPT assisted code 
-    setBackground(rgb(79, 146, 240));
+scene("scoreboard", () => {
+    /**
+     * This scene was lightly assisted by OpenAI's chatGPT-4o.
+     * The prompt and response would be too long to add to the code, here is the process of usage:
+     *      Explained the logic of what the bits I couldn't figure out about localStorage;
+     *      Tried to understand the code
+     *      Adapted it and added it to the scene based on my newly aquired knowledge
+     */
+    setBackground(79, 146, 240);
 
-    const buttonYPos = 50;
-    const scoreListYStart = 150;
-    const maxVisibleItems = Math.floor((H - scoreListYStart) / 40);
-    let scrollOffset = 0;
+    const buttonYPos        = 50;
+    const scoreListYStart   = 150;
+    const maxVisibleItems   = Math.floor((H - scoreListYStart) / 40);
+    let scrollOffset        = 0;
 
     // Replay button
     const replayButton = add([
@@ -2839,11 +2835,7 @@ scene("scoreboard", () => { // More GPT assisted code
         "button",
     ]);
     onClick("replayButton", () => {
-        time = 300;
-        //music = play('default_music', {
-        //    loop: true,
-        //    volume: 0.5,
-        //});
+        time = MU_TIME;
         go("game");
     });
     // Menu button
@@ -2912,7 +2904,7 @@ scene("scoreboard", () => { // More GPT assisted code
         }
     });
 
-    onScroll((dir) => { // I don't know how this works
+    onScroll((dir) => { // I don't know how this works, but so far it does not
         if (dir === "up" && scrollOffset > 0) {
             scrollOffset -= 1;
         } else if (dir === "down" && scrollOffset < highScores.length - maxVisibleItems) {
@@ -2926,7 +2918,7 @@ scene("scoreboard", () => { // More GPT assisted code
             text("utilise les touches flèches pour descendre/monter", {font:"d", size: 10 }),
             pos(W - 20, H - 20),
             anchor("botright"),
-            color(rgb(0, 0, 0)),
+            color(BLACK),
         ]);
 });
 
@@ -2943,7 +2935,7 @@ scene("scoreboard", () => { // More GPT assisted code
                 t.height = t.height / CLICK_JUMP;
             }
         });
-    }
+    };
     // Zoom in
    function zoomIn(t){
         if (t != undefined) {
@@ -2956,7 +2948,7 @@ scene("scoreboard", () => { // More GPT assisted code
                 t.height = t.height * CLICK_JUMP;
             }
         })
-    }
+    };
     // Warning in red
     function warning(t){
         shake(1);
@@ -2964,27 +2956,27 @@ scene("scoreboard", () => { // More GPT assisted code
         wait(0.5, () =>{
             t.color = '';
         })
-    }
+    };
     function smallWarning(t){
         t.color = rgb (255, 0, 0);
         wait(0.3, () =>{
             t.color = '';
         })
-    }
+    };
 
     onClick("button", (t) => {
         music = play('button_click');
-    })
+    });
 
-    // THESE DON'T WORK FOR SOME REASON
+    // THIS DOESN'T WORK FOR SOME REASON
     onHover("button", (b) => {
         console.log("HOVERING")
         b.use(shader("lighten"));
-    })
+    });
     onHoverEnd("button", (b) => {
         console.log("H-over")
         b.use(shader(""));
-    })
+    });
 
     // From https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148 (answered Jul 4, 2019 at 20:48 by MarredCheese)
     /*
@@ -3165,5 +3157,5 @@ scene("scoreboard", () => { // More GPT assisted code
 // we finally have a start scene, yay!
 function startGame() {
     go("startMenu");
-}
+};
 startGame();
