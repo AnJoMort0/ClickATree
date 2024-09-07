@@ -313,16 +313,20 @@ scene("startMenu", () => {
     onClick("timedStartButton", () => {    //start the timed version of the game scene
         time = MU_TIME;
         go("game");
+        music = play('button_click');
     });
     onClick("infStartButton", () => {      //start the infinite time version of the game scene
         time = -10;
         go("game");
+        music = play('button_click');
     });
     onClick("scoreBoardButton", () => {
         go("scoreboard");
+        music = play('button_click');
     });
     onClick("creditsButton", () => {
         go("creditsMenu"); 
+        music = play('button_click');
     });
     onClick("logo", (t) => { 
         // Leaf particles when logo is clicked
@@ -618,6 +622,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
         ]);
         onClick("menuButton", () => {
             go("startMenu");
+            music = play('button_click');
         });
 
         // Click events for links --> currently this isn't working. It seems like Kaboom.js overides the vanilla javascript "window.open" and has no native replacement.
@@ -2772,6 +2777,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
 
     onClick("scoreboardButton", () => {
         go("scoreboard");
+        music = play('button_click');
     });
 
     const menuButton = add([
@@ -2796,6 +2802,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
 
     onClick("menuButton", () => {
         go("startMenu");
+        music = play('button_click');
     });
 });
 
@@ -2837,6 +2844,7 @@ scene("scoreboard", () => {
     onClick("replayButton", () => {
         time = MU_TIME;
         go("game");
+        music = play('button_click');
     });
     // Menu button
     const menuButton = add([
@@ -2860,6 +2868,7 @@ scene("scoreboard", () => {
 
     onClick("menuButton", () => {
         go("startMenu");
+        music = play('button_click');
     });
 
     // Fetch high scores
