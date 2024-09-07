@@ -19,7 +19,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.2.0.jeuVideo2D"
+const VERSION = "v.beta.1.3.0.jeuVideo2D"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -363,7 +363,7 @@ scene("startMenu", () => {
         "logo",
     ]);
     const timedStartButton = add([
-        rect(525, 125, { radius: 15 }),
+        rect(350, 75, { radius: 15 }),
         anchor("center"),
         pos(STARTBOX.pos.x, STARTBOX.pos.y + 80),
         z(Z_UI_BOTTOM),
@@ -373,7 +373,7 @@ scene("startMenu", () => {
         "button,"
     ]);
     const timedStartText = add([
-        text("Mode Mystères de l'UNIL", {size : 22, font : "d"}),
+        text("Mode Défi", {size : 22, font : "d"}),
         pos(timedStartButton.pos),
         anchor("center"),
         color(BLACK),
