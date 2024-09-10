@@ -19,7 +19,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.0.jeuVideo2D"
+const VERSION = "v.beta.1.3.1.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -29,8 +29,9 @@ kaboom({
 })
 
 // Universal values
-const W = width();
-const H = height();
+const W     = width();
+const H     = height();
+let inGame  = false;    //for the Rejour vs Jouer in the leaderboard
 setGravity(800);
 const CLICK_JUMP                = 1.05;
 const MU_TIME                   = 300;  //set the time for the Mystères de l'UNIL mode
@@ -255,9 +256,13 @@ loadRoot('assets/');
 // Load sounds from sfx 
     // Source: by Diablo Luna https://pudretediablo.itch.io/butterfly
     loadSound('birds_bg'        ,"audio/sfx/birds/bird.wav");
+    // Source : DASK https://dagurasusk.itch.io/retrosounds
+    loadSound('error'           , "audio/sfx/error.mp3");
 // Load game music: 
-    // Source: by mayragandra https://mayragandra.itch.io/freeambientmusic 
-    loadSound('default_music'   ,"audio/music/music.wav");
+    // Source: by Abstraction https://tallbeard.itch.io/music-loop-bundle 
+    loadSound('default_music'   , "audio/music/bg_music.ogg");
+    loadSound('bulldozer_music' , "audio/music/bulldozer.ogg");
+    loadSound('pollution_music' , "audio/music/pollution.ogg");
 
 //load shaders (All ChatGPT generated)
     // Grayscale shader
@@ -293,9 +298,10 @@ loadRoot('assets/');
 //============================//
 
 // Globally declaring music
-music_main = play('default_music', {
+let music_main = play('default_music', {
         loop: true,
         volume: 0.5,
+        paused: false,
     });
 
 /**
@@ -303,6 +309,7 @@ music_main = play('default_music', {
  * Including startMenu, game, gameOver, highScoreDisplay and scoreboard
  */
 scene("startMenu", () => {
+    inGame = false;
     const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]); //Creates a general place for all the objects in the main menu
     // Blue background
     setBackground(rgb(0, 191, 255));
@@ -356,7 +363,7 @@ scene("startMenu", () => {
     const logo = STARTBOX.add([
         sprite('logo'),
         anchor('center'),
-        scale(0.4),
+        scale(0.45),
         pos(0, -W/8),
         z(Z_UI),
         area(),
@@ -365,7 +372,7 @@ scene("startMenu", () => {
     const timedStartButton = add([
         rect(350, 75, { radius: 15 }),
         anchor("center"),
-        pos(STARTBOX.pos.x, STARTBOX.pos.y + 80),
+        pos(STARTBOX.pos.x, STARTBOX.pos.y + 120),
         z(Z_UI_BOTTOM),
         outline(4),
         area(),
@@ -373,7 +380,7 @@ scene("startMenu", () => {
         "button,"
     ]);
     const timedStartText = add([
-        text("Mode Défi", {size : 22, font : "d"}),
+        text("Mode Défi", {size : 26, font : "d"}),
         pos(timedStartButton.pos),
         anchor("center"),
         color(BLACK),
@@ -383,7 +390,7 @@ scene("startMenu", () => {
         "button,"
     ])
     const infStartButton = add([
-        rect(350, 75, { radius: 15 }),
+        rect(250, 50, { radius: 15 }),
         anchor("center"),
         pos(STARTBOX.pos.x, STARTBOX.pos.y + 200),
         z(Z_UI_BOTTOM),
@@ -393,7 +400,7 @@ scene("startMenu", () => {
         "button,"
     ])
     const infStartText = add([
-        text("Mode Infini" , {size : 22, font : "d"}),
+        text("Mode Infini" , {size : 18, font : "d"}),
         pos(infStartButton.pos),
         anchor("center"),
         color(BLACK),
@@ -432,7 +439,7 @@ scene("startMenu", () => {
         "button",
     ]);
     const creditsButtonText = creditsButton.add([
-        text("credits", { font: "d", size: 10 }),
+        text("About", { font: "d", size: 10 }),
         pos(0,0),
         anchor("center"),
         color(BLACK),
@@ -509,7 +516,23 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
     const smallLineSpacing  = 30;
     let scrollOffset        = 0;
 
+    // Add the small text at the bottom right
+    add([
+        text("utilise les touches flèches pour descendre/monter", {font:"d", size: 10 }),
+        pos(W - 20, H - 20),
+        anchor("botright"),
+        color(BLACK),
+    ]);
+
     const credits = [
+        { type: "title"     , text: "About"                                    , size: 48, weight: "bold"  , ySpacing: lineSpacing * 4 },
+        { type: "text"      , text: 'Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).', size: 24, tag: "supacat", ySpacing: smallLineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: 'Ce jeu a également été exposé aux Mystères de l\'Unil 2024 où il a rencontrer un grand succès.'                                  , size: 24, ySpacing: smallLineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
         { type: "title"     , text: "Credits"                                   , size: 48, weight: "bold"  , ySpacing: lineSpacing * 4 },
         { type: "text"      , text: "Concept et Développement : "               , size: 24, weight: "bold" },
         { type: "text"      , text: 'Sophie Ward & André "AnJoMorto" Fonseca'   , size: 24, italic: true    , ySpacing: lineSpacing },
@@ -517,9 +540,10 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
         { type: "text"      , text: 'Sophie Ward & André "AnJoMorto" Fonseca'   , size: 24, italic: true    , ySpacing: lineSpacing * 4 },
         { type: "heading"   , text: "Sources Extérieures :"                     , size: 28, weight: "bold"  , ySpacing: lineSpacing },
         { type: "text"      , text: "Musique : "                                , size: 24, weight: "bold" },
-        { type: "link"      , text: "mayragandra"                               , size: 20, url:    "https://mayragandra.itch.io/freeambientmusic"                     , ySpacing: smallLineSpacing },
+        { type: "link"      , text: "Abstraction"                               , size: 20, url:    "https://tallbeard.itch.io/music-loop-bundle"                      , ySpacing: smallLineSpacing },
         { type: "text"      , text: "Sons :"                                    , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
         { type: "link"      , text: "Brackeys, Asbjørn Thirslund"               , size: 20, url:    "https://brackeysgames.itch.io/brackeys-platformer-bundle"         , ySpacing: smallLineSpacing },
+        { type: "link"      , text: "DASK"                                      , size: 20, url:    "https://dagurasusk.itch.io/retrosounds"                           , ySpacing: smallLineSpacing },
         { type: "link"      , text: "Diablo Luna"                               , size: 20, url:    "https://pudretediablo.itch.io/butterfly"                          , ySpacing: smallLineSpacing },
         { type: "link"      , text: "FilmCow"                                   , size: 20, url:    "https://filmcow.itch.io/filmcow-sfx"                              , ySpacing: smallLineSpacing },
         { type: "link"      , text: "Leohpaz"                                   , size: 20, url:    "https://leohpaz.itch.io/minifantasy-forgotten-plains-sfx-pack"    , ySpacing: smallLineSpacing },
@@ -530,9 +554,6 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
         { type: "link"      , text: "Vishal"                                    , size: 20, url:    "https://stackoverflow.com/a/11486026"                             , ySpacing: smallLineSpacing },
         { type: "text"      , text: "Assistant IA : "                           , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
         { type: "link"      , text: "OpenAI, ChatGPT"                           , size: 20, url:    "https://chat.openai.com"   , ySpacing: lineSpacing * 2 },
-        { type: "text"      , text: 'Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).', size: 24, tag: "supacat", ySpacing: smallLineSpacing },
-        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
-        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
         { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
         { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
         { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
@@ -775,6 +796,19 @@ scene("supacat", () => { // ;)
 })
 
 scene("game", () => {
+    inGame = true;
+
+    let music_pollution = play('pollution_music', {
+        loop: true,
+        volume: 0,
+        paused: false,
+    });
+    let music_bulldozer = play('bulldozer_music', {
+        loop: true,
+        volume: 0,
+        paused: false,
+    })
+
     honey = 0; //set the score to 0 at every start
     // DECLARING CONSTANTS
      // Areas
@@ -804,6 +838,7 @@ scene("game", () => {
         let nb_bees     = get('bee').length;
         let nb_birds    = get('bird').length;
         let nb_trash    = get('trash').length;
+        let nb_bulldozer= get('bulldozer').length;
         let nb_flowered = get('flowered').length;
         let nb_beehives = get('beehives').length;
      // Cash/second
@@ -1498,7 +1533,7 @@ scene("game", () => {
                     destroy(t);
                 }
             }
-            music = play('bulldozer_click'); 
+            music = play('bulldozer_click', {volume: 0.77}); 
         });
         //Click the info bubbles
         onClick("info", (t) => {
@@ -1610,7 +1645,7 @@ scene("game", () => {
                     "smoke_particle",
                 ])
                 smoke_particle.jump(rand(400, 500));
-                music_bulldozer.stop(); 
+                sound_bulldozer.stop();
             }
             icon_bear.use(sprite("bear"));
         });
@@ -1829,8 +1864,9 @@ scene("game", () => {
                     if(get("bulldozer").length == 0){
                         addBulldozer();
                         hasBulldozer = true;
-                        music_bulldozer = play('bulldozer', {
+                        sound_bulldozer = play('bulldozer', {
                             loop: true,
+                            volume: 0.5,
                         });
                         icon_bear.use(sprite("bear_scared"));
                     }
@@ -1867,7 +1903,7 @@ scene("game", () => {
                 }
 
                 // Spawn smoke particles on the bulldozer
-                if (get('bulldozer').length != 0) {
+                if (nb_bulldozer != 0) {
                     let bd = get('bulldozer')[0];
                     let smoke_dir = LEFT;
                     if(bd.flipX == false){smoke_dir = RIGHT;} else {smoke_dir = LEFT;};
@@ -1890,6 +1926,31 @@ scene("game", () => {
                     smoke_particle.jump(rand(400, 500));
                 }
             }
+
+            //Adding different musics
+            if (time > 3) {
+                if(nb_bulldozer > 0){
+                    music_main.volume       = 0;
+                    music_pollution.volume  = 0;
+                    music_bulldozer.volume  = 0.75;
+                    //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+                } else if (nb_trash > 0) {
+                    music_main.volume = 0;
+                    music_bulldozer.volume = 0;
+                    music_pollution.volume = 0.75;
+                    //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+                } else {
+                    music_bulldozer.volume = 0;
+                    music_pollution.volume = 0;
+                    music_main.volume      = 0.5;
+                    //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+                }
+            } else {
+                music_bulldozer.volume = 0;
+                music_pollution.volume = 0;
+                music_main.volume      = 0.5;
+                //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+            }
         });
 
         let p = 0; let d = 0; let sbb = false; let sbeeb = false; let sbhb = false; // Try to limit things so the update doesn't update everything even when not needed, but rather only tries to do the if
@@ -1899,6 +1960,7 @@ scene("game", () => {
             nb_bees     = get('bee').length;
             nb_birds    = get('bird').length;
             nb_trash    = get('trash').length;
+            nb_bulldozer= get('bulldozer').length;
             nb_flowered = get('flowered').length;
             nb_beehives = get('beehive').length;
 
@@ -2422,7 +2484,7 @@ scene("gameOver", () => {
     setBackground(rgb(79, 146, 240));
 
     if (hasBulldozer == true) {
-        music_bulldozer.stop();
+        sound_bulldozer.stop();
     }
     if (boughtBird == true) {
         music_bird.stop();
@@ -2820,6 +2882,16 @@ scene("scoreboard", () => {
     const scoreListYStart   = 150;
     const maxVisibleItems   = Math.floor((H - scoreListYStart) / 40);
     let scrollOffset        = 0;
+    let replayTxt           = "Rejouer";
+    let replayPos           = -10;
+
+    if (inGame == true) {
+        replayTxt = "Rejouer"
+        replayPos = -10;
+    } else {
+        replayTxt = "Jouer"
+        replayPos = -26;
+    }
 
     // Replay button
     const replayButton = add([
@@ -2833,9 +2905,9 @@ scene("scoreboard", () => {
     ]);
 
     const replayButtonText = replayButton.add([
-        text("Rejouer", {font:"d", size: 18 }),
+        text(replayTxt, {font:"d", size: 18 }),
         color(0, 0, 0),
-        pos(-10,18),
+        pos(replayPos,18),
         anchor("topright"),
         area(),
         "replayButton",
@@ -2877,23 +2949,36 @@ scene("scoreboard", () => {
     function drawScores() {
         destroyAll("scoreItem");
 
-        highScores.slice(scrollOffset, scrollOffset + maxVisibleItems).forEach((entry, index) => {
+        // Check if highScores is empty
+        if (highScores.length === 0) {
+            // Display the message if there are no scores
             add([
-                text(entry.name, {font:"d", size: 25 }),
-                pos(W / 2 - 20, scoreListYStart + index * 40),
-                anchor("right"),
-                color(rgb(entry.color.r, entry.color.g, entry.color.b)),
-                "scoreItem"
+                text("Pas encore de score ! À toi de jouer !", {font: "d", size: 24 }),
+                pos(W / 2, scoreListYStart),
+                anchor("center"),
+                color(255, 255, 255),
+                "scoreItem",
             ]);
+        } else {
+            // Display the scores if there are any
+            highScores.slice(scrollOffset, scrollOffset + maxVisibleItems).forEach((entry, index) => {
+                add([
+                    text(entry.name, {font:"d", size: 25 }),
+                    pos(W / 2 - 20, scoreListYStart + index * 40),
+                    anchor("right"),
+                    color(rgb(entry.color.r, entry.color.g, entry.color.b)),
+                    "scoreItem"
+                ]);
 
-            add([
-                text(entry.score, {font:"d", size: 25 }),
-                pos(W / 2 + 20, scoreListYStart + index * 40),
-                anchor("left"),
-                color(rgb(entry.color.r, entry.color.g, entry.color.b)),
-                "scoreItem"
-            ]);
-        });
+                add([
+                    text(entry.score, {font:"d", size: 25 }),
+                    pos(W / 2 + 20, scoreListYStart + index * 40),
+                    anchor("left"),
+                    color(rgb(entry.color.r, entry.color.g, entry.color.b)),
+                    "scoreItem"
+                ]);
+            });
+        }
     }
 
     drawScores();
@@ -2965,6 +3050,7 @@ scene("scoreboard", () => {
         wait(0.5, () =>{
             t.color = '';
         })
+        play("error", {volume: 0.3});
     };
     function smallWarning(t){
         t.color = rgb (255, 0, 0);
