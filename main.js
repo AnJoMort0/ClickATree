@@ -393,7 +393,7 @@ scene("startMenu", () => {
         "button,"
     ])
     const infStartText = add([
-        text("Mode infini" , {size : 22, font : "d"}),
+        text("Mode Infini" , {size : 22, font : "d"}),
         pos(infStartButton.pos),
         anchor("center"),
         color(BLACK),
