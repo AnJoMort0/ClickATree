@@ -1924,6 +1924,7 @@ scene("game", () => {
                         "smoke_particle",
                     ])
                     smoke_particle.jump(rand(400, 500));
+                    icon_bear.use(sprite("bear_scared"));
                 }
             }
 
