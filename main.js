@@ -10,7 +10,7 @@
 //KNOWN BUGS
     // When multiple trees overlap, the player gets multiple points in a single click
         //* Fixed it by calling it a feature
-    // You can continue clicking the trees and placing them even when the time stops
+    // You can continue clicking the trees and placing them even when the timer stops
         //* Fixed
     // There's the possibility of clicking something when it is destroyed
         //Seems fixed
@@ -20,7 +20,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.3.sga"
+const VERSION = "v.beta.1.3.4.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -35,8 +35,8 @@ const H     = height();
 let inGame  = false;    //for the Rejour vs Jouer in the leaderboard
 setGravity(800);
 const CLICK_JUMP                = 1.05;
-const MU_TIME                   = 300;  //set the time for the Mystères de l'UNIL mode
-let time                        = -10;
+const MU_TIME                   = 300;  //set the timer for the Mystères de l'UNIL mode
+let timer                        = -10;
 let honey                       = 0;
 let boughtBird                  = false; //this value is kinda doubled but for 2 different purposes, thought of fusing them but I guess better not to not be confused
 let hasBulldozer                = false;
@@ -227,10 +227,11 @@ loadRoot('assets/');
         loadSprite('new_bird'   , "ui/new_buttons/new_bird_button.png");
         loadSprite('info'       , "ui/new_buttons/info_button.png");
         loadSprite('new_beehive', "ui/new_buttons/new_beehive_button.png");
-        loadSprite('new_empty'  , "ui/new_buttons/new_empty_button.png")
+        loadSprite('new_empty'  , "ui/new_buttons/new_empty_button.png");
 
         // Load game logo saved under the icon folder
-        loadSprite('logo'       , 'icon/logo.png')
+        loadSprite('logo'       , 'icon/logo.png');
+        loadSprite('rays'       , 'icon/rays_backdrop.png');
 
 /**
  * Load music and sound saved under the audio folder
@@ -312,19 +313,18 @@ let music_main = play('default_music', {
 scene("startMenu", () => {
     inGame = false;
     const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]); //Creates a general place for all the objects in the main menu
-    // Blue background
-    setBackground(rgb(0, 191, 255));
+    setBackground(rgb(0, 191, 255)); // Blue background
 
     // Music starts on any click
     let music;
-    //Event listeners of the different buttons
+    // Event listeners of the different buttons
     onClick("timedStartButton", () => {    //start the timed version of the game scene
-        time = MU_TIME;
+        timer = MU_TIME;
         go("game");
         music = play('button_click');
     });
-    onClick("infStartButton", () => {      //start the infinite time version of the game scene
-        time = -10;
+    onClick("infStartButton", () => {      //start the infinite timer version of the game scene
+        timer = -10;
         go("game");
         music = play('button_click');
     });
@@ -360,7 +360,23 @@ scene("startMenu", () => {
         music = play('button_click');
     });
 
-    //Add the different elements to the scene
+    // Add the rotating and pulsing rays backdrop
+    const raysBackdrop = STARTBOX.add([
+        sprite("rays"),
+        anchor('center'),
+        pos(0, -W/8),
+        scale(0.6),
+        z(Z_UI_BOTTOM - 10),
+        rotate(0),    // Start at 0 degrees
+        {
+            update() {
+                this.angle += dt() * 30;  // Rotate the backdrop by 30 degrees per second
+                this.scale = wave(0.6, 0.8, time() * 2);  // Pulse effect between scale 0.6 and 0.8
+            }
+        }
+    ]);
+
+    //Add the logo in front of the rotating rays
     const logo = STARTBOX.add([
         sprite('logo'),
         anchor('center'),
@@ -370,6 +386,8 @@ scene("startMenu", () => {
         area(),
         "logo",
     ]);
+
+    // Timed Start Button
     const timedStartButton = add([
         rect(350, 75, { radius: 15 }),
         anchor("center"),
@@ -380,6 +398,7 @@ scene("startMenu", () => {
         "timedStartButton",
         "button,"
     ]);
+    
     const timedStartText = add([
         text("Mode Défi", {size : 26, font : "d"}),
         pos(timedStartButton.pos),
@@ -389,7 +408,8 @@ scene("startMenu", () => {
         area(),
         "timedStartButton",
         "button,"
-    ])
+    ]);
+
     const infStartButton = add([
         rect(250, 50, { radius: 15 }),
         anchor("center"),
@@ -399,7 +419,8 @@ scene("startMenu", () => {
         area(),
         "infStartButton",
         "button,"
-    ])
+    ]);
+    
     const infStartText = add([
         text("Mode Infini" , {size : 18, font : "d"}),
         pos(infStartButton.pos),
@@ -409,7 +430,8 @@ scene("startMenu", () => {
         area(),
         "infStartButton",
         "button,"
-    ])
+    ]);
+
     const scoreBoardButton = add([
         rect(350, 30, { radius: 15 }),
         anchor("center"),
@@ -419,7 +441,8 @@ scene("startMenu", () => {
         area(),
         "scoreBoardButton",
         "button,"
-    ])
+    ]);
+
     const scoreBoardText = add([
         text("Scoreboard", {size : 15, font : "d"}),
         pos(scoreBoardButton.pos),
@@ -429,7 +452,8 @@ scene("startMenu", () => {
         area(),
         "scoreBoardButton",
         "button,"
-    ])
+    ]);
+
     const creditsButton = add([
         rect(80, 30, { radius: 5 }),
         pos(50, H - 25),
@@ -437,8 +461,9 @@ scene("startMenu", () => {
         outline(2),
         area(),
         "creditsButton",
-        "button",
+        "button,"
     ]);
+    
     const creditsButtonText = creditsButton.add([
         text("About", { font: "d", size: 10 }),
         pos(0,0),
@@ -447,7 +472,9 @@ scene("startMenu", () => {
         area(),
         "button"
     ]);
-    add([ //add text indicate the version on the bottom corner
+
+    // Add version text at the bottom corner
+    add([ 
         text(VERSION, {font:"d", size: 10 }),
         pos(W - 20, H - 20),
         anchor("botright"),
@@ -486,16 +513,17 @@ scene("startMenu", () => {
             "bee",
         ])
     }
+
     onClick ("bee", (b) => {
         add([
-            text("Essaie de cliquer sur les flèches quand tu taperas ton nom ;)", {font:"d", size: 12, width: 125, }),
+            text("Essaie de cliquer sur les flèches quand tu taperas ton nom ;)", {font:"d", size: 12, width: 125}),
             pos(mousePos()),
             anchor("center"),
             color(rgb(256, 0, 0)),
             lifespan(1, {fade: 0.3}),
             z(Z_UI_TOP),
         ]);
-    })
+    });
 });
 go("startMenu");
 
@@ -940,7 +968,7 @@ scene("game", () => {
     ]);
     // Timer
      const text_time = TOPLBOX.add([
-        text(`Temps restant : ` + fancyTimeFormat(time),{
+        text(`Temps restant : ` + fancyTimeFormat(timer),{
             width   : W,
             size    : 22,
             font    : "d",
@@ -950,8 +978,8 @@ scene("game", () => {
         z(Z_UI),
         {
             update(){
-                if (time >= 0) {
-                    this.text = `Temps restant : ` + fancyTimeFormat(time);
+                if (timer >= 0) {
+                    this.text = `Temps restant : ` + fancyTimeFormat(timer);
                 } else {
                     this.text= ""; //hides this text in infinite mode
                 }
@@ -1888,8 +1916,8 @@ scene("game", () => {
         loop(1, () => {
             if (diaL == 0) { // Pauses the game if dialogue is opened
                 // Timer
-                if(time > 0){
-                    time = time - 1
+                if(timer > 0){
+                    timer = timer - 1
                 };       
                       
                 // Each element gives cash overtime
@@ -1925,8 +1953,8 @@ scene("game", () => {
                     addTrash();
                 }
     
-                // Flashes time at multiple occasions
-                if ((time < 61 && time >= 60) || (time < 31 && time >= 30) || (time <= 15)) {
+                // Flashes timer at multiple occasions
+                if ((timer < 61 && timer >= 60) || (timer < 31 && timer >= 30) || (timer <= 15)) {
                     smallWarning(text_time);
                 }
                 
@@ -1977,7 +2005,7 @@ scene("game", () => {
             }
 
             //Adding different musics
-            if (time > 3) {
+            if (timer > 3) {
                 if(nb_bulldozer > 0){
                     if (music_main.volume > 0) {
                         music_main.volume = music_main.volume - 0.15;
@@ -2107,7 +2135,7 @@ scene("game", () => {
             }
 
             // Timer relative actions
-            switch(time){
+            switch(timer){
                 case 0 : 
                     go("gameOver");
                     break;
@@ -2917,7 +2945,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     ]);
 
     onClick("replayButton", (b) => {
-        time = MU_TIME;
+        timer = MU_TIME;
         go("game");
     });
 
@@ -3018,7 +3046,7 @@ scene("scoreboard", () => {
         "button",
     ]);
     onClick("replayButton", () => {
-        time = MU_TIME;
+        timer = MU_TIME;
         go("game");
         music = play('button_click');
     });
