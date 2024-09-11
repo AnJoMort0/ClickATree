@@ -20,7 +20,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.6.sga"
+const VERSION = "v.beta.1.3.7.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -2781,7 +2781,7 @@ scene("gameOver", () => {
     ]);
 
     onCharInput((ch) => {
-        if (playerName.length < 10) {
+        if (playerName.length < 20) {
             playerName += ch;
         }
     });
