@@ -20,7 +20,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.1.sga"
+const VERSION = "v.beta.1.3.2.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -1139,11 +1139,11 @@ scene("game", () => {
         sprite('new_bee'),
         {
             update(){
-                if(get('bulldozer').length > 0){
-                    this.use(shader("grayscale"));
-                    this.use("not_available");
-                } else if (nb_flowered > 0) {
+                if (nb_flowered > 0) {
                     if(nb_bees >= nb_flowered * nb_bees_p_flowered){
+                        this.use(shader("grayscale"));
+                        this.use("not_available");
+                    } else if(nb_bulldozer != 0){
                         this.use(shader("grayscale"));
                         this.use("not_available");
                     } else {
@@ -1207,6 +1207,9 @@ scene("game", () => {
             update(){
                 if (nb_bees > 0) {
                     if(nb_bees <= nb_beehives * nb_bees_p_behive || get("hiveable").length == 0 ){
+                        this.use(shader("grayscale"));
+                        this.use("not_available");
+                    } else if (nb_bulldozer != 0) {
                         this.use(shader("grayscale"));
                         this.use("not_available");
                     } else {
@@ -1738,7 +1741,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_tree_price);
                         CASHBOX.add([
-                            text("Pas assez de feuilles!", { 
+                            text("Pas assez de feuilles !", { 
                                 size : 20,
                                 font : "d",
                             }),
@@ -1760,7 +1763,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_bird_price);
                         CASHBOX.add([
-                            text("Pas assez de feuilles!", { 
+                            text("Pas assez de feuilles !", { 
                                 size : 20,
                                 font : "d",
                             }),
@@ -1784,7 +1787,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_bee_price);
                         CASHBOX.add([
-                            text("Pas assez de feuilles!", { 
+                            text("Pas assez de feuilles !", { 
                                 size : 20,
                                 font : "d",
                             }),
@@ -1796,9 +1799,15 @@ scene("game", () => {
                         addBee();
                     }
                 } else if(diaL == 0 && b.is("not_available")){ // When the button is not available
+                    let txt = "";
+                    if (nb_bulldozer != 0) {
+                        txt = "Occupez vous du bulldozer en premier !"
+                    } else {
+                        txt = "Pas assez d'arbres avec des fleurs !"
+                    }
                     warning(b);
                     CASHBOX.add([
-                        text("Pas assez d'arbres avec des fleurs!", { 
+                        text(txt, { 
                             size: 20,
                             font: "d",
                         }),
@@ -1815,7 +1824,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_beehive_price);
                         CASHBOX.add([
-                            text("Pas assez de feuilles!", { 
+                            text("Pas assez de feuilles !", { 
                                 size : 20,
                                 font : "d",
                             }),
@@ -1827,9 +1836,15 @@ scene("game", () => {
                         addBeehive();
                     }
                 } else if(diaL == 0 && b.is("not_available")){
+                    let txt = "Pas assez d'abeilles !";
+                    if (nb_bulldozer != 0) {
+                        txt = "Occupez vous du bulldozer !"
+                    } else {
+                        txt = "Pas assez d'abeilles !"
+                    }
                     warning(b);
                     CASHBOX.add([
-                        text("Pas assez d'abeilles!", { 
+                        text(txt, { 
                             size : 20,
                             font : "d",
                         }),
@@ -1956,7 +1971,7 @@ scene("game", () => {
                         music_bulldozer.volume = 0.75;
                     };
                     
-                    console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+                    //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
                 } else if (nb_trash > 0) {
                     if (music_main.volume > 0) {
                         music_main.volume = music_main.volume - 0.15;
@@ -1979,7 +1994,7 @@ scene("game", () => {
                         music_pollution.volume = 0.75;
                     };
 
-                    console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+                    //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
                 } else {
                     if (music_pollution.volume > 0) {
                         music_pollution.volume = music_pollution.volume - 0.15;
@@ -2002,7 +2017,7 @@ scene("game", () => {
                         music_main.volume = 0.5;
                     };
 
-                    console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+                    //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
                 }
             } else {
                 music_bulldozer.volume = 0;
@@ -2189,7 +2204,7 @@ scene("game", () => {
                         } else if (b === 0 && nb_flowered == 0){
                             this.moveTo(rand(W), rand(H), BEE_SPEED); // If no flowers, bee moves to a random position
                             CASHBOX.add([
-                                text("Tes abeilles sont perdues! Où sont les fleurs?", { 
+                                text("Tes abeilles sont perdues ! Où sont les fleurs?", { 
                                     size: 20,
                                     font: "d",
                                 }),
@@ -2643,7 +2658,7 @@ scene("gameOver", () => {
                 color: customColor
             };
 
-            if (!highScores.some(entry => entry.name === newEntry.name && entry.score === newEntry.score && entry.color.r === newEntry.color.r && entry.color.g === newEntry.color.g && entry.color.b === newEntry.color.b)) {
+            if ( !highScores.some(entry => entry.name === newEntry.name && entry.score === newEntry.score && entry.color.r === newEntry.color.r && entry.color.g === newEntry.color.g && entry.color.b === newEntry.color.b)) {
                 highScores.push(newEntry);
             }
 
@@ -2697,7 +2712,7 @@ scene("gameOver", () => {
     let keyboardVisible = false;
 
     onClick("mobileButton", () => {
-        if (!keyboardVisible) {
+        if ( !keyboardVisible) {
             keyboardVisible = true;
             const buttonSize = 50;
             const padding = 10;
@@ -3214,7 +3229,7 @@ scene("scoreboard", () => {
         x *= 100.0;
 
     let order;
-    if (!isFinite(x) || !useOrderSuffix)
+    if ( !isFinite(x) || !useOrderSuffix)
         order = 0;
     else if (minOrder === maxOrder)
         order = minOrder;
@@ -3274,23 +3289,23 @@ scene("scoreboard", () => {
 */  
 
     const dia_intro = [
-        ["bear_happy", "Bienvenue au Click A Tree! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
+        ["bear_happy", "Bienvenue au Click A Tree ! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
         ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
         ["bear_talking", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
         //["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront de planter des arbres que tu peux voir en haut à droite."],
-        //["bear_wink", "Je te laisse découvrir la suite!"],
+        //["bear_wink", "Je te laisse découvrir la suite !"],
         ["bear_info", "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
-        ["bear_talking", "Je te laisse découvrir la suite! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récupérer mon miel."],
+        ["bear_talking", "Je te laisse découvrir la suite ! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récupérer mon miel."],
     ] //tout bon
     const dia_pollution = [
-        //["bear_scared", "Attention!! La barre de pollution augmente vite!"],
+        //["bear_scared", "Attention ! ! La barre de pollution augmente vite !"],
         ["bear_wink", "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?"], //1er
         ["bear_scared", "Oh non ! La pollution a atteint des niveaux critiques ! Clique sur les poubelles pour les nettoyer !"],
         ["bear_sad", "Pourquoi tu ne cliques pas sur les déchets pour les faire disparaître ?"],
         ["bear_happy", "Bravo, il n'y a plus de déchets pour le moment. Mais attention, ils risquent de revenir !"],
         ]
     const dia_deforestation = [
-        //["bear_scared", "Attention!! La barre de déforestation augmente vite!"],
+        //["bear_scared", "Attention ! ! La barre de déforestation augmente vite !"],
         ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes ?"], //2e
         ["bear_scared", "Oh non ! Ils vont couper nos arbres ! Clique sur le bulldozer pour le détruire ! La barre en haut indique sa vie."],
         ["bear_sad", "Vite ! Le bulldozer détruit toute la biodiversité ! Clique plus vite !"],
@@ -3315,11 +3330,11 @@ scene("scoreboard", () => {
         //bee
         ["bear_flower", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seules trois abeilles par arbre sont autorisées."],
         //beehive
-        ["bear_wink", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré!"],
+        ["bear_wink", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré !"],
         //pollution
-        ["bear_wink", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront. Clique dessus pour les enlever!"],
+        ["bear_wink", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront. Clique dessus pour les enlever !"],
         //deforestation
-        ["bear_wink", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra. Clique dessus pour l'enlever!"],
+        ["bear_wink", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra. Clique dessus pour l'enlever !"],
     ]
     //others
     const dia_others = [
@@ -3329,7 +3344,7 @@ scene("scoreboard", () => {
     ]
 
 
-// we finally have a start scene, yay!
+// we finally have a start scene, yay !
 function startGame() {
     go("startMenu");
 };
