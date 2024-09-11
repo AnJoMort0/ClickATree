@@ -1138,7 +1138,10 @@ scene("game", () => {
         sprite('new_bee'),
         {
             update(){
-                if (nb_flowered > 0) {
+                if(get('bulldozer').length > 0){
+                    this.use(shader("grayscale"));
+                    this.use("not_available");
+                } else if (nb_flowered > 0) {
                     if(nb_bees >= nb_flowered * nb_bees_p_flowered){
                         this.use(shader("grayscale"));
                         this.use("not_available");
@@ -2135,7 +2138,7 @@ scene("game", () => {
                                     size: 20,
                                     font: "d",
                                 }),
-                                pos(text_cash.pos.x - 400, 150), 
+                                pos(text_cash.pos.x - 400, 250), 
                                 color(RED), 
                                 lifespan(2), 
                             ]);
