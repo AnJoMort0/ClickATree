@@ -20,7 +20,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.5.sga"
+const VERSION = "v.beta.1.3.6.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -2289,50 +2289,64 @@ scene("game", () => {
         })
 
     // FUNCTIONS
-       // Add a new tree
-       function addTree() {
-        music = play('tree_leaf', {
-            volume: 5,
-        });
-         let ranYA = H/2;
-         let ranYB = H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)
-         const randX  = rand(0, W);
-         const randY  = rand(ranYA, ranYB);
+            // Add a new tree
+            function addTree() {
+            music = play('tree_leaf', {
+                volume: 5,
+            });
+            let ranYA = H / 2;
+            let ranYB = H / 2 + (BG_TILE_SIZE / 2 - 40 * SPRITE_BG_SCALE);
+            const randX = rand(0, W);
+            const randY = rand(ranYA, ranYB);
             const saturation = calculateSaturation(randY, ranYA, ranYB);
-            // chatGPT Calculate RGB values based on saturation level --> this doesn't seem to fully work
             const color = calculateColor(saturation);
-         // const relScale = 0.1 + (0.5 - 0.1) * ((this.pos.y - ranA) / (ranB - ranA)); //relative scale to the Y position
-         const tree  = add([
-             sprite(choose(trees)),
-             pos(randX, randY),
-             scale(randY * TREE_SCALE),
-             anchor("bot"),
-             area(),
-             z(randY),
-             //health(health_tree), // --> same problem as in starting tree
-             "tree",
-             "hiveable",
-          ]);
-          tree.color = rgb(color.red, color.green, color.blue);
+        
+            const tree = add([
+                sprite(choose(trees)),
+                pos(randX, randY),
+                scale(0), // Start scale at 0 for growing effect
+                anchor("bot"),
+                area(),
+                z(randY),
+                "tree",
+                "hiveable",
+                {
+                    update() {
+                        // Grow the tree over time
+                        if (this.scale.x < randY * TREE_SCALE) {
+                            this.scale.x += 0.02; // Control growth speed
+                            this.scale.y += 0.02;
+                        }
+                    },
+                },
+            ]);
+        
+            tree.color = rgb(color.red, color.green, color.blue);
             pay(pr_new_tree);
-            // exp(pr_new_tree); //This was supposed to increase the price of the tree (and other elements bellow), but doesn't seem to work for some reason
             pr_new_tree = pr_new_tree * scaling;
-       }
+        }
         // Add custom new tree for the birds
-       function addCustTree(x,y) {
-         const tree  = add([
-             sprite(choose(trees)),
-             pos(x,y),
-             scale(y * TREE_SCALE),
-             anchor("bot"),
-             area(),
-             z(y),
-             //health(health_tree),
-             "tree",
-             "hiveable"
-          ])
-            //exp(pr_new_tree); //not working
-       }
+        function addCustTree(x, y) {
+            const tree = add([
+                sprite(choose(trees)),
+                pos(x, y),
+                scale(0), // Start scale at 0 for growing effect
+                anchor("bot"),
+                area(),
+                z(y),
+                "tree",
+                "hiveable",
+                {
+                    update() {
+                        // Grow the tree over time
+                        if (this.scale.x < y * TREE_SCALE) {
+                            this.scale.x += 0.02; // Control growth speed
+                            this.scale.y += 0.02;
+                        }
+                    },
+                },
+            ]);
+        }
        // Add a new bee
        function addBee(){
         let rF = choose(get('flowered')); // Random flowered objects
