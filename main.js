@@ -20,7 +20,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.4.sga"
+const VERSION = "v.beta.1.3.5.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -524,6 +524,115 @@ scene("startMenu", () => {
             z(Z_UI_TOP),
         ]);
     });
+
+    //This whole bit heavily chatGPT assisted
+    let bulldozerExists = false;
+    let currentTrees = []; // Store references to the trees
+    let treeScale = 5; // Scale factor for trees
+    
+    function growTrees() {
+        let maxTrees = randi(3, 12);
+        currentTrees = []; // Clear the previous trees array
+        let treeIndex = 0;
+    
+        function addNextTree() {
+            if (treeIndex < maxTrees) {
+                play('tree_leaf', {volume: 5});
+                const randomX = rand(50, W - 50); // Random position along the x-axis
+                const tree = add([
+                    sprite(choose(trees)),
+                    pos(randomX, H - 50), // Position the tree along the bottom
+                    scale(0), // Start with scale 0, so it "grows"
+                    anchor("bot"),
+                    area(),
+                    "tree",
+                    {
+                        update() {
+                            // Slowly increase the tree's scale to simulate growth
+                            if (this.scale.x < treeScale) {
+                                this.scale.x += 0.05;
+                                this.scale.y += 0.05;
+                            }
+                        },
+                    },
+                ]);
+    
+                currentTrees.push(tree); // Store the tree reference
+                treeIndex++;
+    
+                // Wait a bit before adding the next tree
+                wait(0.5, addNextTree);
+            } else {
+                // Once all trees have grown, bring in the bulldozer
+                wait(2, bulldozerRun);
+            }
+        }
+        addNextTree(); // Start growing trees one by one
+    }
+    
+    onDestroy("tree", (t) => {
+        play('tree_fall', {volume: 1});
+        for (let i = 0; i < randi(10,20); i++) {
+            const leaf_particle = add([
+                pos(t.pos),
+                z(t.pos.y + 10),
+                sprite(choose(leafs)),
+                anchor("center"),
+                scale(rand(1, 0.6)),
+                area({ collisionIgnore:["leaf_particle"]}),
+                body(),
+                lifespan(0.5, {fade: 0.2}),
+                opacity(1),
+                move(choose([LEFT, RIGHT]), rand(30, 150)),
+                rotate(rand(0, 360)),
+                offscreen({destroy: true}),
+                "leaf_particle",
+            ]);
+            leaf_particle.jump(rand(100, 350));
+        }
+    });
+    
+    function bulldozerRun() {
+        if (!bulldozerExists) {
+            sound_bulldozer = play('bulldozer', {
+                loop: true,
+                volume: 0.5,
+            });
+            bulldozerExists = true;
+            let bulldozer = add([
+                sprite("bulldozer", {
+                    anim: "main",
+                }),
+                pos(-100, H - 50), // Start the bulldozer off-screen (left side)
+                anchor("bot"),
+                scale(4.5),
+                z(1),
+                area(),
+                "bulldozer",
+                {
+                    update() {
+                        this.flipX = true; // Flip the bulldozer sprite horizontally
+                        this.move(200, 0); // Move the bulldozer from left to right
+    
+                        // Destroy trees on collision
+                        this.onCollide("tree", (tree) => {
+                            destroy(tree);
+                        });
+    
+                        // Once the bulldozer reaches the right edge of the screen, restart the process
+                        if (this.pos.x > W + 100) {
+                            destroy(this);
+                            sound_bulldozer.stop();
+                            bulldozerExists = false;
+                            wait(2, growTrees); // Start growing new trees after 2 seconds
+                        }
+                    },
+                },
+            ]);
+        }
+    }
+    // Start growing trees at the beginning of the scene
+    growTrees();   
 });
 go("startMenu");
 
@@ -1612,9 +1721,7 @@ scene("game", () => {
             }
         });
         onDestroy("tree", (t) => {
-            music = play('tree_leaf', {
-                volume: 5,
-            });
+            play('tree_fall', {volume: 1});
             for (let i = 0; i < randi(10,20); i++) {
                 const leaf_particle = add([
                     pos(t.pos),
