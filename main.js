@@ -799,7 +799,6 @@ scene("supacat", () => { // ;)
 scene("game", () => {
     inGame = true;
 
-    honey = 0; //set the score to 0 at every start
     // DECLARING CONSTANTS
      // Areas
          const CASHBOX  = add([anchor("center"), pos(W/2 ,30)   , z(Z_UI_BOTTOM), "ui"]);
@@ -812,6 +811,7 @@ scene("game", () => {
         const NEW_BT_DIST   = 5;
 
     // DECLARING VARIABLES
+    honey = 0; //set the score to 0 at every start
      let cash            = 0;
      let score           = 0;
      let cash_per_sec    = 0;
@@ -912,13 +912,15 @@ scene("game", () => {
         "ui",
      ])
     // Score
-     const icon_honey = SCOREBOX.add([
+     const icon_honey = add([
         sprite('honey'),
         anchor("left"),
-        pos(0, 0),
+        pos(SCOREBOX.pos), //Had to remove SCOREBOX.add to be able to make the bottle pulse
         z(Z_UI),
         scale(SPRITE_ICON_SCALE * 2),
+        area(),
         "ui",
+        "honey_icon",
      ]);
      const text_honey = SCOREBOX.add([
         text(`${Math.floor(honey)}`,{
@@ -2256,6 +2258,7 @@ scene("game", () => {
                                 music = play('bee_in_hive');
                                 b++; 
                                 honey++; //honey count is incremented
+                                zoomOut(get('honey_icon')[0]);
                                 this.play("main");
                             };
                         } else if ((b === 1 || b === 2) && nb_beehives == 0){
