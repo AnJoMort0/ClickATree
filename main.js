@@ -322,19 +322,23 @@ scene("startMenu", () => {
         timer = MU_TIME;
         go("game");
         music = play('button_click');
+        sound_bulldozer.stop();
     });
     onClick("infStartButton", () => {      //start the infinite timer version of the game scene
         timer = -10;
         go("game");
         music = play('button_click');
+        sound_bulldozer.stop();
     });
     onClick("scoreBoardButton", () => {
         go("scoreboard");
         music = play('button_click');
+        sound_bulldozer.stop();
     });
     onClick("creditsButton", () => {
         go("creditsMenu"); 
         music = play('button_click');
+        sound_bulldozer.stop();
     });
     onClick("logo", (t) => { 
         // Leaf particles when logo is clicked
