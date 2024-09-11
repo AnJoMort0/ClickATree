@@ -38,7 +38,7 @@ const CLICK_JUMP                = 1.05;
 const MU_TIME                   = 300;  //set the time for the Mystères de l'UNIL mode
 let time                        = -10;
 let honey                       = 0;
-let boughtBird                  = false;
+let boughtBird                  = false; //this value is kinda doubled but for 2 different purposes, thought of fusing them but I guess better not to not be confused
 let hasBulldozer                = false;
 
 const SPRITE_PIXEL_SIZE         = 25;   //value of the sprites' original size
@@ -799,17 +799,6 @@ scene("supacat", () => { // ;)
 scene("game", () => {
     inGame = true;
 
-    let music_pollution = play('pollution_music', {
-        loop: true,
-        volume: 0,
-        paused: false,
-    });
-    let music_bulldozer = play('bulldozer_music', {
-        loop: true,
-        volume: 0,
-        paused: false,
-    })
-
     honey = 0; //set the score to 0 at every start
     // DECLARING CONSTANTS
      // Areas
@@ -860,6 +849,24 @@ scene("game", () => {
         let flowered_clicks     = 40;
         let nb_bees_p_flowered  = 3;
         let nb_bees_p_behive    = 5;
+     //Tutorial like
+        let hasBTrees   = false;
+        let hasBBirds   = false;
+        let hasBBees    = false;
+        let hasBHives   = false;
+        let hasFlowers  = false;
+
+        
+    let music_pollution = play('pollution_music', {
+        loop: true,
+        volume: 0,
+        paused: false,
+    });
+    let music_bulldozer = play('bulldozer_music', {
+        loop: true,
+        volume: 0,
+        paused: false,
+    })
 
     // ADDING ELEMENTS
     // UI
@@ -1434,6 +1441,10 @@ scene("game", () => {
                 plus(1);
                 nb_clicks++;
                 if(nb_clicks == flowered_clicks && t.is("flowered") != true){ //Checks if the tree is not flowered and if the number the clicks is enough to make the tree flowered
+                    if(hasFlowers == false){
+                        diaBubble(dia_info[6]);
+                        hasFlowers = true;
+                    }
                     const flowers = add([
                         sprite("flowers0"),
                         anchor("bot"),
@@ -1540,7 +1551,7 @@ scene("game", () => {
                     destroy(t);
                 }
             }
-            music = play('bulldozer_click', {volume: 0.77}); 
+            music = play('bulldozer_click', {volume: 0.6}); 
         });
         //Click the info bubbles
         onClick("info", (t) => {
@@ -1750,6 +1761,10 @@ scene("game", () => {
                             lifespan(2), 
                         ]);
                     } else {
+                        if(hasBTrees == false){
+                            diaBubble(dia_info[0]);
+                            hasBTrees = true;
+                        }
                         addTree();
                     }
                 }
@@ -1772,10 +1787,14 @@ scene("game", () => {
                             lifespan(2), 
                         ]);
                     } else {
+                        if(hasBBirds == false){
+                            diaBubble(dia_info[1]);
+                            hasBBirds = true;
+                        }
                         addBird();
                         boughtBird = true;
                         music_bird = play('birds_bg', {
-                            volume: 2,
+                            volume: 1.2,
                         });
                     }
                 }
@@ -1796,6 +1815,10 @@ scene("game", () => {
                             lifespan(2),
                         ]);
                     } else {
+                        if(hasBBees == false){
+                            diaBubble(dia_info[2]);
+                            hasBBees = true;
+                        }
                         addBee();
                     }
                 } else if(diaL == 0 && b.is("not_available")){ // When the button is not available
@@ -1833,6 +1856,10 @@ scene("game", () => {
                             lifespan(2), 
                         ]);
                     } else {
+                        if(hasBHives == false){
+                            diaBubble(dia_info[3]);
+                            hasBHives = true;
+                        }
                         addBeehive();
                     }
                 } else if(diaL == 0 && b.is("not_available")){
@@ -3124,7 +3151,7 @@ scene("scoreboard", () => {
         wait(0.5, () =>{
             t.color = '';
         })
-        play("error", {volume: 0.3});
+        play("error", {volume: 0.2});
     };
     function smallWarning(t){
         t.color = rgb (255, 0, 0);
@@ -3335,6 +3362,8 @@ scene("scoreboard", () => {
         ["bear_wink", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront. Clique dessus pour les enlever !"],
         //deforestation
         ["bear_wink", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra. Clique dessus pour l'enlever !"],
+        //fleurs
+        ["bear_flower", "Quand tu cliques plusieurs fois sur un arbre des belles fleurs apparaîssent. Les abeilles ont besoin de ces fleurs qui multiplient également le nombre de feuilles que tu reçois."],
     ]
     //others
     const dia_others = [
@@ -3342,7 +3371,6 @@ scene("scoreboard", () => {
         ["bear_talking", "Ne t'inquiète pas, le jeu est en pause. Clique sur espace pour reprendre !"],
         ["bear_scared", "Qu'est-ce qui se cache là derrière ? Tu ne dois pas avoir assez de feuilles encore."],
     ]
-
 
 // we finally have a start scene, yay !
 function startGame() {
