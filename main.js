@@ -17,13 +17,14 @@
     //If a flower grows on a growing tree it stays small
         //Fixed by adding "grown" tag
     //Bulldozer should roam randomly when he doesn't have trees to destroy
+        //Done
     // When using the on screen keyboard the click is processed multiple times
         //To fix this for now, you can't input twice the same key in a row
 
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.11.sga"
+const VERSION = "v.beta.1.3.12.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -381,6 +382,17 @@ scene("startMenu", () => {
         play('button_click');
     });
 
+    //Add the logo in front of the rotating rays
+    const logo = STARTBOX.add([
+        sprite('logo'),
+        anchor('center'),
+        scale(0.45),
+        pos(0, -W/8),
+        z(Z_UI),
+        area(),
+        "logo",
+    ]);
+
     // Add the rotating and pulsing rays backdrop
     const raysBackdrop = STARTBOX.add([
         sprite("rays"),
@@ -395,17 +407,6 @@ scene("startMenu", () => {
                 this.scale = wave(0.6, 0.8, time() * 2);  // Pulse effect between scale 0.6 and 0.8
             }
         }
-    ]);
-
-    //Add the logo in front of the rotating rays
-    const logo = STARTBOX.add([
-        sprite('logo'),
-        anchor('center'),
-        scale(0.45),
-        pos(0, -W/8),
-        z(Z_UI),
-        area(),
-        "logo",
     ]);
 
     // Timed Start Button
@@ -505,8 +506,8 @@ scene("startMenu", () => {
     // Add bee moving around and easter egg message
     for (let i = 0; i < 3; i++) {
         let randX2 = rand(W);
-        let randNY = rand(H);
         let randY2 = rand(H);
+        let randNY = rand(H);
         const bee = add([
             sprite('bee', {
                 anim: "main",
@@ -2333,11 +2334,11 @@ scene("game", () => {
 
             //Adding different overlays
             if(nb_bulldozer > 0){
-                if (deforestationOverlay.opacity < 0.1){
+                if (deforestationOverlay.opacity < 0.17){
                     deforestationOverlay.opacity = deforestationOverlay.opacity + 0.001;
                 };
-                if (deforestationOverlay.opacity > 0.1){
-                    deforestationOverlay.opacity = 0.1;
+                if (deforestationOverlay.opacity > 0.17){
+                    deforestationOverlay.opacity = 0.17;
                 };
             } else {
                 if (deforestationOverlay.opacity != 0){
@@ -2556,6 +2557,10 @@ scene("game", () => {
         // Add a bulldozer
          function addBulldozer() {
             let rT = choose(get('tree'));
+            let ranYA2 = H / 2;
+            let ranYB2 = H / 2 + (BG_TILE_SIZE / 2 - 40 * SPRITE_BG_SCALE);
+            let randX3 = rand(0, W);
+            let randY3 = rand(ranYA2, ranYB2);
             const bulldozer = add([
                 sprite('bulldozer', {
                     anim: "main",
@@ -2564,36 +2569,50 @@ scene("game", () => {
                 pos(-100, H/2),
                 {
                     update(){
-                        if (diaL == 0 && nb_trees > 1) {
-                            this.z = this.pos.y;
-                            /*//dynamically scale bulldozer
-                            if (get('bulldozer').length != 0) {
-                                get('bulldozer')[0].scale = get('bulldozer')[0].pos.y * BULLDOZER_SCALE;
-                            }*/ //-----> makes it unclickeable for some reason 
-                            if (this.pos.x > rT.pos.x) {
-                                this.flipX = false;
+                        if (diaL == 0) {
+                            if (nb_trees > 1) {
+                                this.z = this.pos.y;
+                                /*//dynamically scale bulldozer
+                                if (get('bulldozer').length != 0) {
+                                    get('bulldozer')[0].scale = get('bulldozer')[0].pos.y * BULLDOZER_SCALE;
+                                }*/ //-----> makes it unclickeable for some reason 
+                                if (this.pos.x > rT.pos.x) {
+                                    this.flipX = false;
+                                } else {
+                                    this.flipX = true;
+                                }
+                                this.moveTo(rT.pos.x, rT.pos.y + 10, BULLDOZER_SPEED);
+                                if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y + 10){
+                                    play('tree_fall');
+                                    destroy(rT);
+                                    rT = choose(get('tree'));
+                                }
+                                this.onCollide("flowers", (f) => {
+                                    f.destroy();
+                                })
+                                this.onCollide("flowered", (f) => {
+                                    f.unuse("flowered");
+                                })
+                                this.onCollide("beehive", (b) => {
+                                    b.destroy();
+                                })
+                                this.onCollide("unhiveable", (t) => {
+                                    t.unuse("unhiveable");
+                                    t.use("hiveable");
+                                })
                             } else {
-                                this.flipX = true;
+                                this.z = this.pos.y;
+                                if (this.pos.x < randX3) {
+                                    this.flipX = true;
+                                } else {
+                                    this.flipX = false;
+                                }
+                                this.moveTo(randX3, randY3, BEE_SPEED * 2);
+                                if(this.pos.x == randX3 && this.pos.y == randY3){
+                                    randX3 = rand(0, W);
+                                    randY3 = rand(ranYA2, ranYB2);
+                                };
                             }
-                            this.moveTo(rT.pos.x, rT.pos.y + 10, BULLDOZER_SPEED);
-                            if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y + 10){
-                                play('tree_fall');
-                                destroy(rT);
-                                rT = choose(get('tree'));
-                            }
-                            this.onCollide("flowers", (f) => {
-                                f.destroy();
-                            })
-                            this.onCollide("flowered", (f) => {
-                                f.unuse("flowered");
-                            })
-                            this.onCollide("beehive", (b) => {
-                                b.destroy();
-                            })
-                            this.onCollide("unhiveable", (t) => {
-                                t.unuse("unhiveable");
-                                t.use("hiveable");
-                            })
                         }
                     },
                 },
