@@ -14,15 +14,16 @@
         //* Fixed
     // There's the possibility of clicking something when it is destroyed
         //Seems fixed
+    //If a flower grows on a growing tree it stays small
+        //Fixed by adding "grown" tag
+    //Bulldozer should roam randomly when he doesn't have trees to destroy
     // When using the on screen keyboard the click is processed multiple times
         //To fix this for now, you can't input twice the same key in a row
-    //If a flower grows on a growing tree it stays small
-    //Bulldozer should roam randomly when he doesn't have trees to destroy
 
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.10.sga"
+const VERSION = "v.beta.1.3.11.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -1613,6 +1614,7 @@ scene("game", () => {
             "hiveable",
             "clickable",
             "start_tree",
+            "grown",
         ]);
 
     // ADDING EVENT LISTENERS
@@ -1624,7 +1626,7 @@ scene("game", () => {
                 play('button_click')
                 plus(1);
                 nb_clicks++;
-                if(nb_clicks == flowered_clicks && t.is("flowered") != true){ //Checks if the tree is not flowered and if the number the clicks is enough to make the tree flowered
+                if(nb_clicks == flowered_clicks && t.is("flowered") != true && t.is("grown")){ //Checks if the tree is not flowered, is grown and if the number the clicks is enough to make the tree flowered
                     if(hasFlowers == false){
                         diaBubble(dia_info[6]);
                         hasFlowers = true;
@@ -2388,6 +2390,8 @@ scene("game", () => {
                         if (this.scale.x < randY * TREE_SCALE) {
                             this.scale.x += 0.02; // Control growth speed
                             this.scale.y += 0.02;
+                        } else {
+                            this.use("grown");
                         }
                     },
                 },
@@ -2414,6 +2418,8 @@ scene("game", () => {
                         if (this.scale.x < y * TREE_SCALE) {
                             this.scale.x += 0.02; // Control growth speed
                             this.scale.y += 0.02;
+                        } else {
+                            this.use("grown");
                         }
                     },
                 },
@@ -2516,36 +2522,36 @@ scene("game", () => {
             pay(pr_new_bee);
             pr_new_bee  = pr_new_bee * scaling;
        };
-        // Add a new bee
+        // Add a new beehive
          function addBeehive(){
-         let rT = choose(get('hiveable'));
-         const beehive = add([
-            sprite('beehive0'),
-            pos(rT.pos.x + 5, rT.pos.y - 20),
-            scale(rT.pos.y * BEEHIVE_SCALE),
-            anchor('center'),
-            area(),
-            z(rT.z + 2),
-            "beehive",
-         ]);
-            rT.unuse("hiveable");
-            rT.use("unhiveable");
-            pay(pr_new_beehive);
-            pr_new_beehive  = pr_new_beehive * scaling;
+            let rT = choose(get('hiveable'));
+            const beehive = add([
+                sprite('beehive0'),
+                pos(rT.pos.x + 5, rT.pos.y - 20),
+                scale(rT.pos.y * BEEHIVE_SCALE),
+                anchor('center'),
+                area(),
+                z(rT.z + 2),
+                "beehive",
+            ]);
+                rT.unuse("hiveable");
+                rT.use("unhiveable");
+                pay(pr_new_beehive);
+                pr_new_beehive  = pr_new_beehive * scaling;
         }
         // Add a new trash
          function addTrash() {
-         const randX  = rand(0, W - icon_bear.pos.x);
-         const randY  = rand((H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)) + 10, (H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)) - 10);
-         const trash  = add([
-             sprite('trash'),
-             pos(randX, randY),
-             scale(TRASH_SCALE ),
-             anchor("bot"),
-             area(),
-             z(randY),
-             "trash",
-          ]);
+            const randX  = rand(0, W - icon_bear.pos.x);
+            const randY  = rand((H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)) + 10, (H/2 + (BG_TILE_SIZE/2 - 40 * SPRITE_BG_SCALE)) - 10);
+            const trash  = add([
+                sprite('trash'),
+                pos(randX, randY),
+                scale(TRASH_SCALE ),
+                anchor("bot"),
+                area(),
+                z(randY),
+                "trash",
+            ]);
          }
         // Add a bulldozer
          function addBulldozer() {
