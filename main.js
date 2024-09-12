@@ -20,7 +20,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.8.sga"
+const VERSION = "v.beta.1.3.9.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -260,6 +260,11 @@ loadRoot('assets/');
     loadSound('birds_bg'        ,"audio/sfx/birds/bird.wav");
     // Source : DASK https://dagurasusk.itch.io/retrosounds
     loadSound('error'           , "audio/sfx/error.mp3");
+    //Bear sounds
+        // Source : DASK https://dagurasusk.itch.io/retrosounds
+        loadSound('bear_angry'  , "audio/sfx/bear/angry.wav");
+        loadSound('bear_curious', "audio/sfx/bear/curious.wav");
+        loadSound('bear_friend' , "audio/sfx/bear/friendly.wav");
 // Load game music: 
     // Source: by Abstraction https://tallbeard.itch.io/music-loop-bundle 
     loadSound('default_music'   , "audio/music/bg_music.ogg");
@@ -1826,11 +1831,17 @@ scene("game", () => {
 
         // Skip dialogs
         let q = 0; //this value is here for the introductory dialogue
+        diaBubble(dia_intro[q]);
+        // Intro dialogue
         onKeyRelease("space", () => {
+            console.log(q);
             destroyAll("dialog");
             icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
             q++;
+            if (q < dia_intro.length) {
+                diaBubble(dia_intro[q]);
+            }
             if(q == 3){
                 let o = 0
                 //loop(0.5, () => { //I can't make this stop for some reason --> it was suppose to make the bubbles blink for a small while
@@ -1853,30 +1864,36 @@ scene("game", () => {
             }
         });
         onClick("skip", () => { //this is mainly here for the mobile version
-            destroyAll("dialog");
-            icon_bear.use(sprite('bear'));
-            icon_bear.use(scale(BEAR_SMALL_SCALE));
-            q++;
-            if(q == 3){
-                let o = 0
-                //loop(0.5, () => { //I can't make this stop for some reason
-                    if (o == 0) {
-                        information_0.use(opacity(1));
-                        information_4.use(opacity(1));
-                        information_5.use(opacity(1));
-                        o = 1;
-                    }/* else {
-                        information_0.use(opacity(0));
-                        information_4.use(opacity(0));
-                        information_5.use(opacity(0));
-                        o = 0;
-                    }nn
-                });*/
-            } else if(q > 3){
-                information_0.use(opacity(1));
-                information_4.use(opacity(1));
-                information_5.use(opacity(1));
-            }
+            wait(0.1, () => { //finally found out how to fix the button clicking multiple times. A wait() suffises to prevent it.
+                console.log(q);
+                destroyAll("dialog");
+                icon_bear.use(sprite('bear'));
+                icon_bear.use(scale(BEAR_SMALL_SCALE));
+                q++;
+                if (q < dia_intro.length) {
+                    diaBubble(dia_intro[q]);
+                }
+                if(q == 3){
+                    let o = 0
+                    //loop(0.5, () => { //I can't make this stop for some reason --> it was suppose to make the bubbles blink for a small while
+                        if (o == 0) {
+                            information_0.use(opacity(1));
+                            information_4.use(opacity(1));
+                            information_5.use(opacity(1));
+                            o = 1;
+                        }/* else {
+                            information_0.use(opacity(0));
+                            information_4.use(opacity(0));
+                            information_5.use(opacity(0));
+                            o = 0;
+                        }nn
+                    });*/
+                } else if(q > 3){
+                    information_0.use(opacity(1));
+                    information_4.use(opacity(1));
+                    information_5.use(opacity(1));
+                }
+            })
         });
 
         //Pause menu --> for some reason, this is locking other functionalities
@@ -2220,11 +2237,6 @@ scene("game", () => {
                 cps_penalty = 1;
             } else {
                 cps_penalty = nb_trash;
-            }
-
-            // Intro dialogue
-            if (q < dia_intro.length) {
-                diaBubble(dia_intro[q]);
             }
 
             // Hide objects based on their need
@@ -2641,7 +2653,7 @@ scene("game", () => {
                 "dialog",
             ]);
             const txt_bubble = add([
-                text(array_with_number[1], { size: 16, font:"d", width: width - 15, align: "center" }),
+                text(array_with_number[2], { size: 16, font:"d", width: width - 15, align: "center" }),
                 pos(bubble.pos),
                 anchor("center"),
                 color(BLACK),
@@ -2662,6 +2674,7 @@ scene("game", () => {
             ]);
             icon_bear.use(sprite(array_with_number[0]));
             icon_bear.use(scale(BEAR_SCALE));
+            play(array_with_number[1], {detune: -600});
        };
 
        function calculateSaturation(yPos, minY, maxY) {
@@ -3468,68 +3481,74 @@ scene("scoreboard", () => {
       
 /**
  *  DIALOGS
+ * Faces:
  * bear_happy
  * bear_wink for fun facts
  * bear_sad
  * bear_talking for general dialog
  * bear_scared when bulldozer appears
+ * 
+ * Sounds:
+ * bear_angry for sad or scared
+ * bear_curious for fun facts
+ * bear_friend for all rest
 */  
 
     const dia_intro = [
-        ["bear_happy", "Bienvenue au Click A Tree ! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
-        ["bear_sad", "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
-        ["bear_talking", "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
-        //["bear", "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront de planter des arbres que tu peux voir en haut à droite."],
-        //["bear_wink", "Je te laisse découvrir la suite !"],
-        ["bear_info", "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
-        ["bear_talking", "Je te laisse découvrir la suite ! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récupérer mon miel."],
+        ["bear_happy"   , "bear_friend" , "Bienvenue au Click A Tree ! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
+        ["bear_sad"     , "bear_angry"  , "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
+        ["bear_talking" , "bear_friend" , "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
+        //["bear"       , "bear_friend" , "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront de planter des arbres que tu peux voir en haut à droite."],
+        //["bear_wink"  , "bear_friend" , "Je te laisse découvrir la suite !"],
+        ["bear_info"    , "bear_curious", "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
+        ["bear_talking" , "bear_friend" , "Je te laisse découvrir la suite ! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récupérer mon miel."],
     ] //tout bon
     const dia_pollution = [
-        //["bear_scared", "Attention ! ! La barre de pollution augmente vite !"],
-        ["bear_wink", "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?"], //1er
-        ["bear_scared", "Oh non ! La pollution a atteint des niveaux critiques ! Clique sur les poubelles pour les nettoyer !"],
-        ["bear_sad", "Pourquoi tu ne cliques pas sur les déchets pour les faire disparaître ?"],
-        ["bear_happy", "Bravo, il n'y a plus de déchets pour le moment. Mais attention, ils risquent de revenir !"],
+        //["bear_scared", "bear_angry"  , "Attention ! ! La barre de pollution augmente vite !"],
+        ["bear_wink"    , "bear_curious", "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?"], //1er
+        ["bear_scared"  , "bear_angry"  , "Oh non ! La pollution a atteint des niveaux critiques ! Clique sur les poubelles pour les nettoyer !"],
+        ["bear_sad"     , "bear_angry"  ,"Pourquoi tu ne cliques pas sur les déchets pour les faire disparaître ?"],
+        ["bear_happy"   , "bear_friend" , "Bravo, il n'y a plus de déchets pour le moment. Mais attention, ils risquent de revenir !"],
         ]
     const dia_deforestation = [
-        //["bear_scared", "Attention ! ! La barre de déforestation augmente vite !"],
-        ["bear_wink", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes ?"], //2e
-        ["bear_scared", "Oh non ! Ils vont couper nos arbres ! Clique sur le bulldozer pour le détruire ! La barre en haut indique sa vie."],
-        ["bear_sad", "Vite ! Le bulldozer détruit toute la biodiversité ! Clique plus vite !"],
-        ["bear_happy", "Bravo ! Le bulldozer ne va pas retourner pendant un moment !"],
+        //["bear_scared", "bear_angry"  , "Attention ! ! La barre de déforestation augmente vite !"],
+        ["bear_wink"    , "bear_curious", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes ?"], //2e
+        ["bear_scared"  , "bear_angry"  , "Oh non ! Ils vont couper nos arbres ! Clique sur le bulldozer pour le détruire ! La barre en haut indique sa vie."],
+        ["bear_sad"     , "bear_angry"  , "Vite ! Le bulldozer détruit toute la biodiversité ! Clique plus vite !"],
+        ["bear_happy"   , "bear_friend" , "Bravo ! Le bulldozer ne va pas retourner pendant un moment !"],
         ]
     //on garde ou non?
     const dia_funfact = [
-        ["bear_wink", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux ?"],
-        ["bear_wink", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin ?"],
-        ["bear_wink", "Savais-tu que planter des arbres peut aider à remplacer ceux qui ont été coupés? C'est une façon de prendre soin de notre planète !"],
-        ["bear_wink", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution ?"],
-        ["bear_wink", "Savais-tu que les abeilles peuvent être affectées par la pollution de l'air? Protéger l'air, c'est aussi protéger nos pollinisateurs !"],
-        ["bear_wink", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques ?"],
-        ["bear_happy", "À la fin du jeu, quand tu tape ton nom, essaie de cliquer sur les touches flèches."],
+        ["bear_wink"    , "bear_curious", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux ?"],
+        ["bear_wink"    , "bear_curious", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin ?"],
+        ["bear_wink"    , "bear_curious", "Savais-tu que planter des arbres peut aider à remplacer ceux qui ont été coupés? C'est une façon de prendre soin de notre planète !"],
+        ["bear_wink"    , "bear_curious", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution ?"],
+        ["bear_wink"    , "bear_curious", "Savais-tu que les abeilles peuvent être affectées par la pollution de l'air? Protéger l'air, c'est aussi protéger nos pollinisateurs !"],
+        ["bear_wink"    , "bear_curious", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques ?"],
+        ["bear_happy"   , "bear_curious", "À la fin du jeu, quand tu tape ton nom, essaie de cliquer sur les touches flèches."],
     ]
     //peut-être une seule ligne ?
     const dia_info = [
         //tree
-        ["bear_wink", "Après avoir accumulé assez de feuilles, tu pourras planter des arbres. Le nombre de feuilles requis augmente à chaque fois que tu plantes un arbre."],
+        ["bear_wink"    , "bear_curious", "Après avoir accumulé assez de feuilles, tu pourras planter des arbres. Le nombre de feuilles requis augmente à chaque fois que tu plantes un arbre."],
         //bird 
-        ["bear_wink", "Après avoir accumulé assez de feuilles, tu pourras placer des oiseaux qui disperseront les graines pour t'aider à créer ta forêt."],
+        ["bear_wink"    , "bear_curious", "Après avoir accumulé assez de feuilles, tu pourras placer des oiseaux qui disperseront les graines pour t'aider à créer ta forêt."],
         //bee
-        ["bear_flower", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seules trois abeilles par arbre sont autorisées."],
+        ["bear_flower"  , "bear_curious", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seules trois abeilles par arbre sont autorisées."],
         //beehive
-        ["bear_wink", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré !"],
+        ["bear_wink"    , "bear_curious", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré !"],
         //pollution
-        ["bear_wink", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront. Clique dessus pour les enlever !"],
+        ["bear_wink"    , "bear_curious", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront. Clique dessus pour les enlever !"],
         //deforestation
-        ["bear_wink", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra. Clique dessus pour l'enlever !"],
+        ["bear_wink"    , "bear_curious", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra. Clique dessus pour l'enlever !"],
         //fleurs
-        ["bear_flower", "Quand tu cliques plusieurs fois sur un arbre des belles fleurs apparaîssent. Les abeilles ont besoin de ces fleurs qui multiplient également le nombre de feuilles que tu reçois."],
+        ["bear_flower"  , "bear_curious", "Quand tu cliques plusieurs fois sur un arbre des belles fleurs apparaîssent. Les abeilles ont besoin de ces fleurs qui multiplient également le nombre de feuilles que tu reçois."],
     ]
     //others
     const dia_others = [
         //pause
-        ["bear_talking", "Ne t'inquiète pas, le jeu est en pause. Clique sur espace pour reprendre !"],
-        ["bear_scared", "Qu'est-ce qui se cache là derrière ? Tu ne dois pas avoir assez de feuilles encore."],
+        ["bear_talking" , "bear_friend" , "Ne t'inquiète pas, le jeu est en pause. Clique sur espace pour reprendre !"],
+        ["bear_scared"  , "bear_angry"  , "Qu'est-ce qui se cache là derrière ? Tu ne dois pas avoir assez de feuilles encore."],
     ]
 
 // we finally have a start scene, yay !
