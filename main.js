@@ -20,7 +20,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.7.sga"
+const VERSION = "v.beta.1.3.8.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -39,7 +39,7 @@ const MU_TIME                   = 300;  //set the timer for the Mystères de l'U
 let timer                        = -10;
 let honey                       = 0;
 let boughtBird                  = false; //this value is kinda doubled but for 2 different purposes, thought of fusing them but I guess better not to not be confused
-let hasBulldozer                = false;
+let hasBulldozerSound           = false;
 
 const SPRITE_PIXEL_SIZE         = 25;   //value of the sprites' original size
 const SPRITE_ICON_SCALE         = 1.4;  //value to scale the sprites
@@ -312,6 +312,7 @@ let music_main = play('default_music', {
  */
 scene("startMenu", () => {
     inGame = false;
+    
     const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]); //Creates a general place for all the objects in the main menu
     setBackground(rgb(0, 191, 255)); // Blue background
 
@@ -321,24 +322,32 @@ scene("startMenu", () => {
     onClick("timedStartButton", () => {    //start the timed version of the game scene
         timer = MU_TIME;
         go("game");
-        music = play('button_click');
-        sound_bulldozer.stop();
+        play('button_click');
+        if (bulldozerExists) {
+            sound_bulldozer.stop();
+        };
     });
     onClick("infStartButton", () => {      //start the infinite timer version of the game scene
         timer = -10;
         go("game");
-        music = play('button_click');
-        sound_bulldozer.stop();
+        play('button_click');
+        if (bulldozerExists) {
+            sound_bulldozer.stop();
+        };
     });
     onClick("scoreBoardButton", () => {
         go("scoreboard");
-        music = play('button_click');
-        sound_bulldozer.stop();
+        play('button_click');
+        if (bulldozerExists) {
+            sound_bulldozer.stop();
+        };
     });
     onClick("creditsButton", () => {
         go("creditsMenu"); 
-        music = play('button_click');
-        sound_bulldozer.stop();
+        play('button_click');
+        if (bulldozerExists) {
+            sound_bulldozer.stop();
+        };
     });
     onClick("logo", (t) => { 
         // Leaf particles when logo is clicked
@@ -361,7 +370,7 @@ scene("startMenu", () => {
             leaf_particle.jump(rand(100, 350))
         }
         zoomOut(t);
-        music = play('button_click');
+        play('button_click');
     });
 
     // Add the rotating and pulsing rays backdrop
@@ -785,7 +794,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
         ]);
         onClick("menuButton", () => {
             go("startMenu");
-            music = play('button_click');
+            play('button_click');
         });
 
         // Click events for links --> currently this isn't working. It seems like Kaboom.js overides the vanilla javascript "window.open" and has no native replacement.
@@ -1008,6 +1017,11 @@ scene("game", () => {
         volume: 0,
         paused: false,
     })
+    let sound_birds     = play('birds_bg', {
+        loop: true,
+        volume: 0,
+        paused: false,
+    });
 
     // ADDING ELEMENTS
     // UI
@@ -1579,8 +1593,8 @@ scene("game", () => {
         // Click any tree
         let nb_clicks = 0; // --> this is what replaced the health code
         onClick("tree", (t) => { 
-            music = play('button_click');
             if (diaL == 0) {
+                play('button_click')
                 plus(1);
                 nb_clicks++;
                 if(nb_clicks == flowered_clicks && t.is("flowered") != true){ //Checks if the tree is not flowered and if the number the clicks is enough to make the tree flowered
@@ -1632,6 +1646,7 @@ scene("game", () => {
         // Click the trashcans
         onClick("trash", (t) => { 
             if (diaL == 0) {
+                play('trash_click');
                 // Particles when clicked
                 for (let i = 0; i < 1; i++) {
                     const trash_particle = add([
@@ -1663,11 +1678,11 @@ scene("game", () => {
                     destroyAll("trash");
                 }
             }
-            music = play('trash_click');
         });
         // Click the bulldozer
         onClick("bulldozer", (t) => { 
             if (diaL == 0) {
+                play('bulldozer_click', {volume: 0.6});
                 //particles when clicked
                 for (let i = 0; i < randi(5); i++) {
                     const smoke_particle = add([
@@ -1694,13 +1709,12 @@ scene("game", () => {
                     destroy(t);
                 }
             }
-            music = play('bulldozer_click', {volume: 0.6}); 
         });
         //Click the info bubbles
         onClick("info", (t) => {
             if (t.opacity != 0) {
                 diaBubble(dia_info[t.dia]);
-                music = play('button_click'); 
+                play('button_click'); 
             }
         });
         //Explode particles destruction of the different things
@@ -1804,6 +1818,7 @@ scene("game", () => {
                     "smoke_particle",
                 ])
                 smoke_particle.jump(rand(400, 500));
+                hasBulldozerSound = false;
                 sound_bulldozer.stop();
             }
             icon_bear.use(sprite("bear"));
@@ -1934,9 +1949,7 @@ scene("game", () => {
                         }
                         addBird();
                         boughtBird = true;
-                        music_bird = play('birds_bg', {
-                            volume: 1.2,
-                        });
+                        sound_birds.volume = 1.2;
                     }
                 }
             })
@@ -2050,7 +2063,7 @@ scene("game", () => {
                     defo_over++;
                     if(get("bulldozer").length == 0){
                         addBulldozer();
-                        hasBulldozer = true;
+                        hasBulldozerSound = true;
                         sound_bulldozer = play('bulldozer', {
                             loop: true,
                             volume: 0.5,
@@ -2116,81 +2129,74 @@ scene("game", () => {
             }
 
             //Adding different musics
-            if (timer > 3) {
-                if(nb_bulldozer > 0){
-                    if (music_main.volume > 0) {
-                        music_main.volume = music_main.volume - 0.15;
-                    };
-                    if (music_main.volume < 0) {
-                        music_main.volume = 0;
-                    };
+            if(nb_bulldozer > 0){
+                if (music_main.volume > 0) {
+                    music_main.volume = music_main.volume - 0.15;
+                };
+                if (music_main.volume < 0) {
+                    music_main.volume = 0;
+                };
 
-                    if (music_pollution.volume > 0) {
-                        music_pollution.volume = music_pollution.volume - 0.15;
-                    };
-                    if (music_pollution.volume < 0) {
-                        music_pollution.volume = 0;
-                    };
+                if (music_pollution.volume > 0) {
+                    music_pollution.volume = music_pollution.volume - 0.15;
+                };
+                if (music_pollution.volume < 0) {
+                    music_pollution.volume = 0;
+                };
 
-                    if (music_bulldozer.volume < 0.75) {
-                        music_bulldozer.volume = music_bulldozer.volume + 0.15;
-                    };
-                    if (music_bulldozer.volume > 0.75) {
-                        music_bulldozer.volume = 0.75;
-                    };
-                    
-                    //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
-                } else if (nb_trash > 0) {
-                    if (music_main.volume > 0) {
-                        music_main.volume = music_main.volume - 0.15;
-                    };
-                    if (music_main.volume < 0) {
-                        music_main.volume = 0;
-                    };
+                if (music_bulldozer.volume < 0.75) {
+                    music_bulldozer.volume = music_bulldozer.volume + 0.15;
+                };
+                if (music_bulldozer.volume > 0.75) {
+                    music_bulldozer.volume = 0.75;
+                };
+                
+                //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+            } else if (nb_trash > 0) {
+                if (music_main.volume > 0) {
+                    music_main.volume = music_main.volume - 0.15;
+                };
+                if (music_main.volume < 0) {
+                    music_main.volume = 0;
+                };
 
-                    if (music_bulldozer.volume > 0) {
-                        music_bulldozer.volume = music_bulldozer.volume - 0.15;
-                    };
-                    if (music_bulldozer.volume < 0) {
-                        music_bulldozer.volume = 0;
-                    };
+                if (music_bulldozer.volume > 0) {
+                    music_bulldozer.volume = music_bulldozer.volume - 0.15;
+                };
+                if (music_bulldozer.volume < 0) {
+                    music_bulldozer.volume = 0;
+                };
 
-                    if (music_pollution.volume < 0.75) {
-                        music_pollution.volume = music_pollution.volume + 0.15;
-                    };
-                    if (music_pollution.volume > 0.75) {
-                        music_pollution.volume = 0.75;
-                    };
+                if (music_pollution.volume < 0.75) {
+                    music_pollution.volume = music_pollution.volume + 0.15;
+                };
+                if (music_pollution.volume > 0.75) {
+                    music_pollution.volume = 0.75;
+                };
 
-                    //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
-                } else {
-                    if (music_pollution.volume > 0) {
-                        music_pollution.volume = music_pollution.volume - 0.15;
-                    };
-                    if (music_pollution.volume < 0) {
-                        music_pollution.volume = 0;
-                    };
- 
-                    if (music_bulldozer.volume > 0) {
-                        music_bulldozer.volume = music_bulldozer.volume - 0.15;
-                    };
-                    if (music_bulldozer.volume < 0) {
-                        music_bulldozer.volume = 0;
-                    };
-
-                    if (music_main.volume < 0.5) {
-                        music_main.volume = music_main.volume + 0.15;
-                    };
-                    if (music_main.volume > 0.5) {
-                        music_main.volume = 0.5;
-                    };
-
-                    //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
-                }
+                //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
             } else {
-                music_bulldozer.volume = 0;
-                music_pollution.volume = 0;
-                music_main.volume      = 0.5;
+                if (music_pollution.volume > 0) {
+                    music_pollution.volume = music_pollution.volume - 0.15;
+                };
+                if (music_pollution.volume < 0) {
+                    music_pollution.volume = 0;
+                };
+
+                if (music_bulldozer.volume > 0) {
+                    music_bulldozer.volume = music_bulldozer.volume - 0.15;
+                };
+                if (music_bulldozer.volume < 0) {
+                    music_bulldozer.volume = 0;
+                };
+
+                if (music_main.volume < 0.5) {
+                    music_main.volume = music_main.volume + 0.15;
+                };
+                if (music_main.volume > 0.5) {
+                    music_main.volume = 0.5;
+                };
+
                 //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
             }
         });
@@ -2247,7 +2253,14 @@ scene("game", () => {
 
             // Timer relative actions
             switch(timer){
-                case 0 : 
+                case 0 :
+                    music_main.volume      = 0.5;
+                    music_bulldozer.stop();
+                    music_pollution.stop();
+                    sound_birds.stop();
+                    if (hasBulldozerSound == true) {
+                        sound_bulldozer.stop();
+                    };
                     go("gameOver");
                     break;
             }
@@ -2289,11 +2302,9 @@ scene("game", () => {
         })
 
     // FUNCTIONS
-            // Add a new tree
-            function addTree() {
-            music = play('tree_leaf', {
-                volume: 5,
-            });
+        // Add a new tree
+        function addTree() {
+            play('tree_leaf', {volume: 5,});
             let ranYA = H / 2;
             let ranYB = H / 2 + (BG_TILE_SIZE / 2 - 40 * SPRITE_BG_SCALE);
             const randX = rand(0, W);
@@ -2320,7 +2331,7 @@ scene("game", () => {
                     },
                 },
             ]);
-        
+            
             tree.color = rgb(color.red, color.green, color.blue);
             pay(pr_new_tree);
             pr_new_tree = pr_new_tree * scaling;
@@ -2408,7 +2419,7 @@ scene("game", () => {
                             this.moveTo(rB.pos.x, rB.pos.y, BEE_SPEED);
                             if(this.pos.x == rB.pos.x && this.pos.y == rB.pos.y){
                                 // Bee pop sound when bee enters beehive
-                                music = play('bee_in_hive');
+                                play('bee_in_hive');
                                 b++; 
                                 honey++; //honey count is incremented
                                 zoomOut(get('honey_icon')[0]);
@@ -2499,7 +2510,7 @@ scene("game", () => {
                             }
                             this.moveTo(rT.pos.x, rT.pos.y + 10, BULLDOZER_SPEED);
                             if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y + 10){
-                                music = play('tree_fall');
+                                play('tree_fall');
                                 destroy(rT);
                                 rT = choose(get('tree'));
                             }
@@ -2739,13 +2750,6 @@ scene("gameOver", () => {
      *      Tested a closer result and change it to fit the full purpose of the scene;
      */
     setBackground(rgb(79, 146, 240));
-
-    if (hasBulldozer == true) {
-        sound_bulldozer.stop();
-    }
-    if (boughtBird == true) {
-        music_bird.stop();
-    }
 
     let playerName = "";
     let playerScore = honey;
@@ -2995,7 +2999,7 @@ scene("gameOver", () => {
 
     onClick("button", (b) => {
         zoomIn(b);
-        music = play('button_click');
+        play('button_click');
     });
 });
 
@@ -3096,7 +3100,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
 
     onClick("scoreboardButton", () => {
         go("scoreboard");
-        music = play('button_click');
+        play('button_click');
     });
 
     const menuButton = add([
@@ -3121,7 +3125,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
 
     onClick("menuButton", () => {
         go("startMenu");
-        music = play('button_click');
+        play('button_click');
     });
 });
 
@@ -3173,7 +3177,7 @@ scene("scoreboard", () => {
     onClick("replayButton", () => {
         timer = MU_TIME;
         go("game");
-        music = play('button_click');
+        play('button_click');
     });
     // Menu button
     const menuButton = add([
@@ -3197,7 +3201,7 @@ scene("scoreboard", () => {
 
     onClick("menuButton", () => {
         go("startMenu");
-        music = play('button_click');
+        play('button_click');
     });
 
     // Fetch high scores
@@ -3338,7 +3342,7 @@ scene("scoreboard", () => {
     
 
     onClick("button", (t) => {
-        music = play('button_click');
+        play('button_click');
     });
 
     // THIS DOESN'T WORK FOR SOME REASON
