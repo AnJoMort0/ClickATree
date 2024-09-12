@@ -16,11 +16,13 @@
         //Seems fixed
     // When using the on screen keyboard the click is processed multiple times
         //To fix this for now, you can't input twice the same key in a row
+    //If a flower grows on a growing tree it stays small
+    //Bulldozer should roam randomly when he doesn't have trees to destroy
 
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.9.sga"
+const VERSION = "v.beta.1.3.10.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -991,11 +993,11 @@ scene("game", () => {
         let cps_tree    = cps_t_base * (nb_bees * nb_flowered + 1);
      // Events
         const MAX_EVENT_STAT    = 100;
-        let pollu_stat          = 0;
+        let pollu_stat          = 95;
         let pollu_over          = 0;
         let pollu_boost         = 2;
         let pollu_color         = rgb(31, 60, 33); //if change this needs to be changed lower - these values can't seem to be stored
-        let defo_stat           = 0;
+        let defo_stat           = 80;
         let defo_over           = 0;
         let defo_boost          = 1.5;
         let defo_color          = rgb(89, 66, 53); //if change this needs to be changed lower - these values can't seem to be stored
@@ -1171,6 +1173,26 @@ scene("game", () => {
             })
             emptyBar();
         })
+
+    // Overlay for Pollution
+    const pollutionOverlay = add([
+        rect(W, H),
+        pos(0, 0),
+        color(50, 90, 50),
+        opacity(0),  
+        z(Z_UI_BOTTOM - 10),
+        "pollution_overlay"
+    ]);
+
+    // Overlay for Deforestation
+    const deforestationOverlay = add([
+        rect(W, H),
+        pos(0, 0),
+        color(100, 100, 100),
+        opacity(0),
+        z(Z_UI_BOTTOM - 10),
+        "deforestation_overlay"
+    ]);
 
     // DIALOG UI
      // Bear
@@ -1834,7 +1856,6 @@ scene("game", () => {
         diaBubble(dia_intro[q]);
         // Intro dialogue
         onKeyRelease("space", () => {
-            console.log(q);
             destroyAll("dialog");
             icon_bear.use(sprite('bear'));
             icon_bear.use(scale(BEAR_SMALL_SCALE));
@@ -1864,8 +1885,7 @@ scene("game", () => {
             }
         });
         onClick("skip", () => { //this is mainly here for the mobile version
-            wait(0.1, () => { //finally found out how to fix the button clicking multiple times. A wait() suffises to prevent it.
-                console.log(q);
+            wait(0.1, () => { //finally found out how to fix the button clicking multiple times. A wait() suffises to prevent it --> actually I did not, it still doesn't work in the digital keyboard IDK why it works here tbf.
                 destroyAll("dialog");
                 icon_bear.use(sprite('bear'));
                 icon_bear.use(scale(BEAR_SMALL_SCALE));
@@ -2167,7 +2187,6 @@ scene("game", () => {
                 if (music_bulldozer.volume > 0.75) {
                     music_bulldozer.volume = 0.75;
                 };
-                
                 //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
             } else if (nb_trash > 0) {
                 if (music_main.volume > 0) {
@@ -2190,7 +2209,6 @@ scene("game", () => {
                 if (music_pollution.volume > 0.75) {
                     music_pollution.volume = 0.75;
                 };
-
                 //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
             } else {
                 if (music_pollution.volume > 0) {
@@ -2213,7 +2231,6 @@ scene("game", () => {
                 if (music_main.volume > 0.5) {
                     music_main.volume = 0.5;
                 };
-
                 //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
             }
         });
@@ -2310,7 +2327,39 @@ scene("game", () => {
             if(defo_stat < 6 && d == 3){
                 d++;
                 //diaBubble(dia_deforestation[3]);
-            } 
+            }
+
+            //Adding different overlays
+            if(nb_bulldozer > 0){
+                if (deforestationOverlay.opacity < 0.1){
+                    deforestationOverlay.opacity = deforestationOverlay.opacity + 0.001;
+                };
+                if (deforestationOverlay.opacity > 0.1){
+                    deforestationOverlay.opacity = 0.1;
+                };
+            } else {
+                if (deforestationOverlay.opacity != 0){
+                    deforestationOverlay.opacity = deforestationOverlay.opacity - 0.003;
+                };
+                if (deforestationOverlay.opacity < 0){
+                    deforestationOverlay.opacity = 0;
+                };
+            };
+            if(nb_trash > 0){
+                if (pollutionOverlay.opacity < 0.01 * nb_trash){
+                    pollutionOverlay.opacity = pollutionOverlay.opacity + 0.001;
+                };
+                if (pollutionOverlay.opacity > 0.25){
+                    pollutionOverlay.opacity = 0.25;
+                };
+            } else {
+                if (pollutionOverlay.opacity != 0){
+                    pollutionOverlay.opacity = pollutionOverlay.opacity - 0.003;
+                };
+                if (pollutionOverlay.opacity < 0){
+                    pollutionOverlay.opacity = 0;
+                };
+            };
         })
 
     // FUNCTIONS
