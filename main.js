@@ -993,11 +993,11 @@ scene("game", () => {
         let cps_tree    = cps_t_base * (nb_bees * nb_flowered + 1);
      // Events
         const MAX_EVENT_STAT    = 100;
-        let pollu_stat          = 95;
+        let pollu_stat          = 0;
         let pollu_over          = 0;
         let pollu_boost         = 2;
         let pollu_color         = rgb(31, 60, 33); //if change this needs to be changed lower - these values can't seem to be stored
-        let defo_stat           = 80;
+        let defo_stat           = 0;
         let defo_over           = 0;
         let defo_boost          = 1.5;
         let defo_color          = rgb(89, 66, 53); //if change this needs to be changed lower - these values can't seem to be stored
