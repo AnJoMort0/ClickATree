@@ -1,6 +1,5 @@
 //IDEAS TO ADD
- //Minimal animations for the bees (for example move around when reach a tree)
-    //Achievements
+    //Minimal animations for the bees (for example move around when reach a tree)
     //Multiple Languages
     //Darker colors at the beginning -> progress saturation the bigger the forest
     //Have all scales depend on screen size --> I'm going to lock screen size instead, it's a better way to make scores universal and prevent weird things when loading in different devices
