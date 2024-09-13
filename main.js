@@ -1814,7 +1814,7 @@ scene("game", () => {
             }
             console.log(info_button_counter);
             info_button_counter[t.dia] = true;
-            if (ac++ == 0 && info_button_counter.every(pressed => pressed === true)) {
+            if (ac == 0 && info_button_counter.every(pressed => pressed === true)) {
                 localStorage.setItem('achieved_curious', 'true');
                 showAchievementPopUp("Curieux");
             }
@@ -4122,7 +4122,7 @@ scene("achievements", () => {
         //beehive
         ["bear_wink"    , "bear_curious", "Oh, une belle ruche ! Tes abeilles déposent leur nectar dedans afin de créer un bon miel sucré !"],
         //fleurs
-        ["bear_flower"  , "bear_curious", "Oh, regarde comme ces belles fleurs fleurissent ! Elles sont essentielles pour les abeilles !"],
+        ["bear_flower"  , "bear_curious", "Oh, regarde comme ces belles fleurs apparaissent ! Elles sont essentielles pour les abeilles !"],
     ]
     //others
     const dia_others = [
