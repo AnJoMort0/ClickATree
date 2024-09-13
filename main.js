@@ -15,16 +15,17 @@
     // There's the possibility of clicking something when it is destroyed
         //Seems fixed
     //If a flower grows on a growing tree it stays small
-        //Fixed by adding "grown" tag
+        //* Fixed by adding "grown" tag
     //Bulldozer should roam randomly when he doesn't have trees to destroy
-        //Done
+        //* Done
+    //Beehives scaling like crazy
     // When using the on screen keyboard the click is processed multiple times
         //To fix this for now, you can't input twice the same key in a row
 
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.4.3.sga"
+const VERSION = "v.beta.1.4.4.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -2304,21 +2305,8 @@ scene("game", () => {
                 };
                 //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
             }
-        });
 
-        let p = 0; let d = 0; let sbb = false; let sbeeb = false; let sbhb = false; // Try to limit things so the update doesn't update everything even when not needed, but rather only tries to do the if
-        onUpdate(() => {    
-            diaL        = get("dialog").length;
-            nb_trees    = get('tree').length;
-            nb_handmade = get('handmade').length;
-            nb_bees     = get('bee').length;
-            nb_birds    = get('bird').length;
-            nb_trash    = get('trash').length;
-            nb_bulldozer= get('bulldozer').length;
-            nb_flowered = get('flowered').length;
-            nb_beehives = get('beehive').length;
-
-            //Achievements
+            //Achievements:
             if (nb_trees > 1) {
                 achieved_lone_wolf = false;
             }
@@ -2381,6 +2369,19 @@ scene("game", () => {
                     showAchievementPopUp("Économiste");
                 }
             }
+        });
+
+        let p = 0; let d = 0; let sbb = false; let sbeeb = false; let sbhb = false; // Try to limit things so the update doesn't update everything even when not needed, but rather only tries to do the if
+        onUpdate(() => {    
+            diaL        = get("dialog").length;
+            nb_trees    = get('tree').length;
+            nb_handmade = get('handmade').length;
+            nb_bees     = get('bee').length;
+            nb_birds    = get('bird').length;
+            nb_trash    = get('trash').length;
+            nb_bulldozer= get('bulldozer').length;
+            nb_flowered = get('flowered').length;
+            nb_beehives = get('beehive').length;
             
             cps_tree = cps_t_base * (nb_bees * nb_flowered + 1); //Changes the passive revenue of trees
 
@@ -3166,7 +3167,7 @@ scene("gameOver", () => {
             keyboardVisible = true;
             const buttonSize = 50;
             const padding = 10;
-            const columns = 13; // Adjusted for the new layout
+            const columns = 13;
             const startX = (W - (columns * (buttonSize + padding))) / 2;
             const startY = H - (4 * (buttonSize + padding)) - 80;
 
@@ -3308,8 +3309,8 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     ]);
 
     add([
-        text(`${playerScore}`, {font:"d", size: 40, color: BLACK}),
-        pos(W / 2, H / 4 + 80),
+        text(`${playerScore}`, {font:"d", size: 55, color: BLACK}),
+        pos(W / 2, H / 4 + 90),
         anchor("center"),
         color(BLACK),
     ]);
