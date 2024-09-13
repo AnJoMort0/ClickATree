@@ -24,7 +24,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.3.12.sga"
+const VERSION = "v.beta.1.4.0.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -76,6 +76,19 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE / 2;
     const BULLDOZER_SPEED   = 60;
     const BIRD_SPEED        = 50;
     const BEE_SPEED         = 40;
+//Achievements
+    let achieved_lone_wolf         = localStorage.getItem('achieved_lone_wolf')         === 'true' ? true : false;  // Completes the game with one tree
+    let achieved_bee_whisperer     = localStorage.getItem('achieved_bee_whisperer')     === 'true' ? true : false;  // Completes the game with one bee and one hive
+    let achieved_forest_lord       = localStorage.getItem('achieved_forest_lord')       === 'true' ? true : false;  // Has more than 200 trees
+    let achieved_gardener_dedicated= localStorage.getItem('achieved_gardener_dedicated')=== 'true' ? true : false;  // Has more than 75 trees planted without birds
+    let achieved_bird_kingdom      = localStorage.getItem('achieved_bird_kingdom')      === 'true' ? true : false;  // Has more than 75 birds
+    let achieved_bee_master        = localStorage.getItem('achieved_bee_master')        === 'true' ? true : false;  // Has more than 50 bees
+    let achieved_perfect_bloom     = localStorage.getItem('achieved_perfect_bloom')     === 'true' ? true : false;  // Has more than 100 trees with flowers
+    let achieved_leaf_tycoon       = localStorage.getItem('achieved_leaf_tycoon')       === 'true' ? true : false;  // Accumulates more than 200k leaves
+    let achieved_falling_leaves    = localStorage.getItem('achieved_falling_leaves')    === 'true' ? true : false;  // Has a passive income of 1k/s
+    let achieved_economist         = localStorage.getItem('achieved_economist')         === 'true' ? true : false;  // Doesn't use any leaves for 1 minute
+    let achieved_tree_guardian     = localStorage.getItem('achieved_tree_guardian')     === 'true' ? true : false;  // Doesn't let the bulldozer destroy any tree
+    let achieved_hidden_secret     = localStorage.getItem('achieved_hidden_secret')     === 'true' ? true : false;  // Finds the hidden secret
 
 // Load assests for the game
 loadRoot('assets/');
@@ -327,60 +340,6 @@ scene("startMenu", () => {
 
     // Music starts on any click
     let music;
-    // Event listeners of the different buttons
-    onClick("timedStartButton", () => {    //start the timed version of the game scene
-        timer = MU_TIME;
-        go("game");
-        play('button_click');
-        if (bulldozerExists) {
-            sound_bulldozer.stop();
-        };
-    });
-    onClick("infStartButton", () => {      //start the infinite timer version of the game scene
-        timer = -10;
-        go("game");
-        play('button_click');
-        if (bulldozerExists) {
-            sound_bulldozer.stop();
-        };
-    });
-    onClick("scoreBoardButton", () => {
-        go("scoreboard");
-        play('button_click');
-        if (bulldozerExists) {
-            sound_bulldozer.stop();
-        };
-    });
-    onClick("creditsButton", () => {
-        go("creditsMenu"); 
-        play('button_click');
-        if (bulldozerExists) {
-            sound_bulldozer.stop();
-        };
-    });
-    onClick("logo", (t) => { 
-        // Leaf particles when logo is clicked
-        for (let i = 0; i < 5; i++) {
-            const leaf_particle = add([
-                pos(mousePos()),
-                z(t.z + 10),
-                sprite(choose(leafs)),
-                anchor("center"),
-                scale(rand(1, 0.6)),
-                area({ collisionIgnore:["leaf_particle"]}),
-                body(),
-                lifespan(0.5, {fade: 0.2}),
-                opacity(1),
-                move(choose([LEFT, RIGHT]), rand(30, 150)),
-                rotate(rand(0, 360)),
-                offscreen({destroy: true}),
-                "leaf_particle",
-            ])
-            leaf_particle.jump(rand(100, 350))
-        }
-        zoomOut(t);
-        play('button_click');
-    });
 
     //Add the logo in front of the rotating rays
     const logo = STARTBOX.add([
@@ -397,7 +356,7 @@ scene("startMenu", () => {
     const raysBackdrop = STARTBOX.add([
         sprite("rays"),
         anchor('center'),
-        pos(0, -W/8),
+        pos(logo.pos),
         scale(0.6),
         z(Z_UI_BOTTOM - 10),
         rotate(0),    // Start at 0 degrees
@@ -422,7 +381,7 @@ scene("startMenu", () => {
     ]);
     
     const timedStartText = add([
-        text("Mode Défi", {size : 26, font : "d"}),
+        text("Mode Défi", {size : 30, font : "d"}),
         pos(timedStartButton.pos),
         anchor("center"),
         color(BLACK),
@@ -433,7 +392,7 @@ scene("startMenu", () => {
     ]);
 
     const infStartButton = add([
-        rect(250, 50, { radius: 15 }),
+        rect(350, 50, { radius: 15 }),
         anchor("center"),
         pos(STARTBOX.pos.x, STARTBOX.pos.y + 200),
         z(Z_UI_BOTTOM),
@@ -451,6 +410,29 @@ scene("startMenu", () => {
         z(Z_UI),
         area(),
         "infStartButton",
+        "button,"
+    ]);
+
+    // Achievements Button
+    const achievementsButton = add([
+        rect(350, 30, { radius: 15 }),
+        anchor("center"),
+        pos(STARTBOX.pos.x, STARTBOX.pos.y + 260),
+        z(Z_UI_BOTTOM),
+        outline(4),
+        area(),
+        "achievementsButton",
+        "button,"
+    ]);
+    
+    const achievementsText = add([
+        text("Succès", {size : 15, font : "d"}),
+        pos(achievementsButton.pos),
+        anchor("center"),
+        color(BLACK),
+        z(Z_UI),
+        area(),
+        "achievementsButton",
         "button,"
     ]);
 
@@ -502,6 +484,69 @@ scene("startMenu", () => {
         anchor("botright"),
         color(BLACK),
     ]);
+
+
+    // Event listeners of the different buttons
+    onClick("timedStartButton", () => {    //start the timed version of the game scene
+        timer = MU_TIME;
+        go("game");
+        play('button_click');
+        if (bulldozerExists) {
+            sound_bulldozer.stop();
+        };
+    });
+    onClick("infStartButton", () => {      //start the infinite timer version of the game scene
+        timer = -10;
+        go("game");
+        play('button_click');
+        if (bulldozerExists) {
+            sound_bulldozer.stop();
+        };
+    });
+    onClick("achievementsButton", () => {
+        go("achievements");
+        play('button_click');
+        if (bulldozerExists) {
+            sound_bulldozer.stop();
+        };
+    });
+    onClick("scoreBoardButton", () => {
+        go("scoreboard");
+        play('button_click');
+        if (bulldozerExists) {
+            sound_bulldozer.stop();
+        };
+    });
+    onClick("creditsButton", () => {
+        go("creditsMenu"); 
+        play('button_click');
+        if (bulldozerExists) {
+            sound_bulldozer.stop();
+        };
+    });
+    onClick("logo", (t) => { 
+        // Leaf particles when logo is clicked
+        for (let i = 0; i < 5; i++) {
+            const leaf_particle = add([
+                pos(mousePos()),
+                z(t.z + 10),
+                sprite(choose(leafs)),
+                anchor("center"),
+                scale(rand(1, 0.6)),
+                area({ collisionIgnore:["leaf_particle"]}),
+                body(),
+                lifespan(0.5, {fade: 0.2}),
+                opacity(1),
+                move(choose([LEFT, RIGHT]), rand(30, 150)),
+                rotate(rand(0, 360)),
+                offscreen({destroy: true}),
+                "leaf_particle",
+            ])
+            leaf_particle.jump(rand(100, 350))
+        }
+        zoomOut(t);
+        play('button_click');
+    });
 
     // Add bee moving around and easter egg message
     for (let i = 0; i < 3; i++) {
@@ -958,6 +1003,12 @@ scene("supacat", () => { // ;)
 scene("game", () => {
     inGame = true;
 
+    //Achievements set to true by default, they get set to false when the player fails to do them
+    achieved_lone_wolf      = true;
+    achieved_bee_whisperer  = true;
+    achieved_tree_guardian  = true;
+    let economist_timer     = 0;
+
     // DECLARING CONSTANTS
      // Areas
          const CASHBOX  = add([anchor("center"), pos(W/2 ,30)   , z(Z_UI_BOTTOM), "ui"]);
@@ -984,6 +1035,7 @@ scene("game", () => {
         let pr_new_beehive  = 30;
      // Number of elements -> these are later updated on the general onUpdate
         let nb_trees    = get('tree').length;
+        let nb_handmade = get('handmade').length;
         let nb_bees     = get('bee').length;
         let nb_birds    = get('bird').length;
         let nb_trash    = get('trash').length;
@@ -2082,6 +2134,7 @@ scene("game", () => {
                 // Timer
                 if(timer > 0){
                     timer = timer - 1
+                    economist_timer = economist_timer + 1;
                 };       
                       
                 // Each element gives cash overtime
@@ -2242,6 +2295,7 @@ scene("game", () => {
         onUpdate(() => {    
             diaL        = get("dialog").length;
             nb_trees    = get('tree').length;
+            nb_handmade = get('handmade').length;
             nb_bees     = get('bee').length;
             nb_birds    = get('bird').length;
             nb_trash    = get('trash').length;
@@ -2249,6 +2303,38 @@ scene("game", () => {
             nb_flowered = get('flowered').length;
             nb_beehives = get('beehive').length;
 
+            //Achievements
+            if (nb_trees > 1) {
+                achieved_lone_wolf = false;
+            }
+            if (nb_bees > 1 || nb_beehives > 1) {
+                achieved_bee_whisperer = false;
+            }
+            if (nb_trees >= 200) {
+                localStorage.setItem('achieved_forest_lord', 'true');
+            }
+            if (nb_handmade >= 75) {
+                localStorage.setItem('achieved_gardener_dedicated', 'true');
+            }
+            if (nb_birds >= 75) {
+                localStorage.setItem('achieved_bird_kingdom', 'true');
+            }
+            if (nb_bees >= 50) {
+                localStorage.setItem('achieved_bee_master', 'true');
+            }
+            if (nb_flowered >= 100) {
+                localStorage.setItem('achieved_perfect_bloom', 'true');
+            }
+            if (cash >= 100000) {
+                localStorage.setItem('achieved_leaf_tycoon', 'true');
+            }
+            if (cash_per_sec >= 1000) {
+                localStorage.setItem('achieved_falling_leafs', 'true');
+            }
+            if (economist_timer >= 60) {
+                localStorage.setItem('achieved_economist', 'true');
+            }
+            
             cps_tree = cps_t_base * (nb_bees * nb_flowered + 1); //Changes the passive revenue of trees
 
             cash_per_sec    = (nb_trees * cps_tree);        //Changes the general passive revenue
@@ -2293,6 +2379,17 @@ scene("game", () => {
                     if (hasBulldozerSound == true) {
                         sound_bulldozer.stop();
                     };
+
+                    if (achieved_lone_wolf == true) {
+                        localStorage.setItem('achieved_lone_wolf', 'true');
+                    }
+                    if (achieved_tree_guardian == true) {
+                        localStorage.setItem('achieved_tree_guardian', 'true');
+                    }
+                    if (achieved_bee_whisperer == true) {
+                        localStorage.setItem('achieved_bee_whisperer', 'true');
+                    }
+
                     go("gameOver");
                     break;
             }
@@ -2385,6 +2482,7 @@ scene("game", () => {
                 z(randY),
                 "tree",
                 "hiveable",
+                "handmade",
                 {
                     update() {
                         // Grow the tree over time
@@ -2585,6 +2683,7 @@ scene("game", () => {
                                 if(this.pos.x == rT.pos.x && this.pos.y == rT.pos.y + 10){
                                     play('tree_fall');
                                     destroy(rT);
+                                    achieved_tree_guardian = false;
                                     rT = choose(get('tree'));
                                 }
                                 this.onCollide("flowers", (f) => {
@@ -2796,6 +2895,7 @@ scene("game", () => {
         // Pay with cash
         function pay(x){
             cash = cash - x;
+            economist_timer = 0;
         }
 
         // Exponentially scale price --> for some reason this does not work
@@ -2884,23 +2984,27 @@ scene("gameOver", () => {
     onKeyPress("right", () => {
         currentColorIndex = (currentColorIndex + 1) % colors.length;
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
+        localStorage.setItem('achieved_hidden_secret', 'true');
     });
 
     onKeyPress("left", () => {
         currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
+        localStorage.setItem('achieved_hidden_secret', 'true');
     });
 
     onKeyDown("down", () => {
         customColor.r = Math.max(0, customColor.r - 1);
         customColor.g = Math.max(0, customColor.g - 2);
         customColor.b = Math.max(0, customColor.b - 3);
+        localStorage.setItem('achieved_hidden_secret', 'true');
     });
 
     onKeyDown("up", () => {
         customColor.r = Math.min(255, customColor.r + 1);
         customColor.g = Math.min(255, customColor.g + 2);
         customColor.b = Math.min(255, customColor.b + 3);
+        localStorage.setItem('achieved_hidden_secret', 'true');
     });
 
     const confirmButton = add([
@@ -3057,20 +3161,24 @@ scene("gameOver", () => {
                         case '<':
                             currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
                             customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
+                            localStorage.setItem('achieved_hidden_secret', 'true');
                             break;
                         case '>':
                             currentColorIndex = (currentColorIndex + 1) % colors.length;
                             customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
+                            localStorage.setItem('achieved_hidden_secret', 'true');
                             break;
                         case '^':
                             customColor.r = Math.min(255, customColor.r + 1);
                             customColor.g = Math.min(255, customColor.g + 2);
                             customColor.b = Math.min(255, customColor.b + 3);
+                            localStorage.setItem('achieved_hidden_secret', 'true');
                             break;
                         case 'v':
                             customColor.r = Math.max(0, customColor.r - 1);
                             customColor.g = Math.max(0, customColor.g - 2);
                             customColor.b = Math.max(0, customColor.b - 3);
+                            localStorage.setItem('achieved_hidden_secret', 'true');
                             break;
                         case 'espace':
                             if (playerName.length < 10) {
@@ -3362,6 +3470,247 @@ scene("scoreboard", () => {
             anchor("botright"),
             color(BLACK),
         ]);
+});
+
+scene("achievements", () => {
+    // UI Constants
+    const ACHIEVE_WIDTH = W * 0.8;
+    const ACHIEVE_HEIGHT = H * 0.1;
+    const ACHIEVE_PADDING = 20;
+    const COMPLETED_COLOR = rgb(60, 170, 60);  // Green for completed achievements
+    const LOCKED_COLOR = rgb(120, 120, 120);   // Gray for locked achievements
+    const SECRET_COLOR = rgb(255, 223, 0);     // Special color for secret achievement
+    let scrollOffset = 0;
+    const maxVisibleItems = Math.floor((H - 250) / (ACHIEVE_HEIGHT + ACHIEVE_PADDING)); // Items visible in the viewport
+
+    // List of achievements
+    const achievements = [
+        {
+            title: "Loup Solitaire",
+            description: "Compléter le jeu avec un seul arbre.",
+            key: "achieved_lone_wolf",  // Key in local storage
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "L'Apiculteur Dédié",
+            description: "Compléter le jeu avec une seule abeille et une ruche.",
+            key: "achieved_bee_whisperer",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "Seigneur de la Forêt",
+            description: "Avoir 200 arbres.",
+            key: "achieved_forest_lord",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "Jardinier Dévoué",
+            description: "Avoir 75 arbres non plantés par les oiseaux.",
+            key: "achieved_gardener_dedicated",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "Royaume des Oiseaux",
+            description: "Avoir 75 oiseaux.",
+            key: "achieved_bird_kingdom",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "Maître des Abeilles",
+            description: "Avoir 50 abeilles.",
+            key: "achieved_bee_master",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "Floraison Parfaite",
+            description: "Avoir 100 arbres avec des fleurs.",
+            key: "achieved_perfect_bloom",
+            color: COMPLETED_COLOR,
+        },    
+        {
+            title: "Magnat des Feuilles",
+            description: "Accumuler 200k feuilles.",
+            key: "achieved_leaf_tycoon",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "Feuilles Tombantes",
+            description: "Atteindre un gain passif de 1 000 feuilles par seconde.",
+            key: "achieved_falling_leafs",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "Économiste",
+            description: "Ne pas utiliser de feuilles pendant 1 minute.",
+            key: "achieved_economist",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "Gardien des Arbres",
+            description: "Ne laisser aucun arbre être détruit par le bulldozer.",
+            key: "achieved_tree_guardian",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: "Le Secret Caché",
+            description: "Trouver le secret !",
+            key: "achieved_hidden_secret",
+            color: SECRET_COLOR,  // Special color for secret achievement
+        },
+    ];
+
+    // Background color consistent with the game
+    add([
+        rect(W, H),
+        pos(0, 0),
+        color(0, 191, 255),  // Correct game background color
+        z(-1),
+    ]);
+
+    // Title of the achievements scene
+    add([
+        text("Succès", {
+            size: 48,
+            font: "d",
+        }),
+        pos(W / 2, 50),
+        anchor("center"),
+        color(255, 255, 255),
+    ]);
+
+    // Function to display achievements
+    function drawAchievements() {
+        destroyAll("achievementItem");
+
+        achievements.slice(scrollOffset, scrollOffset + maxVisibleItems).forEach((ach, i) => {
+            // Check if the achievement is unlocked from local storage
+            const isAchieved = !!localStorage.getItem(ach.key);
+
+            // Container for each achievement
+            const achieveBox = add([
+                rect(ACHIEVE_WIDTH, ACHIEVE_HEIGHT, { radius: 8 }),
+                pos(W / 2, 150 + (i * (ACHIEVE_HEIGHT + ACHIEVE_PADDING))),
+                anchor("center"),
+                color(0, 0, 0),
+                z(1),
+                "achievementItem"
+            ]);
+
+            // Achievement title
+            achieveBox.add([
+                text(ach.title, {
+                    size: 32,
+                    font: "d",
+                    width: ACHIEVE_WIDTH - 20,
+                }),
+                pos(20, -10),
+                anchor("center"),
+                color(isAchieved ? ach.color : LOCKED_COLOR),
+                "achievementItem"
+            ]);
+
+            // Achievement description
+            achieveBox.add([
+                text(ach.description, {
+                    size: 16,
+                    font: "d",
+                    width: ACHIEVE_WIDTH - 20,
+                }),
+                pos(20, 20),
+                anchor("center"),
+                color(isAchieved ? ach.color : LOCKED_COLOR),
+                "achievementItem"
+            ]);
+
+            // Status: Completed or Locked
+            achieveBox.add([
+                text(isAchieved ? "Complété" : "Verrouillé", {
+                    size: 24,
+                    font: "d",
+                }),
+                pos(ACHIEVE_WIDTH - 20, ACHIEVE_HEIGHT / 2),
+                anchor("right"),
+                color(isAchieved ? COMPLETED_COLOR : LOCKED_COLOR),
+                "achievementItem"
+            ]);
+
+            // Special effect for secret achievement if unlocked
+            if (ach.key === "achieved_hidden_secret" && isAchieved) {
+                achieveBox.add([
+                    sprite("star"),  // Special icon for the secret achievement
+                    pos(ACHIEVE_WIDTH - 50, ACHIEVE_HEIGHT / 2),
+                    scale(2),
+                    anchor("center"),
+                    "achievementItem"
+                ]);
+            }
+        });
+    }
+
+    // Draw achievements
+    drawAchievements();
+
+    // Scroll functionality using arrow keys and mouse scroll
+    onKeyPress("up", () => {
+        if (scrollOffset > 0) {
+            scrollOffset -= 1;
+            drawAchievements();
+        }
+    });
+
+    onKeyPress("down", () => {
+        if (scrollOffset < achievements.length - maxVisibleItems) {
+            scrollOffset += 1;
+            drawAchievements();
+        }
+    });
+
+    onScroll((dir) => {
+        if (dir === "up" && scrollOffset > 0) {
+            scrollOffset -= 1;
+        } else if (dir === "down" && scrollOffset < achievements.length - maxVisibleItems) {
+            scrollOffset += 1;
+        }
+        drawAchievements();
+    });
+
+    // Menu button
+    const menuButton = add([
+        rect(150, 50, { radius: 15 }),
+        anchor("topleft"),
+        pos(25, 25),
+        outline(4),
+        area(),
+        z(Z_UI),
+        "menuButton",
+        "button",
+    ]);
+    const menuButtonText = menuButton.add([
+        text("Menu", {font:"d", size: 18 }),
+        color(0, 0, 0),
+        pos(menuButton.pos.x + 15, menuButton.pos.y - 7),
+        z(Z_UI_TOP),
+        anchor(menuButton.anchor),
+        area(),
+        "menuButton",
+        "button",
+    ]);
+
+    onClick("menuButton", () => {
+        go("startMenu");
+        play('button_click');
+    });
+
+    // Small text at the bottom right
+    add([
+        text("Utilise les flèches pour défiler", {
+            font: "d", 
+            size: 10,
+        }),
+        pos(W - 20, H - 20),
+        anchor("botright"),
+        color(0, 0, 0),
+    ]);
 });
 
 // GENERAL FUNCTIONS
