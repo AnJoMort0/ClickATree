@@ -1037,7 +1037,7 @@ scene("game", () => {
 
     // DECLARING VARIABLES
     honey = 0; //set the score to 0 at every start
-     let cash            = 10000000000;
+     let cash            = 0;
      let score           = 0;
      let cash_per_sec    = 0;
      let cps_penalty     = 1;
