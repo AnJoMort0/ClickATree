@@ -1922,7 +1922,6 @@ scene("game", () => {
                 hasBulldozerSound = false;
                 sound_bulldozer.stop();
             }
-            icon_bear.use(sprite("bear"));
         });
 
         // Skip dialogs
@@ -2180,7 +2179,6 @@ scene("game", () => {
                             loop: true,
                             volume: 0.5,
                         });
-                        icon_bear.use(sprite("bear_scared"));
                     }
                 }
 
@@ -2236,7 +2234,6 @@ scene("game", () => {
                         "smoke_particle",
                     ])
                     smoke_particle.jump(rand(400, 500));
-                    icon_bear.use(sprite("bear_scared"));
                 }
             }
 
@@ -2263,6 +2260,9 @@ scene("game", () => {
                     music_bulldozer.volume = 0.75;
                 };
                 //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+                if (diaL == 0) {
+                    icon_bear.use(sprite("bear_scared"));
+                }
             } else if (nb_trash > 0) {
                 if (music_main.volume > 0) {
                     music_main.volume = music_main.volume - 0.15;
@@ -2285,6 +2285,9 @@ scene("game", () => {
                     music_pollution.volume = 0.75;
                 };
                 //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+                if (diaL = 0) {
+                    icon_bear.use(sprite("bear_sad"));
+                }
             } else {
                 if (music_pollution.volume > 0) {
                     music_pollution.volume = music_pollution.volume - 0.15;
@@ -2307,6 +2310,9 @@ scene("game", () => {
                     music_main.volume = 0.5;
                 };
                 //console.log("M : " + music_main.volume + " /  B : " + music_bulldozer.volume + " / P : " + music_pollution.volume);
+                if (diaL == 0) {
+                    icon_bear.use(sprite("bear"));
+                }
             }
 
             //Achievements:
