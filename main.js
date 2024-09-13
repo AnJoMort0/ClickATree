@@ -26,7 +26,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.4.7.sga"
+const VERSION = "v.beta.1.4.8.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -1812,9 +1812,9 @@ scene("game", () => {
                 diaBubble(dia_info[t.dia]);
                 play('button_click');
             }
-            console.log(info_button_counter);
             info_button_counter[t.dia] = true;
             if (ac == 0 && info_button_counter.every(pressed => pressed === true)) {
+                ac++;
                 localStorage.setItem('achieved_curious', 'true');
                 showAchievementPopUp("Curieux");
             }
