@@ -24,7 +24,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.4.1.sga"
+const VERSION = "v.beta.1.4.2.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -89,6 +89,20 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE / 2;
     let achieved_economist         = localStorage.getItem('achieved_economist')         === 'true' ? true : false;  // Doesn't use any leaves for 1 minute
     let achieved_tree_guardian     = localStorage.getItem('achieved_tree_guardian')     === 'true' ? true : false;  // Doesn't let the bulldozer destroy any tree
     let achieved_hidden_secret     = localStorage.getItem('achieved_hidden_secret')     === 'true' ? true : false;  // Finds the hidden secret
+    let achievementQueue = [];
+    let achievementActive = false;
+    let alw  = achieved_lone_wolf         ? 2 : 0;
+    let abw  = achieved_bee_whisperer     ? 2 : 0;
+    let afl  = achieved_forest_lord       ? 2 : 0;
+    let agd  = achieved_gardener_dedicated? 2 : 0;
+    let abk  = achieved_bird_kingdom      ? 2 : 0;
+    let abm  = achieved_bee_master        ? 2 : 0;
+    let apb  = achieved_perfect_bloom     ? 2 : 0;
+    let alt  = achieved_leaf_tycoon       ? 2 : 0;
+    let afls = achieved_falling_leaves    ? 2 : 0;
+    let ae   = achieved_economist         ? 2 : 0;
+    let atg  = achieved_tree_guardian     ? 2 : 0;
+    let ahs  = achieved_hidden_secret     ? 2 : 0;
 
 // Load assests for the game
 loadRoot('assets/');
@@ -277,6 +291,7 @@ loadRoot('assets/');
     loadSound('birds_bg'        ,"audio/sfx/birds/bird.wav");
     // Source : DASK https://dagurasusk.itch.io/retrosounds
     loadSound('error'           , "audio/sfx/error.mp3");
+    loadSound('win'             , "audio/sfx/win.wav");
     //Bear sounds
         // Source : DASK https://dagurasusk.itch.io/retrosounds
         loadSound('bear_angry'  , "audio/sfx/bear/angry.wav");
@@ -1022,7 +1037,7 @@ scene("game", () => {
 
     // DECLARING VARIABLES
     honey = 0; //set the score to 0 at every start
-     let cash            = 0;
+     let cash            = 10000000000;
      let score           = 0;
      let cash_per_sec    = 0;
      let cps_penalty     = 1;
@@ -2312,27 +2327,59 @@ scene("game", () => {
             }
             if (nb_trees >= 125) {
                 localStorage.setItem('achieved_forest_lord', 'true');
+                afl++;
+                if (afl == 1) {
+                    showAchievementPopUp("Seigneur de la Forêt");
+                }
             }
             if (nb_handmade >= 30) {
                 localStorage.setItem('achieved_gardener_dedicated', 'true');
+                agd++;
+                if (agd == 1) {
+                    showAchievementPopUp("Jardinier Dévoué");
+                }
             }
             if (nb_birds >= 25) {
                 localStorage.setItem('achieved_bird_kingdom', 'true');
+                abk++;
+                if (abk == 1) {
+                    showAchievementPopUp("Royaume des Oiseaux");
+                }
             }
             if (nb_bees >= 25) {
                 localStorage.setItem('achieved_bee_master', 'true');
+                abm++;
+                if (abm == 1) {
+                    showAchievementPopUp("Maître des Abeilles");
+                }
             }
             if (nb_flowered >= 50) {
                 localStorage.setItem('achieved_perfect_bloom', 'true');
+                apb++;
+                if (apb == 1) {
+                    showAchievementPopUp("Floraison Parfaite");
+                }
             }
             if (cash >= 200000) {
                 localStorage.setItem('achieved_leaf_tycoon', 'true');
+                alt++;
+                if (alt == 1) {
+                    showAchievementPopUp("Magnat des Feuilles");
+                }
             }
             if (cash_per_sec >= 20000) {
                 localStorage.setItem('achieved_falling_leafs', 'true');
+                afls++;
+                if (afls == 1) {
+                    showAchievementPopUp("Feuilles Tombantes");
+                }
             }
             if (economist_timer >= 60) {
                 localStorage.setItem('achieved_economist', 'true');
+                ae++;
+                if (a8 == 1) {
+                    showAchievementPopUp("Économiste");
+                }
             }
             
             cps_tree = cps_t_base * (nb_bees * nb_flowered + 1); //Changes the passive revenue of trees
@@ -2382,12 +2429,15 @@ scene("game", () => {
 
                     if (achieved_lone_wolf == true) {
                         localStorage.setItem('achieved_lone_wolf', 'true');
+                        alw++;
                     }
                     if (achieved_tree_guardian == true) {
                         localStorage.setItem('achieved_tree_guardian', 'true');
+                        atg++;
                     }
                     if (achieved_bee_whisperer == true) {
                         localStorage.setItem('achieved_bee_whisperer', 'true');
+                        abw++;
                     }
 
                     go("gameOver");
@@ -2938,6 +2988,16 @@ scene("gameOver", () => {
      */
     setBackground(rgb(79, 146, 240));
 
+    if (alw == 1){
+        showAchievementPopUp("Loup Solitaire");
+    };
+    if (atg == 1){
+        showAchievementPopUp("Gardien des Arbres");
+    };
+    if (abw == 1){
+        showAchievementPopUp("Apiculteur Dédié")
+    };
+
     let playerName = "";
     let playerScore = honey;
     let colors = [RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN, WHITE, BLACK];
@@ -2985,12 +3045,18 @@ scene("gameOver", () => {
         currentColorIndex = (currentColorIndex + 1) % colors.length;
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
         localStorage.setItem('achieved_hidden_secret', 'true');
+        if (ahs == 0) {
+            showAchievementPopUp("Le Secret Caché");
+        }
     });
 
     onKeyPress("left", () => {
         currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
         localStorage.setItem('achieved_hidden_secret', 'true');
+        if (ahs == 0) {
+            showAchievementPopUp("Le Secret Caché");
+        }
     });
 
     onKeyDown("down", () => {
@@ -2998,6 +3064,9 @@ scene("gameOver", () => {
         customColor.g = Math.max(0, customColor.g - 2);
         customColor.b = Math.max(0, customColor.b - 3);
         localStorage.setItem('achieved_hidden_secret', 'true');
+        if (ahs == 0) {
+            showAchievementPopUp("Le Secret Caché");
+        }
     });
 
     onKeyDown("up", () => {
@@ -3005,6 +3074,9 @@ scene("gameOver", () => {
         customColor.g = Math.min(255, customColor.g + 2);
         customColor.b = Math.min(255, customColor.b + 3);
         localStorage.setItem('achieved_hidden_secret', 'true');
+        if (ahs == 0) {
+            showAchievementPopUp("Le Secret Caché");
+        }
     });
 
     const confirmButton = add([
@@ -3162,23 +3234,35 @@ scene("gameOver", () => {
                             currentColorIndex = (currentColorIndex - 1 + colors.length) % colors.length;
                             customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
                             localStorage.setItem('achieved_hidden_secret', 'true');
+                            if (ahs == 0) {
+                                showAchievementPopUp("Le Secret Caché");
+                            }
                             break;
                         case '>':
                             currentColorIndex = (currentColorIndex + 1) % colors.length;
                             customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
                             localStorage.setItem('achieved_hidden_secret', 'true');
+                            if (ahs == 0) {
+                                showAchievementPopUp("Le Secret Caché");
+                            }
                             break;
                         case '^':
                             customColor.r = Math.min(255, customColor.r + 1);
                             customColor.g = Math.min(255, customColor.g + 2);
                             customColor.b = Math.min(255, customColor.b + 3);
                             localStorage.setItem('achieved_hidden_secret', 'true');
+                            if (ahs == 0) {
+                                showAchievementPopUp("Le Secret Caché");
+                            }
                             break;
                         case 'v':
                             customColor.r = Math.max(0, customColor.r - 1);
                             customColor.g = Math.max(0, customColor.g - 2);
                             customColor.b = Math.max(0, customColor.b - 3);
                             localStorage.setItem('achieved_hidden_secret', 'true');
+                            if (ahs == 0) {
+                                showAchievementPopUp("Le Secret Caché");
+                            }
                             break;
                         case 'espace':
                             if (playerName.length < 10) {
@@ -3492,7 +3576,7 @@ scene("achievements", () => {
             color: COMPLETED_COLOR,
         },
         {
-            title: "L'Apiculteur Dédié",
+            title: "Apiculteur Dédié",
             description: "Compléter le jeu avec une seule abeille et une ruche.",
             key: "achieved_bee_whisperer",
             color: COMPLETED_COLOR,
@@ -3633,17 +3717,6 @@ scene("achievements", () => {
                 color(isAchieved ? COMPLETED_COLOR : LOCKED_COLOR),
                 "achievementItem"
             ]);
-
-            // Special effect for secret achievement if unlocked
-            if (ach.key === "achieved_hidden_secret" && isAchieved) {
-                achieveBox.add([
-                    sprite("star"),  // Special icon for the secret achievement
-                    pos(ACHIEVE_WIDTH - 50, ACHIEVE_HEIGHT / 2),
-                    scale(2),
-                    anchor("center"),
-                    "achievementItem"
-                ]);
-            }
         });
     }
 
@@ -3755,31 +3828,76 @@ scene("achievements", () => {
             t.color = '';
         })
     };
-
-    function fadeIn(music, targetVolume, step = 0.05) { //This function was generated by Code Copilot in ChatGPT
-        const fade = setInterval(() => {
-            if (music.volume < targetVolume) {
-                music.volume = Math.min(music.volume + step, targetVolume);  // Increase volume gradually
-            } else {
-                clearInterval(fade);  // Stop once target volume is reached
-            }
-        }, 100);  // Adjust volume every 100 milliseconds
-    }
     
-    function fadeOut(music, step = 0.05) { //This function was generated by Code Copilot in ChatGPT
-        const fade = setInterval(() => {
-            if (music.volume > 0) {
-                music.volume = Math.max(music.volume - step, 0);  // Decrease volume gradually
-            } else {
-                clearInterval(fade);  // Stop once volume is fully muted
-            }
-        }, 100);  // Adjust volume every 100 milliseconds
-    }
-    
-
     onClick("button", (t) => {
         play('button_click');
     });
+
+    // Function to display achievement pop-up chatGPT generated
+    function showAchievementPopUp(achievementName) {
+        achievementQueue.push(achievementName);
+        if (!achievementActive) {
+            processAchievementQueue();
+        }
+    }
+    function processAchievementQueue() {
+        if (achievementQueue.length > 0 && !achievementActive) {
+            achievementActive = true;
+            const achievementName = achievementQueue.shift();
+
+            play('win');
+
+            // Pop-up container
+            const popUpBox = add([
+                rect(W * 0.6, 100, { radius: 15 }),
+                pos(W / 2, 100),
+                anchor("center"),
+                color(255, 255, 255), 
+                outline(4),
+                opacity(0),  // Start with 0 opacity for fade-in
+                z(Z_UI_TOP + 1),
+                "achievementPopup"
+            ]);
+
+            popUpBox.add([
+                text("Succès Réussi", {
+                    font: "d",
+                    size: 24,
+                }),
+                pos(0, -20),
+                anchor("center"),
+                color(60, 170, 60),
+                "achievementPopupText"
+            ]);
+
+            popUpBox.add([
+                text(achievementName, {
+                    font: "d",
+                    size: 20,
+                }),
+                pos(0, 20),
+                anchor("center"),
+                color(0, 0, 0),
+                "achievementPopupText"
+            ]);
+
+            // Show the pop-up with fade-in effect
+            tween(popUpBox.opacity, 1, 0.5, (val) => {
+                popUpBox.opacity = val;
+            }).then(() => {
+                wait(3, () => {
+                    // Fade-out the pop-up after 3 seconds
+                    tween(popUpBox.opacity, 0, 0.5, (val) => {
+                        popUpBox.opacity = val;
+                    }).then(() => {
+                        destroy(popUpBox);
+                        achievementActive = false;
+                        processAchievementQueue();  // Process the next achievement pop-up in the queue
+                    });
+                });
+            });
+        }
+    }
 
     // THIS DOESN'T WORK FOR SOME REASON
     onHover("button", (b) => {
