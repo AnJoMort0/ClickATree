@@ -24,7 +24,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.4.2.sga"
+const VERSION = "v.beta.1.4.3.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -2377,7 +2377,7 @@ scene("game", () => {
             if (economist_timer >= 60) {
                 localStorage.setItem('achieved_economist', 'true');
                 ae++;
-                if (a8 == 1) {
+                if (ae == 1) {
                     showAchievementPopUp("Économiste");
                 }
             }
