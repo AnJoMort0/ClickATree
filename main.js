@@ -24,7 +24,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.4.0.sga"
+const VERSION = "v.beta.1.4.1.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -2310,25 +2310,25 @@ scene("game", () => {
             if (nb_bees > 1 || nb_beehives > 1) {
                 achieved_bee_whisperer = false;
             }
-            if (nb_trees >= 200) {
+            if (nb_trees >= 125) {
                 localStorage.setItem('achieved_forest_lord', 'true');
             }
-            if (nb_handmade >= 75) {
+            if (nb_handmade >= 30) {
                 localStorage.setItem('achieved_gardener_dedicated', 'true');
             }
-            if (nb_birds >= 75) {
+            if (nb_birds >= 25) {
                 localStorage.setItem('achieved_bird_kingdom', 'true');
             }
-            if (nb_bees >= 50) {
+            if (nb_bees >= 25) {
                 localStorage.setItem('achieved_bee_master', 'true');
             }
-            if (nb_flowered >= 100) {
+            if (nb_flowered >= 50) {
                 localStorage.setItem('achieved_perfect_bloom', 'true');
             }
-            if (cash >= 100000) {
+            if (cash >= 200000) {
                 localStorage.setItem('achieved_leaf_tycoon', 'true');
             }
-            if (cash_per_sec >= 1000) {
+            if (cash_per_sec >= 20000) {
                 localStorage.setItem('achieved_falling_leafs', 'true');
             }
             if (economist_timer >= 60) {
@@ -3499,31 +3499,31 @@ scene("achievements", () => {
         },
         {
             title: "Seigneur de la Forêt",
-            description: "Avoir 200 arbres.",
+            description: "Avoir 125 arbres.",
             key: "achieved_forest_lord",
             color: COMPLETED_COLOR,
         },
         {
             title: "Jardinier Dévoué",
-            description: "Avoir 75 arbres non plantés par les oiseaux.",
+            description: "Avoir 30 arbres non plantés par les oiseaux.",
             key: "achieved_gardener_dedicated",
             color: COMPLETED_COLOR,
         },
         {
             title: "Royaume des Oiseaux",
-            description: "Avoir 75 oiseaux.",
+            description: "Avoir 25 oiseaux.",
             key: "achieved_bird_kingdom",
             color: COMPLETED_COLOR,
         },
         {
             title: "Maître des Abeilles",
-            description: "Avoir 50 abeilles.",
+            description: "Avoir 25 abeilles.",
             key: "achieved_bee_master",
             color: COMPLETED_COLOR,
         },
         {
             title: "Floraison Parfaite",
-            description: "Avoir 100 arbres avec des fleurs.",
+            description: "Avoir 50 arbres avec des fleurs.",
             key: "achieved_perfect_bloom",
             color: COMPLETED_COLOR,
         },    
@@ -3535,7 +3535,7 @@ scene("achievements", () => {
         },
         {
             title: "Feuilles Tombantes",
-            description: "Atteindre un gain passif de 1 000 feuilles par seconde.",
+            description: "Atteindre un gain passif de 20k feuilles par seconde.",
             key: "achieved_falling_leafs",
             color: COMPLETED_COLOR,
         },
