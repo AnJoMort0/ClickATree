@@ -19,13 +19,14 @@
     //Bulldozer should roam randomly when he doesn't have trees to destroy
         //* Done
     //Beehives scaling like crazy
+        //* Fixed
     // When using the on screen keyboard the click is processed multiple times
         //To fix this for now, you can't input twice the same key in a row
 
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.4.5.sga"
+const VERSION = "v.beta.1.4.6.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -2589,6 +2590,8 @@ scene("game", () => {
         let rF = choose(get('flowered')); // Random flowered objects
         let rB = choose(get('beehive'));  // Random beehive
         let b = 0; // Tracking bee's state
+        let bh = 0; // Tracking beehive's state
+        let bh2 = 0; // Tracking beehive's state
         const bee = add([
             sprite('bee', {
                 anim: "main",
@@ -2646,7 +2649,9 @@ scene("game", () => {
                             if(this.pos.x == rB.pos.x && this.pos.y == rB.pos.y){
                                 // Bee pop sound when bee enters beehive
                                 play('bee_in_hive');
-                                b++; 
+                                b++;
+                                bh = 0;
+                                bh2 = 0;
                                 honey++; //honey count is incremented
                                 zoomOut(get('honey_icon')[0]);
                                 this.play("main");
@@ -2665,12 +2670,18 @@ scene("game", () => {
                             ]);
                         };
                         if(b === 2){
-                            zoomIn(rB)
                             this.z = 0;
+                            bh++;
+                            if (bh == 1) {
+                                zoomIn(rB);
+                            }
                             wait(2, () =>{
-                                zoomOut(rB);
-                                this.z = this.pos.y + 100;
                                 b = 0;
+                                bh2++;
+                                if (bh2 == 1) {
+                                    zoomOut(rB);
+                                }
+                                this.z = this.pos.y + 100;
                             });
                         }
                     }
