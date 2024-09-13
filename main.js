@@ -26,7 +26,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.4.6.sga"
+const VERSION = "v.beta.1.4.7.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -1695,7 +1695,7 @@ scene("game", () => {
                 nb_clicks++;
                 if(nb_clicks == flowered_clicks && t.is("flowered") != true && t.is("grown")){ //Checks if the tree is not flowered, is grown and if the number the clicks is enough to make the tree flowered
                     if(hasFlowers == false){
-                        diaBubble(dia_info[6]);
+                        diaBubble(dia_first_time_info[4]);
                         hasFlowers = true;
                     }
                     const flowers = add([
@@ -2029,7 +2029,7 @@ scene("game", () => {
                         ]);
                     } else {
                         if(hasBTrees == false){
-                            diaBubble(dia_info[0]);
+                            diaBubble(dia_first_time_info[0]);
                             hasBTrees = true;
                         }
                         addTree();
@@ -2055,7 +2055,7 @@ scene("game", () => {
                         ]);
                     } else {
                         if(hasBBirds == false){
-                            diaBubble(dia_info[1]);
+                            diaBubble(dia_first_time_info[1]);
                             hasBBirds = true;
                         }
                         addBird();
@@ -2081,7 +2081,7 @@ scene("game", () => {
                         ]);
                     } else {
                         if(hasBBees == false){
-                            diaBubble(dia_info[2]);
+                            diaBubble(dia_first_time_info[2]);
                             hasBBees = true;
                         }
                         addBee();
@@ -2122,7 +2122,7 @@ scene("game", () => {
                         ]);
                     } else {
                         if(hasBHives == false){
-                            diaBubble(dia_info[3]);
+                            diaBubble(dia_first_time_info[3]);
                             hasBHives = true;
                         }
                         addBeehive();
@@ -4109,6 +4109,18 @@ scene("achievements", () => {
         ["bear_wink"    , "bear_curious", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront. Clique dessus pour les enlever !"],
         //deforestation
         ["bear_wink"    , "bear_curious", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra. Clique dessus pour l'enlever !"],
+        //fleurs
+        ["bear_flower"  , "bear_curious", "Quand tu cliques plusieurs fois sur un arbre des belles fleurs apparaîssent. Les abeilles ont besoin de ces fleurs qui multiplient également le nombre de feuilles que tu reçois."],
+    ]
+    const dia_first_time_info = [
+        //tree
+        ["bear_wink"    , "bear_curious", "Après avoir accumulé assez de feuilles, tu pourras planter des arbres. Le nombre de feuilles requis augmente à chaque fois que tu plantes un arbre."],
+        //bird 
+        ["bear_wink"    , "bear_curious", "Après avoir accumulé assez de feuilles, tu pourras placer des oiseaux qui disperseront les graines pour t'aider à créer ta forêt."],
+        //bee
+        ["bear_flower"  , "bear_curious", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seules trois abeilles par arbre sont autorisées."],
+        //beehive
+        ["bear_wink"    , "bear_curious", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré !"],
         //fleurs
         ["bear_flower"  , "bear_curious", "Quand tu cliques plusieurs fois sur un arbre des belles fleurs apparaîssent. Les abeilles ont besoin de ces fleurs qui multiplient également le nombre de feuilles que tu reçois."],
     ]
