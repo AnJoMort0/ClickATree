@@ -1814,7 +1814,7 @@ scene("game", () => {
             }
             console.log(info_button_counter);
             info_button_counter[t.dia] = true;
-            if (ac == 0 && info_button_counter.every(pressed => pressed === true)) {
+            if (ac++ == 0 && info_button_counter.every(pressed => pressed === true)) {
                 localStorage.setItem('achieved_curious', 'true');
                 showAchievementPopUp("Curieux");
             }
@@ -2023,7 +2023,7 @@ scene("game", () => {
                                 size : 20,
                                 font : "d",
                             }),
-                            pos(text_cash.pos.x - 155, 150), 
+                            pos(text_cash.pos.x - 155, 90), 
                             color(RED), 
                             lifespan(2), 
                         ]);
@@ -2049,7 +2049,7 @@ scene("game", () => {
                                 size : 20,
                                 font : "d",
                             }),
-                            pos(text_cash.pos.x - 155, 150), 
+                            pos(text_cash.pos.x - 155, 120), 
                             color(RED), 
                             lifespan(2), 
                         ]);
@@ -2664,7 +2664,7 @@ scene("game", () => {
                                     size : 20,
                                     font : "d",
                                 }),
-                                pos(text_cash.pos.x - 150, 200), 
+                                pos(text_cash.pos.x - 150, 220), 
                                 color(RED), 
                                 lifespan(2), 
                             ]);
@@ -4114,15 +4114,15 @@ scene("achievements", () => {
     ]
     const dia_first_time_info = [
         //tree
-        ["bear_wink"    , "bear_curious", "Après avoir accumulé assez de feuilles, tu pourras planter des arbres. Le nombre de feuilles requis augmente à chaque fois que tu plantes un arbre."],
+        ["bear_wink"    , "bear_curious", "C'est ça ! Continue à planter des arbres et regarde ta forêt prendre vie !"],
         //bird 
-        ["bear_wink"    , "bear_curious", "Après avoir accumulé assez de feuilles, tu pourras placer des oiseaux qui disperseront les graines pour t'aider à créer ta forêt."],
+        ["bear_wink"    , "bear_curious", "Oh, regarde ! Un oiseau ! Il disperse les graines et plante des arbres au hasard !"],
         //bee
-        ["bear_flower"  , "bear_curious", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seules trois abeilles par arbre sont autorisées."],
+        ["bear_flower"  , "bear_curious", "Oui ! Maintenant tu peux ajouter des abeilles qui vont récupérer leur nectar."],
         //beehive
-        ["bear_wink"    , "bear_curious", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré !"],
+        ["bear_wink"    , "bear_curious", "Oh, une belle ruche ! Tes abeilles déposent leur nectar dedans afin de créer un bon miel sucré !"],
         //fleurs
-        ["bear_flower"  , "bear_curious", "Quand tu cliques plusieurs fois sur un arbre des belles fleurs apparaîssent. Les abeilles ont besoin de ces fleurs qui multiplient également le nombre de feuilles que tu reçois."],
+        ["bear_flower"  , "bear_curious", "Oh, regarde comme ces belles fleurs fleurissent ! Elles sont essentielles pour les abeilles !"],
     ]
     //others
     const dia_others = [
