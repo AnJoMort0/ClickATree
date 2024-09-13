@@ -25,7 +25,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.4.4.sga"
+const VERSION = "v.beta.1.4.5.sga"
 
 kaboom({
     background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
@@ -89,7 +89,8 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE / 2;
     let achieved_falling_leaves    = localStorage.getItem('achieved_falling_leaves')    === 'true' ? true : false;  // Has a passive income of 1k/s
     let achieved_economist         = localStorage.getItem('achieved_economist')         === 'true' ? true : false;  // Doesn't use any leaves for 1 minute
     let achieved_tree_guardian     = localStorage.getItem('achieved_tree_guardian')     === 'true' ? true : false;  // Doesn't let the bulldozer destroy any tree
-    let achieved_hidden_secret     = localStorage.getItem('achieved_hidden_secret')     === 'true' ? true : false;  // Finds the hidden secret
+    let achieved_curious           = localStorage.getItem('achieved_curious')           === 'true' ? true : false;  // Click on all "i"s
+    let achieved_hidden_secret     = localStorage.getItem('achieved_hidden_secret')     === 'true' ? true : false;  // Click on the arrow keys when typing the name
     let achievementQueue = [];
     let achievementActive = false;
     let alw  = achieved_lone_wolf         ? 2 : 0;
@@ -103,6 +104,7 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE / 2;
     let afls = achieved_falling_leaves    ? 2 : 0;
     let ae   = achieved_economist         ? 2 : 0;
     let atg  = achieved_tree_guardian     ? 2 : 0;
+    let ac   = achieved_curious           ? 2 : 0;
     let ahs  = achieved_hidden_secret     ? 2 : 0;
 
 // Load assests for the game
@@ -1024,6 +1026,7 @@ scene("game", () => {
     achieved_bee_whisperer  = true;
     achieved_tree_guardian  = true;
     let economist_timer     = 0;
+    let info_button_counter = [false, false, false, false, false, false];
 
     // DECLARING CONSTANTS
      // Areas
@@ -1327,7 +1330,6 @@ scene("game", () => {
         // Adding a new bird button
         const new_bird = NEWBOX.add([
             sprite('new_bird'), 
-            anchor("topright"),
             pos(new_tree.pos.x, new_tree.pos.y + BUTTON_SIZE + NEW_BT_DIST),
             scale(SPRITE_BUTTON_SCALE),
             anchor("topright"),
@@ -1385,7 +1387,6 @@ scene("game", () => {
                         this.use(shader(""));
                     }
                 }},
-                anchor("topright"),
                 pos(new_bird.pos),
                 scale(SPRITE_BUTTON_SCALE),
                 anchor("topright"),
@@ -1414,7 +1415,6 @@ scene("game", () => {
                 }
             }
         },
-        anchor("topright"),
         pos(new_bird.pos.x, new_bird.pos.y + BUTTON_SIZE + NEW_BT_DIST),
         scale(SPRITE_BUTTON_SCALE),
         anchor("topright"),
@@ -1480,7 +1480,6 @@ scene("game", () => {
                 }
             }
         },
-        anchor("topright"),
         pos(new_bee.pos.x, new_bee.pos.y + BUTTON_SIZE + NEW_BT_DIST),
         scale(SPRITE_BUTTON_SCALE),
         anchor("topright"),
@@ -1535,7 +1534,7 @@ scene("game", () => {
             anchor("topright"),
             pos(new_tree.pos.x - 165, new_tree.pos.y),
             scale(1),
-            area(),
+            area({ scale: 1.5 }),
             z(Z_UI),
             {dia : 0},
             opacity(0),
@@ -1550,7 +1549,7 @@ scene("game", () => {
             anchor("topright"),
             pos(new_bird.pos.x - 165, new_bird.pos.y),
             scale(1),
-            area(),
+            area({ scale: 1.5 }),
             z(Z_UI),
             {dia: 1},
             opacity(0),
@@ -1565,8 +1564,7 @@ scene("game", () => {
             anchor("topright"),
             pos(new_bee.pos.x - 165, new_bee.pos.y),
             scale(1),
-            anchor("topright"),
-            area(),
+            area({ scale: 1.5 }),
             z(Z_UI),
             {dia : 2},
             opacity(0),
@@ -1582,8 +1580,7 @@ scene("game", () => {
             anchor("topright"),
             pos(new_beehive.pos.x - 165, new_beehive.pos.y),
             scale(1),
-            anchor("topright"),
-            area(),
+            area({ scale: 1.5 }),
             z(Z_UI),
             {dia : 3},
             opacity(0),
@@ -1812,7 +1809,13 @@ scene("game", () => {
         onClick("info", (t) => {
             if (t.opacity != 0) {
                 diaBubble(dia_info[t.dia]);
-                play('button_click'); 
+                play('button_click');
+            }
+            console.log(info_button_counter);
+            info_button_counter[t.dia] = true;
+            if (ac == 0 && info_button_counter.every(pressed => pressed === true)) {
+                localStorage.setItem('achieved_curious', 'true');
+                showAchievementPopUp("Curieux");
             }
         });
         //Explode particles destruction of the different things
@@ -2307,62 +2310,62 @@ scene("game", () => {
             }
 
             //Achievements:
-            if (nb_trees > 1) {
+            if (nb_trees > 1 && alw == 0) {
                 achieved_lone_wolf = false;
             }
-            if (nb_bees > 1 || nb_beehives > 1) {
+            if ((nb_bees > 1 || nb_beehives > 1) && abw == 0) {
                 achieved_bee_whisperer = false;
             }
-            if (nb_trees >= 125) {
+            if (nb_trees >= 125 && afl == 0) {
                 localStorage.setItem('achieved_forest_lord', 'true');
                 afl++;
                 if (afl == 1) {
                     showAchievementPopUp("Seigneur de la Forêt");
                 }
             }
-            if (nb_handmade >= 30) {
+            if (nb_handmade >= 30  && agd == 0) {
                 localStorage.setItem('achieved_gardener_dedicated', 'true');
                 agd++;
                 if (agd == 1) {
                     showAchievementPopUp("Jardinier Dévoué");
                 }
             }
-            if (nb_birds >= 25) {
+            if (nb_birds >= 25  && abk == 0) {
                 localStorage.setItem('achieved_bird_kingdom', 'true');
                 abk++;
                 if (abk == 1) {
                     showAchievementPopUp("Royaume des Oiseaux");
                 }
             }
-            if (nb_bees >= 25) {
+            if (nb_bees >= 25  && abm == 0) {
                 localStorage.setItem('achieved_bee_master', 'true');
                 abm++;
                 if (abm == 1) {
                     showAchievementPopUp("Maître des Abeilles");
                 }
             }
-            if (nb_flowered >= 50) {
+            if (nb_flowered >= 50  && apb == 0) {
                 localStorage.setItem('achieved_perfect_bloom', 'true');
                 apb++;
                 if (apb == 1) {
                     showAchievementPopUp("Floraison Parfaite");
                 }
             }
-            if (cash >= 200000) {
+            if (cash >= 200000  && alt == 0) {
                 localStorage.setItem('achieved_leaf_tycoon', 'true');
                 alt++;
                 if (alt == 1) {
                     showAchievementPopUp("Magnat des Feuilles");
                 }
             }
-            if (cash_per_sec >= 20000) {
+            if (cash_per_sec >= 20000  && afls == 0) {
                 localStorage.setItem('achieved_falling_leafs', 'true');
                 afls++;
                 if (afls == 1) {
                     showAchievementPopUp("Feuilles Tombantes");
                 }
             }
-            if (economist_timer >= 60) {
+            if (economist_timer >= 60  && ae == 0) {
                 localStorage.setItem('achieved_economist', 'true');
                 ae++;
                 if (ae == 1) {
@@ -2436,7 +2439,7 @@ scene("game", () => {
                         localStorage.setItem('achieved_tree_guardian', 'true');
                         atg++;
                     }
-                    if (achieved_bee_whisperer == true) {
+                    if (achieved_bee_whisperer == true && nb_bees != 0 && nb_beehives != 0) {
                         localStorage.setItem('achieved_bee_whisperer', 'true');
                         abw++;
                     }
@@ -2768,7 +2771,7 @@ scene("game", () => {
                 },
                 z(1),
                 scale(H/2 * BULLDOZER_SCALE),
-                area(0.5),
+                area({scale : 0.75}),
                 "bulldozer",
             ]);
          };
@@ -3637,10 +3640,16 @@ scene("achievements", () => {
             color: COMPLETED_COLOR,
         },
         {
+            title: "Curieux",
+            description: "Soyez curieux !",
+            key: "achieved_curious",
+            color: SECRET_COLOR,
+        },
+        {
             title: "Le Secret Caché",
             description: "Trouver le secret !",
             key: "achieved_hidden_secret",
-            color: SECRET_COLOR,  // Special color for secret achievement
+            color: SECRET_COLOR,
         },
     ];
 
