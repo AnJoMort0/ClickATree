@@ -14,6 +14,7 @@ const langData = {
         scoreboard: "Scores",
         about: "A Propos",
         bee_mess: "Essaie de cliquer sur les flèches quand tu taperas ton nom ;)",
+        complete_timed_first: "Complète d'abord le Mode Défi",
 
         //Game
         timer_txt: `Temps restant : `,
@@ -35,6 +36,7 @@ const langData = {
         dia_intro_3: "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe.",
         dia_intro_4: "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles.",
         dia_intro_5: "Je te laisse découvrir la suite ! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récupérer mon miel.",
+        dia_inf_intro: "Maintenant que tu connais tout, tu peux t'amuser à créer la plus grande forêt sans limites !",
         // Pollution Dialogs
         dia_pollution_1: "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?",
         dia_pollution_2: "Oh non ! La pollution a atteint des niveaux critiques ! Clique sur les poubelles pour les nettoyer !",
@@ -134,6 +136,7 @@ const langData = {
         scoreboard: "Scoreboard",
         about: "About",
         bee_mess: "Try clicking on the arrows when you type your name ;)",
+        complete_timed_first: "Complete Challenge Mode first",
 
         //Game
         timer_txt: `Time remaining: `,
@@ -155,7 +158,7 @@ const langData = {
         dia_intro_3: "Would you be willing to help me? I'm sure we'll make a great team.",
         dia_intro_4: "Click on the tree to start, and don't hesitate to click on the blue 'i' circles for more useful information.",
         dia_intro_5: "I'll let you discover the rest! You have 5 minutes to help me create a beautiful forest, but most importantly, to get my honey back.",
-
+        dia_inf_intro: "Now that you know everything, you can have fun creating the largest forest without limits!",
         // Pollution Dialogs
         dia_pollution_1: "Did you know that by protecting the habitat of one species, you also help many other species living in the same area?",
         dia_pollution_2: "Oh no! Pollution levels have reached critical! Click on the trash cans to clean them up!",

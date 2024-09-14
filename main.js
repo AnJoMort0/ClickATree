@@ -25,7 +25,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.5.1.sga"
+const VERSION = "v.1.5.2.sga"
 
 kaboom({
     background  : [0, 191, 255],    //I would like to make this a const value, but I can't seem to do it.
@@ -445,6 +445,7 @@ scene("startMenu", () => {
         "button,"
     ]);
 
+    const timedCompleted = localStorage.getItem('timed_completed') === 'true';
     const infStartButton = add([
         rect(350, 50, { radius: 15 }),
         anchor("center"),
@@ -455,11 +456,15 @@ scene("startMenu", () => {
         "infStartButton",
         "button,"
     ]);
+    if (!timedCompleted) {
+        infStartButton.use(color(120, 120, 120));
+        infStartButton.use(opacity(0.5));
+    }
     const infStartText = add([
         text(TXT.infinite , {size : 18, font : "d"}),
         pos(infStartButton.pos),
         anchor("center"),
-        color(BLACK),
+        color(timedCompleted ? BLACK : rgb(128, 128, 128)),
         z(Z_UI),
         area(),
         "infStartButton",
@@ -546,13 +551,25 @@ scene("startMenu", () => {
             sound_bulldozer.stop();
         };
     });
-    onClick("infStartButton", () => {      //start the infinite timer version of the game scene
-        timer = -10;
-        go("game");
-        play('button_click');
-        if (bulldozerExists) {
-            sound_bulldozer.stop();
-        };
+    onClick("infStartButton", (b) => {      //start the infinite timer version of the game scene
+        if (timedCompleted) {
+            timer = -10;
+            go("game");
+            play('button_click');
+            if (bulldozerExists) {
+                sound_bulldozer.stop();
+            };
+        } else {
+            warning(b);
+            add([
+                text(TXT.complete_timed_first, { size: 16, font: "d" }),
+                pos(W / 2, H / 2 + 50),
+                anchor("center"),
+                color(RED),
+                lifespan(2, { fade: 0.5 }),
+                z(Z_UI_TOP),
+            ]);
+        }
     });
     onClick("achievementsButton", () => {
         go("achievements");
@@ -645,7 +662,7 @@ scene("startMenu", () => {
             text(TXT.bee_mess, {font:"d", size: 12, width: 125}),
             pos(mousePos()),
             anchor("center"),
-            color(rgb(256, 0, 0)),
+            color(RED),
             lifespan(1, {fade: 0.3}),
             z(Z_UI_TOP),
         ]);
@@ -1166,6 +1183,7 @@ scene("game", () => {
             ["bear_talking" , "bear_friend" , TXT.dia_intro_3],
             ["bear_info"    , "bear_curious", TXT.dia_intro_4],
             ["bear_talking" , "bear_friend" , TXT.dia_intro_5],
+            ["bear_wink"    , "bear_friend" , TXT.dia_inf_intro],
         ];
         const dia_pollution = [
             ["bear_wink"    , "bear_curious", TXT.dia_pollution_1],
@@ -1798,7 +1816,9 @@ scene("game", () => {
                 nb_clicks++;
                 if(nb_clicks == flowered_clicks && t.is("flowered") != true && t.is("grown")){ //Checks if the tree is not flowered, is grown and if the number the clicks is enough to make the tree flowered
                     if(hasFlowers == false){
-                        diaBubble(dia_first_time_info[4]);
+                        if (timer > 0) {
+                            diaBubble(dia_first_time_info[4]);
+                        }
                         hasFlowers = true;
                     }
                     const flowers = add([
@@ -2030,40 +2050,11 @@ scene("game", () => {
         });
 
         // Skip dialogs
-        let q = 0; //this value is here for the introductory dialogue
-        diaBubble(dia_intro[q]);
-        // Intro dialogue
-        onKeyRelease("space", () => {
-            destroyAll("dialog");
-            icon_bear.use(sprite('bear'));
-            icon_bear.use(scale(BEAR_SMALL_SCALE));
-            q++;
-            if (q < dia_intro.length) {
-                diaBubble(dia_intro[q]);
-            }
-            if(q == 3){
-                let o = 0
-                //loop(0.5, () => { //I can't make this stop for some reason --> it was suppose to make the bubbles blink for a small while
-                    if (o == 0) {
-                        information_0.use(opacity(1));
-                        information_4.use(opacity(1));
-                        information_5.use(opacity(1));
-                        o = 1;
-                    }/* else {
-                        information_0.use(opacity(0));
-                        information_4.use(opacity(0));
-                        information_5.use(opacity(0));
-                        o = 0;
-                    }nn
-                });*/
-            } else if(q > 3){
-                information_0.use(opacity(1));
-                information_4.use(opacity(1));
-                information_5.use(opacity(1));
-            }
-        });
-        onClick("skip", () => { //this is mainly here for the mobile version
-            wait(0.1, () => { //finally found out how to fix the button clicking multiple times. A wait() suffises to prevent it --> actually I did not, it still doesn't work in the digital keyboard IDK why it works here tbf.
+        if (timer > 0) { //This ensures it is only for the timed version
+            let q = 0; //this value is here for the introductory dialogue
+            diaBubble(dia_intro[q]);
+            // Intro dialogue
+            onKeyRelease("space", () => {
                 destroyAll("dialog");
                 icon_bear.use(sprite('bear'));
                 icon_bear.use(scale(BEAR_SMALL_SCALE));
@@ -2091,8 +2082,56 @@ scene("game", () => {
                     information_4.use(opacity(1));
                     information_5.use(opacity(1));
                 }
-            })
-        });
+            });
+            onClick("skip", () => { //this is mainly here for the mobile version
+                wait(0.1, () => { //finally found out how to fix the button clicking multiple times. A wait() suffises to prevent it --> actually I did not, it still doesn't work in the digital keyboard IDK why it works here tbf.
+                    destroyAll("dialog");
+                    icon_bear.use(sprite('bear'));
+                    icon_bear.use(scale(BEAR_SMALL_SCALE));
+                    q++;
+                    if (q < dia_intro.length) {
+                        diaBubble(dia_intro[q]);
+                    }
+                    if(q == 3){
+                        let o = 0
+                        //loop(0.5, () => { //I can't make this stop for some reason --> it was suppose to make the bubbles blink for a small while
+                            if (o == 0) {
+                                information_0.use(opacity(1));
+                                information_4.use(opacity(1));
+                                information_5.use(opacity(1));
+                                o = 1;
+                            }/* else {
+                                information_0.use(opacity(0));
+                                information_4.use(opacity(0));
+                                information_5.use(opacity(0));
+                                o = 0;
+                            }nn
+                        });*/
+                    } else if(q > 3){
+                        information_0.use(opacity(1));
+                        information_4.use(opacity(1));
+                        information_5.use(opacity(1));
+                    }
+                })
+            });
+        } else {
+            information_0.use(opacity(1));
+            information_4.use(opacity(1));
+            information_5.use(opacity(1));
+            diaBubble(dia_intro[5]);
+            onKeyRelease("space", () => {
+                destroyAll("dialog");
+                icon_bear.use(sprite('bear'));
+                icon_bear.use(scale(BEAR_SMALL_SCALE));
+            });
+            onClick("skip", () => { //this is mainly here for the mobile version
+                wait(0.1, () => { //finally found out how to fix the button clicking multiple times. A wait() suffises to prevent it --> actually I did not, it still doesn't work in the digital keyboard IDK why it works here tbf.
+                    destroyAll("dialog");
+                    icon_bear.use(sprite('bear'));
+                    icon_bear.use(scale(BEAR_SMALL_SCALE));
+                });
+            });
+        }
         // Get a fun fact
         onClick("bear", (t) => {
             diaBubble(choose(dia_funfact));
@@ -2131,7 +2170,9 @@ scene("game", () => {
                         ]);
                     } else {
                         if(hasBTrees == false){
-                            diaBubble(dia_first_time_info[0]);
+                            if (timer > 0) {
+                                diaBubble(dia_first_time_info[0]);
+                            }
                             hasBTrees = true;
                         }
                         addTree();
@@ -2157,7 +2198,9 @@ scene("game", () => {
                         ]);
                     } else {
                         if(hasBBirds == false){
-                            diaBubble(dia_first_time_info[1]);
+                            if (timer > 0) {
+                                diaBubble(dia_first_time_info[1]);
+                            }
                             hasBBirds = true;
                         }
                         addBird();
@@ -2183,7 +2226,9 @@ scene("game", () => {
                         ]);
                     } else {
                         if(hasBBees == false){
-                            diaBubble(dia_first_time_info[2]);
+                            if (timer > 0) {
+                                diaBubble(dia_first_time_info[2]);
+                            }
                             hasBBees = true;
                         }
                         addBee();
@@ -2224,7 +2269,9 @@ scene("game", () => {
                         ]);
                     } else {
                         if(hasBHives == false){
-                            diaBubble(dia_first_time_info[3]);
+                            if (timer > 0) {
+                                diaBubble(dia_first_time_info[3]);
+                            }
                             hasBHives = true;
                         }
                         addBeehive();
@@ -2552,6 +2599,7 @@ scene("game", () => {
                         abw++;
                     }
 
+                    localStorage.setItem('timed_completed', 'true'); //States that the player completed a challenge game
                     go("gameOver");
                     break;
             }
