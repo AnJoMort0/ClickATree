@@ -25,11 +25,11 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.4.8.sga"
+const VERSION = "v.beta.1.5.0.sga"
 
 kaboom({
-    background  : [0, 191, 255],//I would like to make this a const value, but I can't seem to do it.
-    width       : 1280,         //Even if the size is blocked from version beta.1.2.0, the relative size functions will stay in case we try to make it work at a later date
+    background  : [0, 191, 255],    //I would like to make this a const value, but I can't seem to do it.
+    width       : 1280,             //Even if the size is blocked from version beta.1.2.0, the relative size functions will stay in case we try to make it work at a later date
     height      : 720,
     letterbox   : true,
 })
@@ -37,11 +37,11 @@ kaboom({
 // Universal values
 const W     = width();
 const H     = height();
-let inGame  = false;    //for the Rejour vs Jouer in the leaderboard
+let inGame  = false;    //for the Rejouer vs Jouer in the leaderboard
 setGravity(800);
 const CLICK_JUMP                = 1.05;
-const MU_TIME                   = 300;  //set the timer for the Mystères de l'UNIL mode
-let timer                        = -10;
+const CHAL_TIME                 = 300;  //set the timer for the timed mode
+let timer                       = -10;
 let honey                       = 0;
 let boughtBird                  = false; //this value is kinda doubled but for 2 different purposes, thought of fusing them but I guess better not to not be confused
 let hasBulldozerSound           = false;
@@ -93,6 +93,7 @@ const BEAR_SMALL_SCALE          = BEAR_SCALE / 2;
     let achieved_hidden_secret     = localStorage.getItem('achieved_hidden_secret')     === 'true' ? true : false;  // Click on the arrow keys when typing the name
     let achievementQueue = [];
     let achievementActive = false;
+    //Checks if the achievements were already true or false
     let alw  = achieved_lone_wolf         ? 2 : 0;
     let abw  = achieved_bee_whisperer     ? 2 : 0;
     let afl  = achieved_forest_lord       ? 2 : 0;
@@ -175,7 +176,6 @@ loadRoot('assets/');
         loadSprite('flowers0'   , 'game_elements/vfx/flowers0.png');
         // Others
         loadSprite('bee'        , 'game_elements/other/bee_animation.png', { 
-            // Slicing which animations from spritesheet to use and where
             sliceX: 3,
             sliceY: 3,
             anims: {
@@ -185,7 +185,6 @@ loadRoot('assets/');
         });
         loadSprite('trash'      , 'game_elements/other/trashcan_.png')
         loadSprite('bulldozer'  , 'game_elements/other/bulldozer.png', {
-            // Slicing which animations from spritesheet to use and where
             sliceX: 2,
             sliceY: 3,
             anims: {
@@ -193,7 +192,6 @@ loadRoot('assets/');
             }
         })
         loadSprite('bird'       , 'game_elements/other/bird.png', { //this one is not ours, so the format is not the same
-            // Slicing which animations from spritesheet to use and where
             sliceX: 11,
             sliceY: 8,
             anims: {
@@ -221,7 +219,6 @@ loadRoot('assets/');
         loadSprite('bear_flower'    , 'game_elements/bear/bear_flower.png');
         // Vfx 
         loadSprite('smoke'          , 'game_elements/vfx/smoke.png', { //this one is not ours so the format is not the same
-            // Slicing which animations from spritesheet to use and where
             sliceX: 3,
             sliceY: 3,
             anims: {
@@ -352,12 +349,52 @@ let music_main = play('default_music', {
  */
 scene("startMenu", () => {
     inGame = false;
+    const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
+    const TXT = langData[LANGUAGE];
     
-    const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]); //Creates a general place for all the objects in the main menu
-    setBackground(rgb(0, 191, 255)); // Blue background
+    setBackground(rgb(0, 191, 255));
 
-    // Music starts on any click
-    let music;
+    const STARTBOX  = add([anchor("center"), pos(W/2,H/2)  ,z(Z_UI_BOTTOM),"ui"]); //Creates a general place for all the objects in the main menu
+    
+    // Add language buttons
+    const frButton = add([
+        rect(50, 30, { radius: 5 }),
+        pos(W - 120, 30),
+        z(Z_UI_BOTTOM),
+        anchor("center"),
+        outline(2),
+        area(),
+        "frButton",
+        "button",
+    ]);
+    const frButtonText = frButton.add([
+        text("FR", { font: "d", size: 18 }),
+        pos(0, 0),
+        z(Z_UI),
+        anchor("center"),
+        color(BLACK),
+        area(),
+        "button"
+    ]);
+    const enButton = add([
+        rect(50, 30, { radius: 5 }),
+        pos(W - 50, 30),
+        z(Z_UI_BOTTOM),
+        anchor("center"),
+        outline(2),
+        area(),
+        "enButton",
+        "button",
+    ]);
+    const enButtonText = enButton.add([
+        text("EN", { font: "d", size: 18 }),
+        pos(0, 0),
+        z(Z_UI),
+        anchor("center"),
+        color(BLACK),
+        area(),
+        "button"
+    ]);
 
     //Add the logo in front of the rotating rays
     const logo = STARTBOX.add([
@@ -377,11 +414,11 @@ scene("startMenu", () => {
         pos(logo.pos),
         scale(0.6),
         z(Z_UI_BOTTOM - 10),
-        rotate(0),    // Start at 0 degrees
+        rotate(0),
         {
             update() {
                 this.angle += dt() * 30;  // Rotate the backdrop by 30 degrees per second
-                this.scale = wave(0.6, 0.8, time() * 2);  // Pulse effect between scale 0.6 and 0.8
+                this.scale = wave(0.6, 0.8, time() * 2);  // Pulse effect
             }
         }
     ]);
@@ -397,9 +434,8 @@ scene("startMenu", () => {
         "timedStartButton",
         "button,"
     ]);
-    
     const timedStartText = add([
-        text("Mode Défi", {size : 30, font : "d"}),
+        text(TXT.challenge, {size : 30, font : "d"}),
         pos(timedStartButton.pos),
         anchor("center"),
         color(BLACK),
@@ -419,9 +455,8 @@ scene("startMenu", () => {
         "infStartButton",
         "button,"
     ]);
-    
     const infStartText = add([
-        text("Mode Infini" , {size : 18, font : "d"}),
+        text(TXT.infinite , {size : 18, font : "d"}),
         pos(infStartButton.pos),
         anchor("center"),
         color(BLACK),
@@ -431,7 +466,6 @@ scene("startMenu", () => {
         "button,"
     ]);
 
-    // Achievements Button
     const achievementsButton = add([
         rect(350, 30, { radius: 15 }),
         anchor("center"),
@@ -442,9 +476,8 @@ scene("startMenu", () => {
         "achievementsButton",
         "button,"
     ]);
-    
     const achievementsText = add([
-        text("Succès", {size : 15, font : "d"}),
+        text(TXT.achievements, {size : 15, font : "d"}),
         pos(achievementsButton.pos),
         anchor("center"),
         color(BLACK),
@@ -464,9 +497,8 @@ scene("startMenu", () => {
         "scoreBoardButton",
         "button,"
     ]);
-
     const scoreBoardText = add([
-        text("Scoreboard", {size : 15, font : "d"}),
+        text(TXT.scoreboard, {size : 15, font : "d"}),
         pos(scoreBoardButton.pos),
         anchor("center"),
         color(BLACK),
@@ -477,17 +509,16 @@ scene("startMenu", () => {
     ]);
 
     const creditsButton = add([
-        rect(80, 30, { radius: 5 }),
-        pos(50, H - 25),
+        rect(85, 30, { radius: 5 }),
+        pos(55, H - 25),
         anchor("center"),
         outline(2),
         area(),
         "creditsButton",
         "button,"
     ]);
-    
     const creditsButtonText = creditsButton.add([
-        text("About", { font: "d", size: 10 }),
+        text(TXT.about, { font: "d", size: 10 }),
         pos(0,0),
         anchor("center"),
         color(BLACK),
@@ -506,7 +537,7 @@ scene("startMenu", () => {
 
     // Event listeners of the different buttons
     onClick("timedStartButton", () => {    //start the timed version of the game scene
-        timer = MU_TIME;
+        timer = CHAL_TIME;
         go("game");
         play('button_click');
         if (bulldozerExists) {
@@ -565,6 +596,14 @@ scene("startMenu", () => {
         zoomOut(t);
         play('button_click');
     });
+     onClick("frButton", () => {
+        localStorage.setItem('language', 'FR');
+        go("startMenu");  // Restart the menu scene to reflect the language change
+    });
+    onClick("enButton", () => {
+        localStorage.setItem('language', 'EN');
+        go("startMenu");  // Restart the menu scene to reflect the language change
+    });
 
     // Add bee moving around and easter egg message
     for (let i = 0; i < 3; i++) {
@@ -601,7 +640,7 @@ scene("startMenu", () => {
 
     onClick ("bee", (b) => {
         add([
-            text("Essaie de cliquer sur les flèches quand tu taperas ton nom ;)", {font:"d", size: 12, width: 125}),
+            text(TXT.bee_mess, {font:"d", size: 12, width: 125}),
             pos(mousePos()),
             anchor("center"),
             color(rgb(256, 0, 0)),
@@ -613,7 +652,7 @@ scene("startMenu", () => {
     //This whole bit heavily chatGPT assisted
     let bulldozerExists = false;
     let currentTrees = []; // Store references to the trees
-    let treeScale = 5; // Scale factor for trees
+    let treeScale = 5;
     
     function growTrees() {
         let maxTrees = randi(3, 12);
@@ -623,17 +662,17 @@ scene("startMenu", () => {
         function addNextTree() {
             if (treeIndex < maxTrees) {
                 play('tree_leaf', {volume: 5});
-                const randomX = rand(50, W - 50); // Random position along the x-axis
+                const randomX = rand(50, W - 50);
                 const tree = add([
                     sprite(choose(trees)),
-                    pos(randomX, H - 50), // Position the tree along the bottom
-                    scale(0), // Start with scale 0, so it "grows"
+                    pos(randomX, H - 50),
+                    scale(0),
                     anchor("bot"),
                     area(),
                     "tree",
                     {
                         update() {
-                            // Slowly increase the tree's scale to simulate growth
+                            // Simulate growth
                             if (this.scale.x < treeScale) {
                                 this.scale.x += 0.05;
                                 this.scale.y += 0.05;
@@ -645,14 +684,12 @@ scene("startMenu", () => {
                 currentTrees.push(tree); // Store the tree reference
                 treeIndex++;
     
-                // Wait a bit before adding the next tree
                 wait(0.5, addNextTree);
             } else {
-                // Once all trees have grown, bring in the bulldozer
                 wait(2, bulldozerRun);
             }
         }
-        addNextTree(); // Start growing trees one by one
+        addNextTree();
     }
     
     onDestroy("tree", (t) => {
@@ -688,40 +725,37 @@ scene("startMenu", () => {
                 sprite("bulldozer", {
                     anim: "main",
                 }),
-                pos(-100, H - 50), // Start the bulldozer off-screen (left side)
+                pos(-100, H - 50),
                 anchor("bot"),
                 scale(4.5),
-                z(1),
                 area(),
                 "bulldozer",
                 {
                     update() {
-                        this.flipX = true; // Flip the bulldozer sprite horizontally
-                        this.move(200, 0); // Move the bulldozer from left to right
+                        this.flipX = true;
+                        this.move(200, 0);
     
-                        // Destroy trees on collision
                         this.onCollide("tree", (tree) => {
                             destroy(tree);
                         });
     
-                        // Once the bulldozer reaches the right edge of the screen, restart the process
                         if (this.pos.x > W + 100) {
                             destroy(this);
                             sound_bulldozer.stop();
                             bulldozerExists = false;
-                            wait(2, growTrees); // Start growing new trees after 2 seconds
+                            wait(2, growTrees);
                         }
                     },
                 },
             ]);
         }
     }
-    // Start growing trees at the beginning of the scene
+    // Beginning of the scene
     growTrees();   
 });
 go("startMenu");
 
-scene("creditsMenu", () => { //Heavily GPT Assisted
+scene("creditsMenu", () => {
     /**
      * This scene was heavily assisted by OpenAI's chatGPT-4o.
      * The prompt and response would be too long to add to the code, here is the process of usage:
@@ -731,6 +765,9 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
      *      Re-explained the logic and try to correct it where I couldn't find a fix;
      *      Tested a closer result and change it to fit the full purpose of the scene;
      */
+    const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
+    const TXT = langData[LANGUAGE];
+
     setBackground(0, 191, 255);
 
     const centerX           = W/2;
@@ -741,30 +778,30 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
 
     // Add the small text at the bottom right
     add([
-        text("utilise les touches flèches pour descendre/monter", {font:"d", size: 10 }),
+        text(TXT.arrows, {font:"d", size: 10 }),
         pos(W - 20, H - 20),
         anchor("botright"),
         color(BLACK),
     ]);
 
     const credits = [
-        { type: "title"     , text: "About"                                    , size: 48, weight: "bold"  , ySpacing: lineSpacing * 4 },
-        { type: "text"      , text: 'Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).', size: 24, tag: "supacat", ySpacing: smallLineSpacing },
+        { type: "title"     , text: TXT.about                                     , size: 48, weight: "bold"  , ySpacing: lineSpacing * 4 },
+        { type: "text"      , text: TXT.context                                   , size: 24, tag: "supacat", ySpacing: smallLineSpacing },
         { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
-        { type: "text"      , text: 'Ce jeu a également été exposé aux Mystères de l\'Unil 2024 où il a rencontrer un grand succès.'                                  , size: 24, ySpacing: smallLineSpacing },
-        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
-        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: TXT.mu                                        , size: 24, ySpacing: smallLineSpacing },
         { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
         { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
-        { type: "title"     , text: "Credits"                                   , size: 48, weight: "bold"  , ySpacing: lineSpacing * 4 },
-        { type: "text"      , text: "Concept et Développement : "               , size: 24, weight: "bold" },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
+        { type: "title"     , text: TXT.credits                                   , size: 48, weight: "bold"  , ySpacing: lineSpacing * 4 },
+        { type: "text"      , text: TXT.concept                                   , size: 24, weight: "bold" },
         { type: "text"      , text: 'Sophie Ward & André "AnJoMorto" Fonseca'   , size: 24, italic: true    , ySpacing: lineSpacing },
-        { type: "text"      , text: "Conception visuelle : "                    , size: 24, weight: "bold"  , ySpacing: lineSpacing },
+        { type: "text"      , text: TXT.visuals                                   , size: 24, weight: "bold"  , ySpacing: lineSpacing },
         { type: "text"      , text: 'Sophie Ward & André "AnJoMorto" Fonseca'   , size: 24, italic: true    , ySpacing: lineSpacing * 4 },
-        { type: "heading"   , text: "Sources Extérieures :"                     , size: 28, weight: "bold"  , ySpacing: lineSpacing },
-        { type: "text"      , text: "Musique : "                                , size: 24, weight: "bold" },
+        { type: "heading"   , text: TXT.external                                  , size: 28, weight: "bold"  , ySpacing: lineSpacing },
+        { type: "text"      , text: TXT.music                                     , size: 24, weight: "bold" },
         { type: "link"      , text: "Abstraction"                               , size: 20, url:    "https://tallbeard.itch.io/music-loop-bundle"                      , ySpacing: smallLineSpacing },
-        { type: "text"      , text: "Sons :"                                    , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
+        { type: "text"      , text: TXT.sounds                                    , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
         { type: "link"      , text: "Brackeys, Asbjørn Thirslund"               , size: 20, url:    "https://brackeysgames.itch.io/brackeys-platformer-bundle"         , ySpacing: smallLineSpacing },
         { type: "link"      , text: "DASK"                                      , size: 20, url:    "https://dagurasusk.itch.io/retrosounds"                           , ySpacing: smallLineSpacing },
         { type: "link"      , text: "Diablo Luna"                               , size: 20, url:    "https://pudretediablo.itch.io/butterfly"                          , ySpacing: smallLineSpacing },
@@ -775,7 +812,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
         { type: "text"      , text: "Snippets de code : "                       , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
         { type: "link"      , text: "MarredCheese"                              , size: 20, url:    "https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900/63066148", ySpacing: smallLineSpacing },
         { type: "link"      , text: "Vishal"                                    , size: 20, url:    "https://stackoverflow.com/a/11486026"                             , ySpacing: smallLineSpacing },
-        { type: "text"      , text: "Assistant IA : "                           , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
+        { type: "text"      , text: TXT.ai                                        , size: 24, weight: "bold"                      , ySpacing: lineSpacing },
         { type: "link"      , text: "OpenAI, ChatGPT"                           , size: 20, url:    "https://chat.openai.com"   , ySpacing: lineSpacing * 2 },
         { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
         { type: "text"      , text: ' ', size: 24, ySpacing: lineSpacing },
@@ -848,7 +885,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
             }
         });
 
-        // Add menu button to return to the start menu
+        // Add menu button
         const menuButton = add([
             rect(150, 50, { radius: 15 }),
             anchor("center"),
@@ -859,7 +896,7 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
             "menuButton",
         ]);
         const menuButtonText = menuButton.add([
-            text("Menu", { font: "d", size: 18 }),
+            text(TXT.menu, { font: "d", size: 18 }),
             pos(0, 0),
             anchor("center"),
             color(rgb(0, 0, 0)),
@@ -897,7 +934,6 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
             updateCredits();
         }
     });
-
     onKeyPress("down", () => {
         if (scrollOffset < credits.length * lineSpacing - containerHeight) {
             scrollOffset += lineSpacing;
@@ -933,7 +969,10 @@ scene("creditsMenu", () => { //Heavily GPT Assisted
     }
 });
 
-scene("supacat", () => { // ;)
+scene("supacat", () => {
+    const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
+    const TXT = langData[LANGUAGE];
+    // ;)
     // charger les assets
     loadSprite("chat","ref/cat.png");
     loadSound("miaou","ref/miau.wav");
@@ -1002,7 +1041,7 @@ scene("supacat", () => { // ;)
         "menuButton",
     ]);
     const menuButtonText = menuButton.add([
-        text("Menu", { font: "d", size: 18 }),
+        text(TXT.menu, { font: "d", size: 18 }),
         pos(0, 0),
         anchor("center"),
         color(rgb(0, 0, 0)),
@@ -1011,7 +1050,7 @@ scene("supacat", () => { // ;)
         go("startMenu");
     });
     add([ //Credits
-        text("Vous jouez à supacat par Isaac Pante, 6 juin 2024", {font:"d", size: 16 }),
+        text(TXT.supacat, {font:"d", size: 16 }),
         pos(W - 100, H - 100),
         anchor("botright"),
         color(rgb(0, 0, 0)),
@@ -1020,6 +1059,8 @@ scene("supacat", () => { // ;)
 
 scene("game", () => {
     inGame = true;
+    const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
+    const TXT = langData[LANGUAGE];
 
     //Achievements set to true by default, they get set to false when the player fails to do them
     achieved_lone_wolf      = true;
@@ -1103,6 +1144,69 @@ scene("game", () => {
         paused: false,
     });
 
+    /**
+     * DIALOGS
+     * Faces:
+     * bear_happy
+     * bear_wink for fun facts
+     * bear_sad
+     * bear_talking for general dialog
+     * bear_scared when bulldozer appears
+     * 
+     * Sounds:
+     * bear_angry for sad or scared
+     * bear_curious for fun facts
+     * bear_friend for all rest
+    */  
+        const dia_intro = [
+            ["bear_happy"   , "bear_friend" , TXT.dia_intro_1],
+            ["bear_sad"     , "bear_angry"  , TXT.dia_intro_2],
+            ["bear_talking" , "bear_friend" , TXT.dia_intro_3],
+            ["bear_info"    , "bear_curious", TXT.dia_intro_4],
+            ["bear_talking" , "bear_friend" , TXT.dia_intro_5],
+        ];
+        const dia_pollution = [
+            ["bear_wink"    , "bear_curious", TXT.dia_pollution_1],
+            ["bear_scared"  , "bear_angry"  , TXT.dia_pollution_2],
+            ["bear_sad"     , "bear_angry"  , TXT.dia_pollution_3],
+            ["bear_happy"   , "bear_friend" , TXT.dia_pollution_4],
+        ];
+        const dia_deforestation = [
+            ["bear_wink"    , "bear_curious", TXT.dia_deforestation_1],
+            ["bear_scared"  , "bear_angry"  , TXT.dia_deforestation_2],
+            ["bear_sad"     , "bear_angry"  , TXT.dia_deforestation_3],
+            ["bear_happy"   , "bear_friend" , TXT.dia_deforestation_4],
+        ];
+        const dia_funfact = [
+            ["bear_wink"    , "bear_curious", TXT.dia_funfact_1],
+            ["bear_wink"    , "bear_curious", TXT.dia_funfact_2],
+            ["bear_wink"    , "bear_curious", TXT.dia_funfact_3],
+            ["bear_wink"    , "bear_curious", TXT.dia_funfact_4],
+            ["bear_wink"    , "bear_curious", TXT.dia_funfact_5],
+            ["bear_wink"    , "bear_curious", TXT.dia_funfact_6],
+            ["bear_happy"   , "bear_curious", TXT.dia_funfact_7],
+        ];
+        const dia_info = [
+            ["bear_wink"    , "bear_curious", TXT.dia_info_tree],
+            ["bear_wink"    , "bear_curious", TXT.dia_info_bird],
+            ["bear_flower"  , "bear_curious", TXT.dia_info_bee],
+            ["bear_wink"    , "bear_curious", TXT.dia_info_beehive],
+            ["bear_wink"    , "bear_curious", TXT.dia_info_pollution],
+            ["bear_wink"    , "bear_curious", TXT.dia_info_deforestation],
+            ["bear_flower"  , "bear_curious", TXT.dia_info_fleurs],
+        ];
+        const dia_first_time_info = [
+            ["bear_wink"    , "bear_curious", TXT.dia_first_tree],
+            ["bear_wink"    , "bear_curious", TXT.dia_first_bird],
+            ["bear_flower"  , "bear_curious", TXT.dia_first_bee],
+            ["bear_wink"    , "bear_curious", TXT.dia_first_beehive],
+            ["bear_flower"  , "bear_curious", TXT.dia_first_fleurs],
+        ];
+        const dia_others = [
+            ["bear_talking" , "bear_friend" , TXT.dia_pause],
+            ["bear_scared"  , "bear_angry"  , TXT.dia_not_enough_leaves],
+        ];
+
     // ADDING ELEMENTS
     // UI
     // Cash
@@ -1175,7 +1279,7 @@ scene("game", () => {
     ]);
     // Timer
      const text_time = TOPLBOX.add([
-        text(`Temps restant : ` + fancyTimeFormat(timer),{
+        text(TXT.timer_txt + fancyTimeFormat(timer),{
             width   : W,
             size    : 22,
             font    : "d",
@@ -1186,7 +1290,7 @@ scene("game", () => {
         {
             update(){
                 if (timer >= 0) {
-                    this.text = `Temps restant : ` + fancyTimeFormat(timer);
+                    this.text = TXT.timer_txt + fancyTimeFormat(timer);
                 } else {
                     this.text= ""; //hides this text in infinite mode
                 }
@@ -1256,7 +1360,6 @@ scene("game", () => {
         z(Z_UI_BOTTOM - 10),
         "pollution_overlay"
     ]);
-
     // Overlay for Deforestation
     const deforestationOverlay = add([
         rect(W, H),
@@ -1590,7 +1693,6 @@ scene("game", () => {
             "info",
             "info_beehive",
          ])
-
         // Info button for the pollution
          const information_4 = EVENTS.add([
             sprite('info'), 
@@ -1818,6 +1920,7 @@ scene("game", () => {
                 showAchievementPopUp("Curieux");
             }
         });
+
         //Explode particles destruction of the different things
         onDestroy("trash", (t) =>{
             for (let i = 0; i < randi(5); i++) {
@@ -1988,7 +2091,10 @@ scene("game", () => {
                 }
             })
         });
-
+        // Get a fun fact
+        onClick("bear", (t) => {
+            diaBubble(choose(dia_funfact));
+        })
         //Pause menu --> for some reason, this is locking other functionalities
         //onKeyRelease("p", () => {
         //    diaBubble(dia_others[0]);
@@ -1996,11 +2102,6 @@ scene("game", () => {
         //onKeyRelease("escape", () => {
         //    diaBubble(dia_others[0]);
         //})
-
-        // Get a fun fact
-        onClick("bear", (t) => {
-            diaBubble(choose(dia_funfact));
-        })
         
     // UI elements
         // Click any button
@@ -2018,7 +2119,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_tree_price);
                         CASHBOX.add([
-                            text("Pas assez de feuilles !", { 
+                            text(TXT.no_leaves, { 
                                 size : 20,
                                 font : "d",
                             }),
@@ -2044,7 +2145,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_bird_price);
                         CASHBOX.add([
-                            text("Pas assez de feuilles !", { 
+                            text(TXT.no_leaves, { 
                                 size : 20,
                                 font : "d",
                             }),
@@ -2070,7 +2171,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_bee_price);
                         CASHBOX.add([
-                            text("Pas assez de feuilles !", { 
+                            text(TXT.no_leaves, { 
                                 size : 20,
                                 font : "d",
                             }),
@@ -2088,9 +2189,9 @@ scene("game", () => {
                 } else if(diaL == 0 && b.is("not_available")){ // When the button is not available
                     let txt = "";
                     if (nb_bulldozer != 0) {
-                        txt = "Occupez vous du bulldozer en premier !"
+                        txt = TXT.bulldozer_first
                     } else {
-                        txt = "Pas assez d'arbres avec des fleurs !"
+                        txt = TXT.no_flowers
                     }
                     warning(b);
                     CASHBOX.add([
@@ -2111,7 +2212,7 @@ scene("game", () => {
                         warning(text_cash);
                         warning(text_new_beehive_price);
                         CASHBOX.add([
-                            text("Pas assez de feuilles !", { 
+                            text(TXT.no_leaves, { 
                                 size : 20,
                                 font : "d",
                             }),
@@ -2127,11 +2228,10 @@ scene("game", () => {
                         addBeehive();
                     }
                 } else if(diaL == 0 && b.is("not_available")){
-                    let txt = "Pas assez d'abeilles !";
                     if (nb_bulldozer != 0) {
-                        txt = "Occupez vous du bulldozer !"
+                        txt = TXT.bulldozer_first;
                     } else {
-                        txt = "Pas assez d'abeilles !"
+                        txt = TXT.no_bees;
                     }
                     warning(b);
                     CASHBOX.add([
@@ -2326,56 +2426,56 @@ scene("game", () => {
                 localStorage.setItem('achieved_forest_lord', 'true');
                 afl++;
                 if (afl == 1) {
-                    showAchievementPopUp("Seigneur de la Forêt");
+                    showAchievementPopUp(TXT.afl);
                 }
             }
             if (nb_handmade >= 30  && agd == 0) {
                 localStorage.setItem('achieved_gardener_dedicated', 'true');
                 agd++;
                 if (agd == 1) {
-                    showAchievementPopUp("Jardinier Dévoué");
+                    showAchievementPopUp(TXT.agd);
                 }
             }
             if (nb_birds >= 25  && abk == 0) {
                 localStorage.setItem('achieved_bird_kingdom', 'true');
                 abk++;
                 if (abk == 1) {
-                    showAchievementPopUp("Royaume des Oiseaux");
+                    showAchievementPopUp(TXT.abk);
                 }
             }
             if (nb_bees >= 25  && abm == 0) {
                 localStorage.setItem('achieved_bee_master', 'true');
                 abm++;
                 if (abm == 1) {
-                    showAchievementPopUp("Maître des Abeilles");
+                    showAchievementPopUp(TXT.abm);
                 }
             }
             if (nb_flowered >= 50  && apb == 0) {
                 localStorage.setItem('achieved_perfect_bloom', 'true');
                 apb++;
                 if (apb == 1) {
-                    showAchievementPopUp("Floraison Parfaite");
+                    showAchievementPopUp(TXT.apb);
                 }
             }
             if (cash >= 200000  && alt == 0) {
                 localStorage.setItem('achieved_leaf_tycoon', 'true');
                 alt++;
                 if (alt == 1) {
-                    showAchievementPopUp("Magnat des Feuilles");
+                    showAchievementPopUp(TXT.alt);
                 }
             }
             if (cash_per_sec >= 20000  && afls == 0) {
                 localStorage.setItem('achieved_falling_leafs', 'true');
                 afls++;
                 if (afls == 1) {
-                    showAchievementPopUp("Feuilles Tombantes");
+                    showAchievementPopUp(TXT.afls);
                 }
             }
             if (economist_timer >= 60  && ae == 0) {
                 localStorage.setItem('achieved_economist', 'true');
                 ae++;
                 if (ae == 1) {
-                    showAchievementPopUp("Économiste");
+                    showAchievementPopUp(TXT.ae);
                 }
             }
         });
@@ -2536,7 +2636,7 @@ scene("game", () => {
             const tree = add([
                 sprite(choose(trees)),
                 pos(randX, randY),
-                scale(0), // Start scale at 0 for growing effect
+                scale(0),
                 anchor("bot"),
                 area(),
                 z(randY),
@@ -2565,7 +2665,7 @@ scene("game", () => {
             const tree = add([
                 sprite(choose(trees)),
                 pos(x, y),
-                scale(0), // Start scale at 0 for growing effect
+                scale(0),
                 anchor("bot"),
                 area(),
                 z(y),
@@ -3006,16 +3106,19 @@ scene("gameOver", () => {
      *      Re-explained the logic and try to correct it where I couldn't find a fix;
      *      Tested a closer result and change it to fit the full purpose of the scene;
      */
+    const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
+    const TXT = langData[LANGUAGE];
+
     setBackground(rgb(79, 146, 240));
 
     if (alw == 1){
-        showAchievementPopUp("Loup Solitaire");
+        showAchievementPopUp(TXT.alw);
     };
     if (atg == 1){
-        showAchievementPopUp("Gardien des Arbres");
+        showAchievementPopUp(TXT.atg);
     };
     if (abw == 1){
-        showAchievementPopUp("Apiculteur Dédié")
+        showAchievementPopUp(TXT.abw);
     };
 
     let playerName = "";
@@ -3027,13 +3130,13 @@ scene("gameOver", () => {
     let customColor = { r: 255, g: 255, b: 255 };
 
     const gameOverText = add([
-        text("TEMPS ÉCOULÉ", {font:"d", size: 50 }),
+        text(TXT.time_over, {font:"d", size: 50 }),
         color(BLUE),
         pos(W / 2, 100),
         anchor("center"),
     ]);
     const instructionText = add([
-        text("Tape ton nom !", {font:"d", size: 30 }),
+        text(TXT.type, {font:"d", size: 30 }),
         color(BLACK),
         pos(W / 2, H / 3 - 50),
         anchor("center"),
@@ -3066,7 +3169,7 @@ scene("gameOver", () => {
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
         localStorage.setItem('achieved_hidden_secret', 'true');
         if (ahs == 0) {
-            showAchievementPopUp("Le Secret Caché");
+            showAchievementPopUp(TXT.ahs);
         }
     });
 
@@ -3075,7 +3178,7 @@ scene("gameOver", () => {
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
         localStorage.setItem('achieved_hidden_secret', 'true');
         if (ahs == 0) {
-            showAchievementPopUp("Le Secret Caché");
+            showAchievementPopUp(TXT.ahs);
         }
     });
 
@@ -3085,7 +3188,7 @@ scene("gameOver", () => {
         customColor.b = Math.max(0, customColor.b - 3);
         localStorage.setItem('achieved_hidden_secret', 'true');
         if (ahs == 0) {
-            showAchievementPopUp("Le Secret Caché");
+            showAchievementPopUp(TXT.ahs);
         }
     });
 
@@ -3095,7 +3198,7 @@ scene("gameOver", () => {
         customColor.b = Math.min(255, customColor.b + 3);
         localStorage.setItem('achieved_hidden_secret', 'true');
         if (ahs == 0) {
-            showAchievementPopUp("Le Secret Caché");
+            showAchievementPopUp(TXT.ahs);
         }
     });
 
@@ -3110,7 +3213,7 @@ scene("gameOver", () => {
     ]);
 
     const confirmButtonText = add([
-        text("Confirmer", {font:"d", size: 20 }),
+        text(TXT.confirm, {font:"d", size: 20 }),
         color(0, 0, 0),
         pos(W / 2, H / 2),
         anchor("center"),
@@ -3145,7 +3248,7 @@ scene("gameOver", () => {
 
     // Mobile button
     const mobileButton = add([
-        rect(200, 50, { radius: 15 }),
+        rect(250, 50, { radius: 15 }),
         pos(W - 160, H - 60),
         anchor("center"),
         outline(4),
@@ -3154,7 +3257,7 @@ scene("gameOver", () => {
         "button",
     ]);
     const mobileButtonText = add([
-        text("sur mobile", {font:"d", size: 18 }),
+        text(TXT.phone, {font:"d", size: 18 }),
         color(0, 0, 0),
         pos(W - 160, H - 60),
         anchor("center"),
@@ -3255,7 +3358,7 @@ scene("gameOver", () => {
                             customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
                             localStorage.setItem('achieved_hidden_secret', 'true');
                             if (ahs == 0) {
-                                showAchievementPopUp("Le Secret Caché");
+                                showAchievementPopUp(TXT.ahs);
                             }
                             break;
                         case '>':
@@ -3263,7 +3366,7 @@ scene("gameOver", () => {
                             customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
                             localStorage.setItem('achieved_hidden_secret', 'true');
                             if (ahs == 0) {
-                                showAchievementPopUp("Le Secret Caché");
+                                showAchievementPopUp(TXT.ahs);
                             }
                             break;
                         case '^':
@@ -3272,7 +3375,7 @@ scene("gameOver", () => {
                             customColor.b = Math.min(255, customColor.b + 3);
                             localStorage.setItem('achieved_hidden_secret', 'true');
                             if (ahs == 0) {
-                                showAchievementPopUp("Le Secret Caché");
+                                showAchievementPopUp(TXT.ahs);
                             }
                             break;
                         case 'v':
@@ -3281,7 +3384,7 @@ scene("gameOver", () => {
                             customColor.b = Math.max(0, customColor.b - 3);
                             localStorage.setItem('achieved_hidden_secret', 'true');
                             if (ahs == 0) {
-                                showAchievementPopUp("Le Secret Caché");
+                                showAchievementPopUp(TXT.ahs);
                             }
                             break;
                         case 'espace':
@@ -3310,6 +3413,9 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
      *      Tried to understand the code
      *      Adapted it and added it to the scene based on my newly aquired knowledge
      */
+    const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
+    const TXT = langData[LANGUAGE];
+
     setBackground(79, 146, 240);
 
     const icon_honey = add([ // SCOREBOX
@@ -3322,7 +3428,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
      ]);
 
     add([
-        text("Ton score :", {font:"d", size: 30 }),
+        text(TXT.your_score, {font:"d", size: 30 }),
         pos(W / 2, H / 4 - 130),
         anchor("center"),
     ]);
@@ -3335,7 +3441,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     ]);
 
     add([
-        text("Meilleurs joueurs :", {font:"d", size: 30 }),
+        text(TXT.best, {font:"d", size: 30 }),
         pos(W / 2, H / 2),
         anchor("center"),
     ]);
@@ -3361,9 +3467,8 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
         "replayButton",
         "button",
     ]);
-
     const replayButtonText = add([
-        text("Rejouer", {font:"d", size: 18 }),
+        text(TXT.replay, {font:"d", size: 18 }),
         color(0, 0, 0),
         pos(W / 2 - 170, buttonYPos),
         anchor("center"),
@@ -3371,9 +3476,8 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
         "replayButton",
         "button",
     ]);
-
     onClick("replayButton", (b) => {
-        timer = MU_TIME;
+        timer = CHAL_TIME;
         go("game");
     });
 
@@ -3386,9 +3490,8 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
         "scoreboardButton",
         "button",
     ]);
-
     const scoreboardButtonText = add([
-        text("Scoreboard", {font:"d", size: 14 }),
+        text(TXT.scoreboard, {font:"d", size: 14 }),
         color(0, 0, 0),
         pos(W / 2, buttonYPos),
         anchor("center"),
@@ -3396,7 +3499,6 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
         "scoreboardButton",
         "button",
     ]);
-
     onClick("scoreboardButton", () => {
         go("scoreboard");
         play('button_click');
@@ -3413,7 +3515,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     ]);
 
     const menuButtonText = add([
-        text("Menu", {font:"d", size: 18 }),
+        text(TXT.menu, {font:"d", size: 18 }),
         color(0, 0, 0),
         pos(W / 2 + 170, buttonYPos),
         anchor("center"),
@@ -3436,20 +3538,23 @@ scene("scoreboard", () => {
      *      Tried to understand the code
      *      Adapted it and added it to the scene based on my newly aquired knowledge
      */
+    const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
+    const TXT = langData[LANGUAGE];
+
     setBackground(79, 146, 240);
 
     const buttonYPos        = 50;
     const scoreListYStart   = 150;
     const maxVisibleItems   = Math.floor((H - scoreListYStart) / 40);
     let scrollOffset        = 0;
-    let replayTxt           = "Rejouer";
+    let replayTxt           = TXT.replay;
     let replayPos           = -10;
 
     if (inGame == true) {
-        replayTxt = "Rejouer"
+        replayTxt = TXT.replay;
         replayPos = -10;
     } else {
-        replayTxt = "Jouer"
+        replayTxt = TXT.play;
         replayPos = -26;
     }
 
@@ -3463,7 +3568,6 @@ scene("scoreboard", () => {
         "replayButton",
         "button",
     ]);
-
     const replayButtonText = replayButton.add([
         text(replayTxt, {font:"d", size: 18 }),
         color(0, 0, 0),
@@ -3474,7 +3578,7 @@ scene("scoreboard", () => {
         "button",
     ]);
     onClick("replayButton", () => {
-        timer = MU_TIME;
+        timer = CHAL_TIME;
         go("game");
         play('button_click');
     });
@@ -3489,7 +3593,7 @@ scene("scoreboard", () => {
         "button",
     ]);
     const menuButtonText = menuButton.add([
-        text("Menu", {font:"d", size: 18 }),
+        text(TXT.menu, {font:"d", size: 18 }),
         color(0, 0, 0),
         pos(40,18),
         anchor("topleft"),
@@ -3497,7 +3601,6 @@ scene("scoreboard", () => {
         "menuButton",
         "button",
     ]);
-
     onClick("menuButton", () => {
         go("startMenu");
         play('button_click');
@@ -3513,7 +3616,7 @@ scene("scoreboard", () => {
         if (highScores.length === 0) {
             // Display the message if there are no scores
             add([
-                text("Pas encore de score ! À toi de jouer !", {font: "d", size: 24 }),
+                text(TXT.no_score, {font: "d", size: 24 }),
                 pos(W / 2, scoreListYStart),
                 anchor("center"),
                 color(255, 255, 255),
@@ -3569,117 +3672,114 @@ scene("scoreboard", () => {
 
         // Add the small text at the bottom right
         add([
-            text("utilise les touches flèches pour descendre/monter", {font:"d", size: 10 }),
+            text(TXT.arrows, {font:"d", size: 10 }),
             pos(W - 20, H - 20),
             anchor("botright"),
             color(BLACK),
         ]);
 });
 
-scene("achievements", () => {
+scene("achievements", () => { //Scene moderately chatGPT assisted
+    const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
+    const TXT = langData[LANGUAGE];
+
+    setBackground(rgb(0, 191, 255));
+
     // UI Constants
-    const ACHIEVE_WIDTH = W * 0.8;
-    const ACHIEVE_HEIGHT = H * 0.1;
-    const ACHIEVE_PADDING = 20;
-    const COMPLETED_COLOR = rgb(60, 170, 60);  // Green for completed achievements
-    const LOCKED_COLOR = rgb(120, 120, 120);   // Gray for locked achievements
-    const SECRET_COLOR = rgb(255, 223, 0);     // Special color for secret achievement
-    let scrollOffset = 0;
-    const maxVisibleItems = Math.floor((H - 250) / (ACHIEVE_HEIGHT + ACHIEVE_PADDING)); // Items visible in the viewport
+    const ACHIEVE_WIDTH     = W * 0.8;
+    const ACHIEVE_HEIGHT    = H * 0.1;
+    const ACHIEVE_PADDING   = 20;
+    const COMPLETED_COLOR   = rgb(60, 170, 60);  
+    const LOCKED_COLOR      = rgb(120, 120, 120);  
+    const SECRET_COLOR      = rgb(255, 223, 0); 
+    let scrollOffset        = 0;
+    const maxVisibleItems = Math.floor((H - 250) / (ACHIEVE_HEIGHT + ACHIEVE_PADDING));
 
     // List of achievements
     const achievements = [
         {
-            title: "Loup Solitaire",
-            description: "Compléter le jeu avec un seul arbre.",
-            key: "achieved_lone_wolf",  // Key in local storage
-            color: COMPLETED_COLOR,
-        },
-        {
-            title: "Apiculteur Dédié",
-            description: "Compléter le jeu avec une seule abeille et une ruche.",
-            key: "achieved_bee_whisperer",
-            color: COMPLETED_COLOR,
-        },
-        {
-            title: "Seigneur de la Forêt",
-            description: "Avoir 125 arbres.",
+            title: TXT.afl, 
+            description: TXT.aflD, 
             key: "achieved_forest_lord",
             color: COMPLETED_COLOR,
         },
         {
-            title: "Jardinier Dévoué",
-            description: "Avoir 30 arbres non plantés par les oiseaux.",
+            title: TXT.abw, 
+            description: TXT.abwD, 
+            key: "achieved_bee_whisperer",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: TXT.als, 
+            description: TXT.alsD, 
+            key: "achieved_lone_wolf",
+            color: COMPLETED_COLOR,
+        },
+        {
+            title: TXT.agd, 
+            description: TXT.agdD, 
             key: "achieved_gardener_dedicated",
             color: COMPLETED_COLOR,
         },
         {
-            title: "Royaume des Oiseaux",
-            description: "Avoir 25 oiseaux.",
+            title: TXT.abk, 
+            description: TXT.abkD, 
             key: "achieved_bird_kingdom",
             color: COMPLETED_COLOR,
         },
         {
-            title: "Maître des Abeilles",
-            description: "Avoir 25 abeilles.",
+            title: TXT.abm, 
+            description: TXT.abmD, 
             key: "achieved_bee_master",
             color: COMPLETED_COLOR,
         },
         {
-            title: "Floraison Parfaite",
-            description: "Avoir 50 arbres avec des fleurs.",
+            title: TXT.apb, 
+            description: TXT.apbD, 
             key: "achieved_perfect_bloom",
             color: COMPLETED_COLOR,
-        },    
+        },
         {
-            title: "Magnat des Feuilles",
-            description: "Accumuler 200k feuilles.",
+            title: TXT.alt, 
+            description: TXT.altD, 
             key: "achieved_leaf_tycoon",
             color: COMPLETED_COLOR,
         },
         {
-            title: "Feuilles Tombantes",
-            description: "Atteindre un gain passif de 20k feuilles par seconde.",
+            title: TXT.afls, 
+            description: TXT.aflsD, 
             key: "achieved_falling_leafs",
             color: COMPLETED_COLOR,
         },
         {
-            title: "Économiste",
-            description: "Ne pas utiliser de feuilles pendant 1 minute.",
+            title: TXT.ae, 
+            description: TXT.aeD, 
             key: "achieved_economist",
             color: COMPLETED_COLOR,
         },
         {
-            title: "Gardien des Arbres",
-            description: "Ne laisser aucun arbre être détruit par le bulldozer.",
+            title: TXT.atg, 
+            description: TXT.atgD, 
             key: "achieved_tree_guardian",
             color: COMPLETED_COLOR,
         },
         {
-            title: "Curieux",
-            description: "Soyez curieux !",
+            title: TXT.ac, 
+            description: TXT.acD, 
             key: "achieved_curious",
             color: SECRET_COLOR,
         },
         {
-            title: "Le Secret Caché",
-            description: "Trouver le secret !",
+            title: TXT.ahs, 
+            description: TXT.ahsD, 
             key: "achieved_hidden_secret",
             color: SECRET_COLOR,
         },
     ];
 
-    // Background color consistent with the game
-    add([
-        rect(W, H),
-        pos(0, 0),
-        color(0, 191, 255),  // Correct game background color
-        z(-1),
-    ]);
-
     // Title of the achievements scene
     add([
-        text("Succès", {
+        text(TXT.achievements, {
             size: 48,
             font: "d",
         }),
@@ -3693,10 +3793,8 @@ scene("achievements", () => {
         destroyAll("achievementItem");
 
         achievements.slice(scrollOffset, scrollOffset + maxVisibleItems).forEach((ach, i) => {
-            // Check if the achievement is unlocked from local storage
             const isAchieved = !!localStorage.getItem(ach.key);
 
-            // Container for each achievement
             const achieveBox = add([
                 rect(ACHIEVE_WIDTH, ACHIEVE_HEIGHT, { radius: 8 }),
                 pos(W / 2, 150 + (i * (ACHIEVE_HEIGHT + ACHIEVE_PADDING))),
@@ -3734,7 +3832,7 @@ scene("achievements", () => {
 
             // Status: Completed or Locked
             achieveBox.add([
-                text(isAchieved ? "Complété" : "Verrouillé", {
+                text(isAchieved ? TXT.completed : TXT.locked , {
                     size: 24,
                     font: "d",
                 }),
@@ -3749,22 +3847,20 @@ scene("achievements", () => {
     // Draw achievements
     drawAchievements();
 
-    // Scroll functionality using arrow keys and mouse scroll
+    // Scroll  using arrow keys and mouse scroll
     onKeyPress("up", () => {
         if (scrollOffset > 0) {
             scrollOffset -= 1;
             drawAchievements();
         }
     });
-
     onKeyPress("down", () => {
         if (scrollOffset < achievements.length - maxVisibleItems) {
             scrollOffset += 1;
             drawAchievements();
         }
     });
-
-    onScroll((dir) => {
+    onScroll((dir) => { //Still not working
         if (dir === "up" && scrollOffset > 0) {
             scrollOffset -= 1;
         } else if (dir === "down" && scrollOffset < achievements.length - maxVisibleItems) {
@@ -3785,7 +3881,7 @@ scene("achievements", () => {
         "button",
     ]);
     const menuButtonText = menuButton.add([
-        text("Menu", {font:"d", size: 18 }),
+        text(TXT.menu, {font:"d", size: 18 }),
         color(0, 0, 0),
         pos(menuButton.pos.x + 15, menuButton.pos.y - 7),
         z(Z_UI_TOP),
@@ -3794,7 +3890,6 @@ scene("achievements", () => {
         "menuButton",
         "button",
     ]);
-
     onClick("menuButton", () => {
         go("startMenu");
         play('button_click');
@@ -3802,7 +3897,7 @@ scene("achievements", () => {
 
     // Small text at the bottom right
     add([
-        text("Utilise les flèches pour défiler", {
+        text(TXT.arrows, {
             font: "d", 
             size: 10,
         }),
@@ -3886,7 +3981,7 @@ scene("achievements", () => {
             ]);
 
             popUpBox.add([
-                text("Succès Réussi", {
+                text(TXT.done, {
                     font: "d",
                     size: 24,
                 }),
@@ -3925,7 +4020,7 @@ scene("achievements", () => {
         }
     }
 
-    // THIS DOESN'T WORK FOR SOME REASON
+    // THIS DOESN'TXT WORK FOR SOME REASON
     onHover("button", (b) => {
         console.log("HOVERING")
         b.use(shader("lighten"));
@@ -3982,7 +4077,7 @@ scene("achievements", () => {
         valueIfNaN = '',
         style = '',
         useOrderSuffix = false,
-        orderSuffixes = ['', 'k', 'M', 'B', 'T'],
+        orderSuffixes = ['', 'k', 'M', 'B', 'TXT'],
         minOrder = 0,
         maxOrder = Infinity
     } = {}) {
@@ -4045,90 +4140,6 @@ scene("achievements", () => {
       
         return ret;
       }
-      
-/**
- *  DIALOGS
- * Faces:
- * bear_happy
- * bear_wink for fun facts
- * bear_sad
- * bear_talking for general dialog
- * bear_scared when bulldozer appears
- * 
- * Sounds:
- * bear_angry for sad or scared
- * bear_curious for fun facts
- * bear_friend for all rest
-*/  
-
-    const dia_intro = [
-        ["bear_happy"   , "bear_friend" , "Bienvenue au Click A Tree ! Tu peux appuyer sur la barre d'espace pour passer à la prochaine bulle de dialogue."], 
-        ["bear_sad"     , "bear_angry"  , "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré."],
-        ["bear_talking" , "bear_friend" , "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe."],
-        //["bear"       , "bear_friend" , "En cliquant sur l'arbre du milieu, tu pourras accumuler des points qui te permettront de planter des arbres que tu peux voir en haut à droite."],
-        //["bear_wink"  , "bear_friend" , "Je te laisse découvrir la suite !"],
-        ["bear_info"    , "bear_curious", "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles."],
-        ["bear_talking" , "bear_friend" , "Je te laisse découvrir la suite ! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récupérer mon miel."],
-    ] //tout bon
-    const dia_pollution = [
-        //["bear_scared", "bear_angry"  , "Attention ! ! La barre de pollution augmente vite !"],
-        ["bear_wink"    , "bear_curious", "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?"], //1er
-        ["bear_scared"  , "bear_angry"  , "Oh non ! La pollution a atteint des niveaux critiques ! Clique sur les poubelles pour les nettoyer !"],
-        ["bear_sad"     , "bear_angry"  ,"Pourquoi tu ne cliques pas sur les déchets pour les faire disparaître ?"],
-        ["bear_happy"   , "bear_friend" , "Bravo, il n'y a plus de déchets pour le moment. Mais attention, ils risquent de revenir !"],
-        ]
-    const dia_deforestation = [
-        //["bear_scared", "bear_angry"  , "Attention ! ! La barre de déforestation augmente vite !"],
-        ["bear_wink"    , "bear_curious", "Savais-tu que les abeilles ont un rôle très important pour la pollinisation des plantes ?"], //2e
-        ["bear_scared"  , "bear_angry"  , "Oh non ! Ils vont couper nos arbres ! Clique sur le bulldozer pour le détruire ! La barre en haut indique sa vie."],
-        ["bear_sad"     , "bear_angry"  , "Vite ! Le bulldozer détruit toute la biodiversité ! Clique plus vite !"],
-        ["bear_happy"   , "bear_friend" , "Bravo ! Le bulldozer ne va pas retourner pendant un moment !"],
-        ]
-    //on garde ou non?
-    const dia_funfact = [
-        ["bear_wink"    , "bear_curious", "Savais-tu que même les petites actions comme ramasser les déchets dans la nature peuvent aider à protéger les animaux ?"],
-        ["bear_wink"    , "bear_curious", "Savais-tu que tu peux aider à protéger les abeilles en plantant des fleurs dans ton jardin ?"],
-        ["bear_wink"    , "bear_curious", "Savais-tu que planter des arbres peut aider à remplacer ceux qui ont été coupés? C'est une façon de prendre soin de notre planète !"],
-        ["bear_wink"    , "bear_curious", "Savais-tu que planter des arbres aide à nettoyer l'air et à réduire la pollution ?"],
-        ["bear_wink"    , "bear_curious", "Savais-tu que les abeilles peuvent être affectées par la pollution de l'air? Protéger l'air, c'est aussi protéger nos pollinisateurs !"],
-        ["bear_wink"    , "bear_curious", "Savais-tu que les zones protégées sont créées surtout pour protéger les animaux, les plantes et les paysages magnifiques ?"],
-        ["bear_happy"   , "bear_curious", "À la fin du jeu, quand tu tape ton nom, essaie de cliquer sur les touches flèches."],
-    ]
-    //peut-être une seule ligne ?
-    const dia_info = [
-        //tree
-        ["bear_wink"    , "bear_curious", "Après avoir accumulé assez de feuilles, tu pourras planter des arbres. Le nombre de feuilles requis augmente à chaque fois que tu plantes un arbre."],
-        //bird 
-        ["bear_wink"    , "bear_curious", "Après avoir accumulé assez de feuilles, tu pourras placer des oiseaux qui disperseront les graines pour t'aider à créer ta forêt."],
-        //bee
-        ["bear_flower"  , "bear_curious", "Clique plusieurs fois sur un arbre et de belles fleurs apparaîtront. À ce moment là, les abeilles pourront récupérer leur nectar. Seules trois abeilles par arbre sont autorisées."],
-        //beehive
-        ["bear_wink"    , "bear_curious", "Si tu as au moins une abeille dans ta forêt, tu pourras placer une ruche. Tes abeilles déposeront leur nectar dans ces ruches afin de créer un bon miel sucré !"],
-        //pollution
-        ["bear_wink"    , "bear_curious", "Cette barre représente la pollution. Dès qu'elle est remplie, tu auras des déchets qui apparaîtront. Clique dessus pour les enlever !"],
-        //deforestation
-        ["bear_wink"    , "bear_curious", "Cette barre représente la déforestation. Dès qu'elle est remplie, tu auras un bulldozer qui apparaîtra. Clique dessus pour l'enlever !"],
-        //fleurs
-        ["bear_flower"  , "bear_curious", "Quand tu cliques plusieurs fois sur un arbre des belles fleurs apparaîssent. Les abeilles ont besoin de ces fleurs qui multiplient également le nombre de feuilles que tu reçois."],
-    ]
-    const dia_first_time_info = [
-        //tree
-        ["bear_wink"    , "bear_curious", "C'est ça ! Continue à planter des arbres et regarde ta forêt prendre vie !"],
-        //bird 
-        ["bear_wink"    , "bear_curious", "Oh, regarde ! Un oiseau ! Il disperse les graines et plante des arbres au hasard !"],
-        //bee
-        ["bear_flower"  , "bear_curious", "Oui ! Maintenant tu peux ajouter des abeilles qui vont récupérer leur nectar."],
-        //beehive
-        ["bear_wink"    , "bear_curious", "Oh, une belle ruche ! Tes abeilles déposent leur nectar dedans afin de créer un bon miel sucré !"],
-        //fleurs
-        ["bear_flower"  , "bear_curious", "Oh, regarde comme ces belles fleurs apparaissent ! Elles sont essentielles pour les abeilles !"],
-    ]
-    //others
-    const dia_others = [
-        //pause
-        ["bear_talking" , "bear_friend" , "Ne t'inquiète pas, le jeu est en pause. Clique sur espace pour reprendre !"],
-        ["bear_scared"  , "bear_angry"  , "Qu'est-ce qui se cache là derrière ? Tu ne dois pas avoir assez de feuilles encore."],
-    ]
 
 // we finally have a start scene, yay !
 function startGame() {
