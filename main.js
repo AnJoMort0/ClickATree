@@ -3222,6 +3222,7 @@ scene("gameOver", () => {
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
         localStorage.setItem('achieved_hidden_secret', 'true');
         if (ahs == 0) {
+            ahs++;
             showAchievementPopUp(TXT.ahs);
         }
     });
@@ -3231,6 +3232,7 @@ scene("gameOver", () => {
         customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
         localStorage.setItem('achieved_hidden_secret', 'true');
         if (ahs == 0) {
+            ahs++;
             showAchievementPopUp(TXT.ahs);
         }
     });
@@ -3241,6 +3243,7 @@ scene("gameOver", () => {
         customColor.b = Math.max(0, customColor.b - 3);
         localStorage.setItem('achieved_hidden_secret', 'true');
         if (ahs == 0) {
+            ahs++;
             showAchievementPopUp(TXT.ahs);
         }
     });
@@ -3251,6 +3254,7 @@ scene("gameOver", () => {
         customColor.b = Math.min(255, customColor.b + 3);
         localStorage.setItem('achieved_hidden_secret', 'true');
         if (ahs == 0) {
+            ahs++;
             showAchievementPopUp(TXT.ahs);
         }
     });
@@ -3411,6 +3415,7 @@ scene("gameOver", () => {
                             customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
                             localStorage.setItem('achieved_hidden_secret', 'true');
                             if (ahs == 0) {
+                                ahs++;
                                 showAchievementPopUp(TXT.ahs);
                             }
                             break;
@@ -3419,6 +3424,7 @@ scene("gameOver", () => {
                             customColor = { r: colors[currentColorIndex].r, g: colors[currentColorIndex].g, b: colors[currentColorIndex].b };
                             localStorage.setItem('achieved_hidden_secret', 'true');
                             if (ahs == 0) {
+                                ahs++;
                                 showAchievementPopUp(TXT.ahs);
                             }
                             break;
@@ -3428,6 +3434,7 @@ scene("gameOver", () => {
                             customColor.b = Math.min(255, customColor.b + 3);
                             localStorage.setItem('achieved_hidden_secret', 'true');
                             if (ahs == 0) {
+                                ahs++;
                                 showAchievementPopUp(TXT.ahs);
                             }
                             break;
@@ -3437,6 +3444,7 @@ scene("gameOver", () => {
                             customColor.b = Math.max(0, customColor.b - 3);
                             localStorage.setItem('achieved_hidden_secret', 'true');
                             if (ahs == 0) {
+                                ahs++;
                                 showAchievementPopUp(TXT.ahs);
                             }
                             break;
