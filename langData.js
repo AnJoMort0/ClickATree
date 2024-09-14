@@ -37,7 +37,7 @@ const langData = {
         dia_intro_2: "Ce vieil ours est malheureusement en manque de miel et aura besoin d'un peu d'aide pour obtenir ce produit sucré.",
         dia_intro_3: "Est-ce que tu serais prêt.e à m'aider? Je suis sûr qu'on formera une belle équipe.",
         dia_intro_4: "Clique sur l'arbre pour commencer et n'hésite pas à appuyer sur les cercles 'i' en bleu pour avoir plus d'informations utiles.",
-        dia_intro_5: "Je te laisse découvrir la suite ! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récupérer mon miel.",
+        dia_intro_5: "Je te laisse découvrir la suite ! Tu as 5 minutes pour m'aider à créer une belle forêt, mais surtout à récolter mon miel.",
         dia_inf_intro: "Maintenant que tu connais tout, tu peux t'amuser à créer la plus grande forêt sans limites !",
         // Pollution Dialogs
         dia_pollution_1: "Savais-tu que si on protège l'habitat d'une espèce, on aide aussi beaucoup d'autres espèces qui vivent au même endroit?",
@@ -110,7 +110,7 @@ const langData = {
         //Credits
         about: "A Propos",
         context: 'Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).',
-        mu: 'Ce jeu a également été exposé aux Mystères de l\'Unil 2024 où il a rencontrer un grand succès.',
+        mu: 'Ce jeu a également été exposé aux Mystères de l\'UNIL 2024 où il a rencontrer un grand succès.',
         credits: "Crédits",
         concept: "Concept et Développement :",
         visuals: "Conception visuelle :",
@@ -128,7 +128,7 @@ const langData = {
         arrows: "Use the arrow keys to scroll",
         menu: "Menu",
         replay: "Replay",
-        play: "Play",
+        play: "Play ",
         confirm: "Confirm",
 
         //Start Menu
@@ -161,11 +161,11 @@ const langData = {
         dia_intro_2: "This old bear is sadly running out of honey and will need some help to get that sweet treat.",
         dia_intro_3: "Would you be willing to help me? I'm sure we'll make a great team.",
         dia_intro_4: "Click on the tree to start, and don't hesitate to click on the blue 'i' circles for more useful information.",
-        dia_intro_5: "I'll let you discover the rest! You have 5 minutes to help me create a beautiful forest, but most importantly, to get my honey back.",
+        dia_intro_5: "I'll let you discover the rest! You have 5 minutes to help me create a beautiful forest, but most importantly, to collect my honey.",
         dia_inf_intro: "Now that you know everything, you can have fun creating the largest forest without limits!",
         // Pollution Dialogs
         dia_pollution_1: "Did you know that by protecting the habitat of one species, you also help many other species living in the same area?",
-        dia_pollution_2: "Oh no! Pollution levels have reached critical! Click on the trash cans to clean them up!",
+        dia_pollution_2: "Oh no! Pollution levels have reached a critical level! Click on the trash cans to clean them up!",
         dia_pollution_3: "Why aren't you clicking on the trash to make it disappear?",
         dia_pollution_4: "Well done, there's no more trash for now. But be careful, they might come back!",
 
@@ -187,7 +187,7 @@ const langData = {
         // Information Dialogs
         dia_info_tree: "After accumulating enough leaves, you'll be able to plant trees. The number of leaves required increases each time you plant a tree.",
         dia_info_bird: "After accumulating enough leaves, you'll be able to place birds that will scatter seeds to help you create your forest.",
-        dia_info_bee: "Click multiple times on a tree, and beautiful flowers will appear. At that point, bees will be able to collect their nectar. Only three bees per tree are allowed.",
+        dia_info_bee: "Click multiple times on a tree and beautiful flowers will appear. At that point, bees will be able to collect their nectar. Only three bees per tree are allowed.",
         dia_info_beehive: "If you have at least one bee in your forest, you can place a beehive. Your bees will deposit their nectar in these hives to make sweet honey!",
         dia_info_pollution: "This bar represents pollution. Once it’s full, trash will appear. Click on it to remove it!",
         dia_info_deforestation: "This bar represents deforestation. Once it’s full, a bulldozer will appear. Click on it to remove it!",
@@ -196,7 +196,7 @@ const langData = {
         // First-Time Info Dialogs
         dia_first_tree: "That's it! Keep planting trees and watch your forest come to life!",
         dia_first_bird: "Oh, look! A bird! It's scattering seeds and planting trees randomly!",
-        dia_first_bee: "Yes! Now you can add bees that will collect their nectar.",
+        dia_first_bee: "Yes! Now you can add bees that will go collect their nectar.",
         dia_first_beehive: "Oh, a nice beehive! Your bees deposit their nectar in it to make sweet honey!",
         dia_first_fleurs: "Oh, look at those beautiful flowers appearing! They are essential for the bees!",
 
@@ -239,7 +239,7 @@ const langData = {
         //Credits
         about: "About",
         context: 'This project was developed as part of the course "2D Game Development" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).',
-        mu: 'This game was also showcased at the Mystères de l\'UNIL 2024, where it met with great success.',
+        mu: 'This game was also showcased at the Mystères de l\'UNIL 2024, where it was met with great success.',
         credits: "Credits",
         concept: "Concept and Development:",
         visuals: "Visual Design:",
