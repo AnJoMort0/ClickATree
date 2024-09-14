@@ -165,7 +165,7 @@ const langData = {
         dia_inf_intro: "Now that you know everything, you can have fun creating the largest forest without limits!",
         // Pollution Dialogs
         dia_pollution_1: "Did you know that by protecting the habitat of one species, you also help many other species living in the same area?",
-        dia_pollution_2: "Oh no! Pollution levels have reached a critical level! Click on the trash cans to clean them up!",
+        dia_pollution_2: "Oh no! Pollution levels have reached critical! Click on the trash cans to clean them up!",
         dia_pollution_3: "Why aren't you clicking on the trash to make it disappear?",
         dia_pollution_4: "Well done, there's no more trash for now. But be careful, they might come back!",
 
