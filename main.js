@@ -2164,12 +2164,13 @@ scene("game", () => {
                     if(cash < pr_new_tree){
                         warning(text_cash);
                         warning(text_new_tree_price);
-                        CASHBOX.add([
+                        add([
                             text(TXT.no_leaves, { 
                                 size : 20,
                                 font : "d",
                             }),
-                            pos(text_cash.pos.x - 155, 90), 
+                            anchor("center"),
+                            pos(W/2, H/2 - 250),,
                             color(RED), 
                             lifespan(2), 
                         ]);
@@ -2192,12 +2193,13 @@ scene("game", () => {
                     } else if(cash < pr_new_bird){
                         warning(text_cash);
                         warning(text_new_bird_price);
-                        CASHBOX.add([
+                        add([
                             text(TXT.no_leaves, { 
                                 size : 20,
                                 font : "d",
                             }),
-                            pos(text_cash.pos.x - 155, 120), 
+                            anchor("center"),
+                            pos(W/2, H/2 - 250),
                             color(RED), 
                             lifespan(2), 
                         ]);
@@ -2220,12 +2222,13 @@ scene("game", () => {
                     if(cash < pr_new_bee){
                         warning(text_cash);
                         warning(text_new_bee_price);
-                        CASHBOX.add([
+                        add([
                             text(TXT.no_leaves, { 
                                 size : 20,
                                 font : "d",
                             }),
-                            pos(text_cash.pos.x - 155, 150),
+                            anchor("center"),
+                            pos(W/2, H/2 - 250),
                             color(RED),
                             lifespan(2),
                         ]);
@@ -2246,12 +2249,13 @@ scene("game", () => {
                         txt = TXT.no_flowers
                     }
                     warning(b);
-                    CASHBOX.add([
+                    add([
                         text(txt, { 
                             size: 20,
                             font: "d",
                         }),
-                        pos(text_cash.pos.x - 300, 150), 
+                        anchor("center"),
+                        pos(W/2, H/2 - 150),
                         color(RED), 
                         lifespan(2), 
                     ]);
@@ -2263,12 +2267,13 @@ scene("game", () => {
                     if(cash < pr_new_beehive){
                         warning(text_cash);
                         warning(text_new_beehive_price);
-                        CASHBOX.add([
+                        add([
                             text(TXT.no_leaves, { 
                                 size : 20,
                                 font : "d",
                             }),
-                            pos(text_cash.pos.x - 155, 150), 
+                            anchor("center"),
+                            pos(W/2, H/2 - 250), 
                             color(RED), 
                             lifespan(2), 
                         ]);
@@ -2288,12 +2293,13 @@ scene("game", () => {
                         txt = TXT.no_bees;
                     }
                     warning(b);
-                    CASHBOX.add([
+                    add([
                         text(txt, { 
                             size : 20,
                             font : "d",
                         }),
-                        pos(text_cash.pos.x - 155, 180), 
+                        anchor("center"),
+                        pos(W/2, H/2 - 175), 
                         color(RED), 
                         lifespan(2), 
                     ]);
@@ -2595,7 +2601,7 @@ scene("game", () => {
                         localStorage.setItem('achieved_lone_wolf', 'true');
                         alw++;
                     }
-                    if (achieved_tree_guardian == true) {
+                    if (achieved_tree_guardian == true && nb_trees != 1) {
                         localStorage.setItem('achieved_tree_guardian', 'true');
                         atg++;
                     }
@@ -2779,12 +2785,13 @@ scene("game", () => {
                             };
                         } else if (b === 0 && nb_flowered == 0){
                             this.moveTo(rand(W), rand(H), BEE_SPEED); // If no flowers, bee moves to a random position
-                            CASHBOX.add([
-                                text("Tes abeilles sont perdues ! Où sont les fleurs?", { 
+                            add([
+                                text(TXT.looking_flowers, { 
                                     size: 20,
                                     font: "d",
                                 }),
-                                pos(text_cash.pos.x - 400, 250), 
+                                anchor("center"),
+                                pos(W/2, H/2 - 100), 
                                 color(RED), 
                                 lifespan(2), 
                             ]);
@@ -2813,12 +2820,13 @@ scene("game", () => {
                         } else if ((b === 1 || b === 2) && nb_beehives == 0){
                             // If there are no beehives, the bee moves to a random position
                             this.moveTo(rand(W), rand(H), BEE_SPEED);
-                            CASHBOX.add([
-                                text("Où sont les ruches?", { 
+                            add([
+                                text(TXT.no_beehives, { 
                                     size : 20,
                                     font : "d",
                                 }),
-                                pos(text_cash.pos.x - 150, 220), 
+                                anchor("center"),
+                                pos(W/2, H/2 - 125), 
                                 color(RED), 
                                 lifespan(2), 
                             ]);

@@ -21,7 +21,9 @@ const langData = {
         no_leaves: "Pas assez de feuilles !",
         bulldozer_first: "Occupez vous du bulldozer en premier !",
         no_flowers: "Pas assez d'arbres avec des fleurs !",
+        looking_flowers: "Tes abeilles sont perdues ! \n Où sont les fleurs?",
         no_bees: "Pas assez d'abeilles !",
+        no_beehives: "Les abeilles cherchent les ruches !",
 
         time_over: "TEMPS ÉCOULÉ",
         type: "Tape ton nom !",
@@ -143,7 +145,9 @@ const langData = {
         no_leaves: "Not enough leaves!",
         bulldozer_first: "Deal with the bulldozer first!",
         no_flowers: "Not enough trees with flowers!",
+        looking_flowers: "The bees are lost! \n Where are the flowers?",
         no_bees: "Not enough bees!",
+        no_beehives: "The bees are looking for beehives!",
 
         time_over: "TIME'S UP",
         type: "Type your name!",
