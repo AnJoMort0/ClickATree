@@ -113,7 +113,7 @@ const langData = {
         external: "Sources Extérieures :",
         music: "Musique :",
         sounds: "Sons :",
-        ai: "Assistant IA : ",
+        ai: "Des parties du code ont été légèrement révisées par :",
 
         //Other
         no_score: "Pas encore de score ! À toi de jouer !",
@@ -239,7 +239,7 @@ const langData = {
         external: "External Sources:",
         music: "Music:",
         sounds: "Sounds:",
-        ai: "AI Assistant:",
+        ai: "Portions of the code where lightly revised by:",
 
         //Other
         no_score: "No score yet! It's your turn to play!",

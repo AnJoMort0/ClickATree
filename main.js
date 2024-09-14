@@ -25,7 +25,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.beta.1.5.0.sga"
+const VERSION = "v.beta.1.5.1.sga"
 
 kaboom({
     background  : [0, 191, 255],    //I would like to make this a const value, but I can't seem to do it.
@@ -303,7 +303,7 @@ loadRoot('assets/');
     loadSound('bulldozer_music' , "audio/music/bulldozer.ogg");
     loadSound('pollution_music' , "audio/music/pollution.ogg");
 
-//load shaders (All ChatGPT generated)
+//load shaders (These shaders were done with the help of OpenAI's chatGPT)
     // Grayscale shader
     loadShader("grayscale", null, `
         vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
@@ -359,7 +359,7 @@ scene("startMenu", () => {
     // Add language buttons
     const frButton = add([
         rect(50, 30, { radius: 5 }),
-        pos(W - 120, 30),
+        pos(W - 120, 50),
         z(Z_UI_BOTTOM),
         anchor("center"),
         outline(2),
@@ -378,7 +378,7 @@ scene("startMenu", () => {
     ]);
     const enButton = add([
         rect(50, 30, { radius: 5 }),
-        pos(W - 50, 30),
+        pos(W - 50, 50),
         z(Z_UI_BOTTOM),
         anchor("center"),
         outline(2),
@@ -510,10 +510,11 @@ scene("startMenu", () => {
 
     const creditsButton = add([
         rect(85, 30, { radius: 5 }),
-        pos(55, H - 25),
+        pos(75, scoreBoardButton.pos.y),
         anchor("center"),
         outline(2),
         area(),
+        z(Z_UI_BOTTOM),
         "creditsButton",
         "button,"
     ]);
@@ -523,6 +524,7 @@ scene("startMenu", () => {
         anchor("center"),
         color(BLACK),
         area(),
+        z(Z_UI),
         "button"
     ]);
 
@@ -649,7 +651,7 @@ scene("startMenu", () => {
         ]);
     });
 
-    //This whole bit heavily chatGPT assisted
+    //This animation was inspired on Open AI's chatGPT's proposition
     let bulldozerExists = false;
     let currentTrees = []; // Store references to the trees
     let treeScale = 5;
@@ -757,13 +759,13 @@ go("startMenu");
 
 scene("creditsMenu", () => {
     /**
-     * This scene was heavily assisted by OpenAI's chatGPT-4o.
+     * This layout of this scene was assisted by OpenAI's chatGPT-4o.
      * The prompt and response would be too long to add to the code, here is the process of usage:
      *      Gave it the entirety of this code to serve as an example of proper Kaboom.js coding;
-     *      Explained the logic of what needs to be done in this scene;
+     *      Explained the logic of what needs to be done for the layout in this scene;
      *      Saw the poor results and tested them;
      *      Re-explained the logic and try to correct it where I couldn't find a fix;
-     *      Tested a closer result and change it to fit the full purpose of the scene;
+     *      Tested a closer result and exxtensively change it to fit the full purpose of the scene;
      */
     const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
     const TXT = langData[LANGUAGE];
@@ -3022,10 +3024,8 @@ scene("game", () => {
 
        function calculateSaturation(yPos, minY, maxY) {
             /** 
-             * ChatGPT generated code
+             * This code was OpenAI's ChatGPT generated, however it does not work as intended, it was a first attempt that was left undevelopped to priorise other mechanics
              * Calculate RGB values based on saturation
-             * For demonstration, we'll use a simple linear interpolation from gray to fully saturated color
-             * Change saturation here - trial and error 
             */
             // Calculate the percentage of yPos within the range minY to maxY
             const percentage = (yPos - minY) / (maxY - minY);
@@ -3038,10 +3038,8 @@ scene("game", () => {
         }
         function calculateColor(saturation) {
             /** 
-             * ChatGPT generated code
+             * This code was OpenAI's ChatGPT generated, however it does not work as intended, it was a first attempt that was left undevelopped to priorise other mechanics
              * Calculate RGB values based on saturation
-             * For demonstration, we'll use a simple linear interpolation from gray to fully saturated color
-             * Change saturation here - trial and error 
             */
             const grayValue     = 600; // Middle gray value
             const maxColorValue = 100; // Maximum color value
@@ -3098,13 +3096,7 @@ scene("game", () => {
 // GameOver Scene --> Type name scene
 scene("gameOver", () => {
     /**
-     * This scene was heavily assisted by OpenAI's chatGPT-4o.
-     * The prompt and response would be too long to add to the code, here is the process of usage:
-     *      Gave it the entirety of this code to serve as an example of proper Kaboom.js coding;
-     *      Explained the logic of what needs to be done in this scene;
-     *      Saw the poor results and tested them;
-     *      Re-explained the logic and try to correct it where I couldn't find a fix;
-     *      Tested a closer result and change it to fit the full purpose of the scene;
+     * Multiple elements of this scene (notably the colour changes) came from discussions with OpenAI's ChatGPT.
      */
     const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
     const TXT = langData[LANGUAGE];
@@ -3407,11 +3399,7 @@ scene("gameOver", () => {
 
 scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     /**
-     * This scene was lightly assisted by OpenAI's chatGPT-4o.
-     * The prompt and response would be too long to add to the code, here is the process of usage:
-     *      Explained the logic of what the bits I couldn't figure out about localStorage;
-     *      Tried to understand the code
-     *      Adapted it and added it to the scene based on my newly aquired knowledge
+     * This scene was lightly assisted by OpenAI's ChatGPT to better understand the logic behind localStorage.
      */
     const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
     const TXT = langData[LANGUAGE];
@@ -3532,11 +3520,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
 
 scene("scoreboard", () => {
     /**
-     * This scene was lightly assisted by OpenAI's chatGPT-4o.
-     * The prompt and response would be too long to add to the code, here is the process of usage:
-     *      Explained the logic of what the bits I couldn't figure out about localStorage;
-     *      Tried to understand the code
-     *      Adapted it and added it to the scene based on my newly aquired knowledge
+     * This scene was lightly assisted by OpenAI's ChatGPT, mostly for layout and LocalStorage interactions that were a new concept for the developpers.
      */
     const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
     const TXT = langData[LANGUAGE];
@@ -3679,7 +3663,7 @@ scene("scoreboard", () => {
         ]);
 });
 
-scene("achievements", () => { //Scene moderately chatGPT assisted
+scene("achievements", () => { //Layout was assisted by OpenAI's chatGPT
     const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
     const TXT = langData[LANGUAGE];
 
@@ -3954,7 +3938,7 @@ scene("achievements", () => { //Scene moderately chatGPT assisted
         play('button_click');
     });
 
-    // Function to display achievement pop-up chatGPT generated
+    // Functions to display achievement are modified and adapted OpenAI's generations
     function showAchievementPopUp(achievementName) {
         achievementQueue.push(achievementName);
         if (!achievementActive) {
@@ -3962,24 +3946,24 @@ scene("achievements", () => { //Scene moderately chatGPT assisted
         }
     }
     function processAchievementQueue() {
+        const LANGUAGE = localStorage.getItem("language") || "FR"; // Language choice on localStorage or French by default
+        const TXT = langData[LANGUAGE];
         if (achievementQueue.length > 0 && !achievementActive) {
             achievementActive = true;
             const achievementName = achievementQueue.shift();
 
             play('win');
 
-            // Pop-up container
             const popUpBox = add([
                 rect(W * 0.6, 100, { radius: 15 }),
                 pos(W / 2, 100),
                 anchor("center"),
                 color(255, 255, 255), 
                 outline(4),
-                opacity(0),  // Start with 0 opacity for fade-in
+                opacity(0),
                 z(Z_UI_TOP + 1),
                 "achievementPopup"
             ]);
-
             popUpBox.add([
                 text(TXT.done, {
                     font: "d",
@@ -3990,7 +3974,6 @@ scene("achievements", () => { //Scene moderately chatGPT assisted
                 color(60, 170, 60),
                 "achievementPopupText"
             ]);
-
             popUpBox.add([
                 text(achievementName, {
                     font: "d",
@@ -4020,7 +4003,7 @@ scene("achievements", () => { //Scene moderately chatGPT assisted
         }
     }
 
-    // THIS DOESN'TXT WORK FOR SOME REASON
+    // THIS DOESN'T WORK FOR SOME REASON
     onHover("button", (b) => {
         console.log("HOVERING")
         b.use(shader("lighten"));
@@ -4077,7 +4060,7 @@ scene("achievements", () => { //Scene moderately chatGPT assisted
         valueIfNaN = '',
         style = '',
         useOrderSuffix = false,
-        orderSuffixes = ['', 'k', 'M', 'B', 'TXT'],
+        orderSuffixes = ['', 'k', 'M', 'B', 'T'],
         minOrder = 0,
         maxOrder = Infinity
     } = {}) {
