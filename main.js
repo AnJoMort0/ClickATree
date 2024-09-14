@@ -1,4 +1,9 @@
 //IDEAS TO ADD
+//NEED TO RE-PUT THE MOBILE BUTTON LATER
+/** The itch.io mention
+ * ⚠️ Sur mobile, le jeu n'est pas optimisé, mettre le zoom de la page à 50%, en paysage, et cliquer sur l'icône "ESPACE" pour sauter les dialogues. Au moment de taper le nom, un clavier virtuel est disponible en bas à droite. Des noms avec des caractères répétés ne sont pas autorisés sur mobile.
+ */
+
     //Minimal animations for the bees (for example move around when reach a tree)
     //Multiple Languages
     //Darker colors at the beginning -> progress saturation the bigger the forest
@@ -25,7 +30,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.1.5.2.sga"
+const VERSION = "v.1.5.3.sga"
 
 kaboom({
     background  : [0, 191, 255],    //I would like to make this a const value, but I can't seem to do it.
@@ -3286,7 +3291,7 @@ scene("gameOver", () => {
     onClick("confirmButton", saveScore);
     onKeyRelease("enter", saveScore);
 
-    // Mobile button
+    /** Mobile button --> temporarly removed to only send stable things to the SGW
     const mobileButton = add([
         rect(250, 50, { radius: 15 }),
         pos(W - 160, H - 60),
@@ -3437,7 +3442,7 @@ scene("gameOver", () => {
                 });
             });
         }
-    });
+    }); */
 
     onClick("button", (b) => {
         zoomIn(b);
