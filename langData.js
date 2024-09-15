@@ -145,7 +145,7 @@ const langData = {
         no_leaves: "Not enough leaves!",
         bulldozer_first: "Deal with the bulldozer first!",
         no_flowers: "Not enough trees with flowers!",
-        looking_flowers: "The bees are lost! \n Where are the flowers?",
+        looking_flowers: "The bees are lost!\nWhere are the flowers?",
         no_bees: "Not enough bees!",
         no_beehives: "The bees are looking for beehives!",
 
