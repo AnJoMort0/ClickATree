@@ -30,7 +30,7 @@
 //===================================================================//
 //===================================================================//
 
-const VERSION = "v.1.5.3.sga"
+const VERSION = "v.1.5.4.sga"
 
 kaboom({
     background  : [0, 191, 255],    //I would like to make this a const value, but I can't seem to do it.
