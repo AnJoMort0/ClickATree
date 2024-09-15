@@ -2792,7 +2792,7 @@ scene("game", () => {
                                     font: "d",
                                 }),
                                 anchor("center"),
-                                pos(W/2, H/2 - 100), 
+                                pos(W/2, H/2 - 90), 
                                 color(RED), 
                                 lifespan(2), 
                             ]);
