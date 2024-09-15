@@ -21,11 +21,11 @@ const langData = {
         no_leaves: "Pas assez de feuilles !",
         bulldozer_first: "Occupez vous du bulldozer en premier !",
         no_flowers: "Pas assez d'arbres avec des fleurs !",
-        looking_flowers: "Tes abeilles sont perdues ! \n Où sont les fleurs?",
+        looking_flowers: "Tes abeilles sont perdues !\nOù sont les fleurs?",
         no_bees: "Pas assez d'abeilles !",
         no_beehives: "Les abeilles cherchent les ruches !",
 
-        time_over: "TEMPS ÉCOULÉ",
+        time_over: "TEMPS ECOULE",
         type: "Tape ton nom !",
         phone: "Sur mobile ?",
 
