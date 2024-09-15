@@ -211,6 +211,7 @@ loadRoot('assets/');
             },
         })
         loadSprite('honey'          , 'game_elements/other/honey.png');
+        loadSprite('honey_label'    , 'game_elements/other/honey_label.png');
         loadSprite('beehive0'       , 'game_elements/other/beehive0.png');
         loadSprite('space_bar'      , 'game_elements/other/space_bar.png');
         // Bear
@@ -3476,7 +3477,7 @@ scene("highScoreDisplay", ({ playerName, playerScore, playerColor }) => {
     setBackground(79, 146, 240);
 
     const icon_honey = add([ // SCOREBOX
-        sprite('honey'),
+        sprite('honey_label'),
         anchor("center"),
         pos(W / 2, H / 4 + 20),
         z(0),
