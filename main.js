@@ -550,20 +550,20 @@ scene("startMenu", () => {
     // Event listeners of the different buttons
     onClick("timedStartButton", () => {    //start the timed version of the game scene
         timer = CHAL_TIME;
-        go("game");
-        play('button_click');
         if (bulldozerExists) {
             sound_bulldozer.stop();
         };
+        play('button_click');
+        go("game");
     });
     onClick("infStartButton", (b) => {      //start the infinite timer version of the game scene
         if (timedCompleted) {
             timer = -10;
-            go("game");
             play('button_click');
             if (bulldozerExists) {
                 sound_bulldozer.stop();
             };
+            go("game");
         } else {
             warning(b);
             add([
@@ -577,25 +577,25 @@ scene("startMenu", () => {
         }
     });
     onClick("achievementsButton", () => {
-        go("achievements");
         play('button_click');
         if (bulldozerExists) {
             sound_bulldozer.stop();
         };
+        go("achievements");
     });
     onClick("scoreBoardButton", () => {
-        go("scoreboard");
         play('button_click');
         if (bulldozerExists) {
             sound_bulldozer.stop();
         };
+        go("scoreboard");
     });
     onClick("creditsButton", () => {
-        go("creditsMenu"); 
         play('button_click');
         if (bulldozerExists) {
             sound_bulldozer.stop();
         };
+        go("creditsMenu"); 
     });
     onClick("logo", (t) => { 
         // Leaf particles when logo is clicked
