@@ -109,7 +109,7 @@ const langData = {
 
         //Credits
         about: "A Propos",
-        context: 'Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).',
+        context: 'Ce projet a été développé dans le cadre du cours "Développement de Jeu Vidéo 2D" donné par Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).',
         mu: 'Ce jeu a également été exposé aux Mystères de l\'UNIL 2024 où il a rencontrer un grand succès.',
         credits: "Crédits",
         concept: "Concept et Développement :",
@@ -238,7 +238,7 @@ const langData = {
 
         //Credits
         about: "About",
-        context: 'This project was developed as part of the course "2D Game Development" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).',
+        context: 'This project was developed as part of the course "2D Video Game Development" under Isaac Pante (SLI, Lettres, UNIL, Lausanne, CH).',
         mu: 'This game was also showcased at the Mystères de l\'UNIL 2024, where it was met with great success.',
         credits: "Credits",
         concept: "Concept and Development:",
@@ -246,7 +246,7 @@ const langData = {
         external: "External Sources:",
         music: "Music:",
         sounds: "Sounds:",
-        ai: "Portions of the code where lightly revised by:",
+        ai: "Portions of the code were lightly revised by:",
 
         //Other
         no_score: "No score yet! It's your turn to play!",
