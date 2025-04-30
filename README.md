@@ -36,7 +36,7 @@ Ce projet a été développé dans le cadre du cours "Développement de Jeu 2D" 
 
 ## Jouez sur itch.io! 🎮
 
-Notre jeu est disponible sur [itch.io]([https://sophwrd.itch.io/the-london-quest]) ! Il suffit de cliquer sur **RUN GAME** ! 🌳💚
+Notre jeu est disponible sur [itch.io](https://anjomorto.itch.io/click-a-tree) ! Il suffit de cliquer sur **RUN GAME** ! 🌳💚
 
 <div style="display: flex; justify-content: right;">
     <img src="assets/game_elements/bear/bear_happy.png" alt="Bear" width="100">
